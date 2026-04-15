@@ -6,6 +6,14 @@ function resolveMediaUrl(rawUrl) {
     return rawUrl;
   }
 
+  const uploadsMatch = rawUrl.match(/[\\/]+uploads[\\/]+(.+)$/i);
+  if (uploadsMatch) {
+    const relative = uploadsMatch[1].replace(/\\/g, "/");
+    rawUrl = `/uploads/${relative}`;
+  } else if (/^[a-zA-Z]:[\\/]/.test(rawUrl) || rawUrl.startsWith("\\\\")) {
+    return "";
+  }
+
   const baseUrl = String(API.defaults.baseURL || "");
   const apiRoot = baseUrl.replace(/\/api\/?$/, "");
   if (rawUrl.startsWith("/")) {

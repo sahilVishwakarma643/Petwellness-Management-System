@@ -194,7 +194,7 @@ public class ProductServiceImp implements ProductService {
         dto.setBrand(product.getBrand());
         dto.setStockQuantity(product.getStockQuantity());
         dto.setStatus(product.getStatus());
-        dto.setImage(product.getImage());
+        dto.setImage(fileStorageUtil.toWebPath(product.getImage()));
         return dto;
     }
 

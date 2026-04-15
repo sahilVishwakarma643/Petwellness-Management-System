@@ -44,10 +44,38 @@ public class FileStorageUtil {
         Path destination = folderPath.resolve(uniqueFileName);
         try {
             file.transferTo(destination.toFile());
-            return destination.toAbsolutePath().toString();
+            return toUploadsWebPath(subFolder, uniqueFileName);
         } catch (IOException e) {
             throw new RuntimeException("File saving failed at path: " + destination.toAbsolutePath(), e);
         }
+    }
+
+    public String toWebPath(String storedPath) {
+        if (storedPath == null || storedPath.isBlank()) {
+            return storedPath;
+        }
+
+        String trimmed = storedPath.trim();
+        if (trimmed.startsWith("/uploads/") || trimmed.startsWith("/uploads\\")) {
+            return trimmed.replace('\\', '/');
+        }
+        if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+            return trimmed;
+        }
+
+        Path uploadRoot = getUploadRootPath();
+        try {
+            Path candidatePath = Paths.get(trimmed).toAbsolutePath().normalize();
+            if (candidatePath.startsWith(uploadRoot)) {
+                Path relative = uploadRoot.relativize(candidatePath);
+                String relativePosix = relative.toString().replace('\\', '/');
+                return "/uploads/" + relativePosix;
+            }
+        } catch (InvalidPathException ignored) {
+            // Ignore invalid local path; fall back to returning the original string.
+        }
+
+        return trimmed;
     }
 
     public void deleteFileQuietly(String absolutePath) {
@@ -56,10 +84,34 @@ public class FileStorageUtil {
         }
 
         try {
-            Files.deleteIfExists(Paths.get(absolutePath));
+            Files.deleteIfExists(toAbsolutePath(absolutePath));
         } catch (IOException | InvalidPathException ignored) {
             // Best-effort cleanup; upload/update should not fail due to old-file deletion.
         }
+    }
+
+    private Path toAbsolutePath(String storedPath) {
+        String trimmed = storedPath == null ? "" : storedPath.trim();
+        if (trimmed.startsWith("/uploads/") || trimmed.startsWith("/uploads\\")) {
+            String relativePart = trimmed.substring("/uploads/".length()).replace('\\', '/');
+            relativePart = relativePart.replaceAll("^/+", "");
+            return getUploadRootPath().resolve(relativePart).normalize();
+        }
+
+        return Paths.get(trimmed);
+    }
+
+    private String toUploadsWebPath(String subFolder, String fileName) {
+        String safeSubFolder = (subFolder == null ? "" : subFolder).replace('\\', '/').replaceAll("^/+", "").replaceAll("/+$", "");
+        String safeFileName = (fileName == null ? "" : fileName).replace('\\', '/');
+        if (safeSubFolder.isBlank()) {
+            return "/uploads/" + safeFileName;
+        }
+        return "/uploads/" + safeSubFolder + "/" + safeFileName;
+    }
+
+    private Path getUploadRootPath() {
+        return Paths.get(uploadDir).toAbsolutePath().normalize();
     }
 }
 

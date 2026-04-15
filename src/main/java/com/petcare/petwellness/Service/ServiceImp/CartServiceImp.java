@@ -25,6 +25,7 @@ import com.petcare.petwellness.Repository.CartRepository;
 import com.petcare.petwellness.Repository.ProductRepository;
 import com.petcare.petwellness.Repository.UserRepository;
 import com.petcare.petwellness.Service.CartService;
+import com.petcare.petwellness.Util.FileStorageUtil;
 
 @Service
 public class CartServiceImp implements CartService {
@@ -33,15 +34,18 @@ public class CartServiceImp implements CartService {
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
+    private final FileStorageUtil fileStorageUtil;
 
     public CartServiceImp(CartRepository cartRepository,
                           CartItemRepository cartItemRepository,
                           ProductRepository productRepository,
-                          UserRepository userRepository) {
+                          UserRepository userRepository,
+                          FileStorageUtil fileStorageUtil) {
         this.cartRepository = cartRepository;
         this.cartItemRepository = cartItemRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
+        this.fileStorageUtil = fileStorageUtil;
     }
 
     @Override
@@ -219,7 +223,7 @@ public class CartServiceImp implements CartService {
         dto.setProductId(product.getId());
         dto.setProductName(product.getProductName());
         dto.setPrice(price);
-        dto.setImage(product.getImage());
+        dto.setImage(fileStorageUtil.toWebPath(product.getImage()));
         dto.setQuantity(item.getQuantity());
         dto.setLineTotal(lineTotal);
         dto.setStatus(product.getStatus());

@@ -47,6 +47,16 @@ function resolveMediaUrl(rawUrl?: string) {
     return rawUrl;
   }
 
+  const uploadsMatch = rawUrl.match(/[\\/]+uploads[\\/]+(.+)$/i);
+  if (uploadsMatch) {
+    const relative = uploadsMatch[1].replace(/\\/g, "/");
+    rawUrl = `/uploads/${relative}`;
+  } else if (/^[a-zA-Z]:[\\/]/.test(rawUrl) || rawUrl.startsWith("\\\\")) {
+    // Local filesystem path that cannot be loaded by the browser; avoid triggering
+    // "Not allowed to load local resource" when backend sends an absolute path.
+    return "";
+  }
+
   const baseUrl = String(API.defaults.baseURL || "");
   const apiRoot = baseUrl.replace(/\/api\/?$/, "");
   if (rawUrl.startsWith("/")) {

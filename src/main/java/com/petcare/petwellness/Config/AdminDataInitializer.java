@@ -18,6 +18,7 @@ public class AdminDataInitializer implements CommandLineRunner {
                            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        
     }
 
     @Override
