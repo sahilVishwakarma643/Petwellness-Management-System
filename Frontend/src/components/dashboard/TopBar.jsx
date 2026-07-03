@@ -131,13 +131,11 @@ export default function TopBar({
               title="View Profile"
             >
               <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-app-teal-light text-xs font-extrabold text-app-teal-dark">
-                V
+                {userName?.charAt(0)?.toUpperCase() || "P"}
               </span>
-              <span className="hidden sm:inline">Profile</span>
+             
             </button>
-            <button type="button" className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-app-teal text-sm font-bold text-white">
-              {userName?.charAt(0)?.toUpperCase() || "P"}
-            </button>
+           
           </div>
         </div>
     </div>

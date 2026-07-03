@@ -132,21 +132,21 @@ export default function UserMarketplace() {
             onOpenSidebar={() => setSidebarOpen(true)}
             actions={
               <>
-                <div className="relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-[#E2EBF0] bg-white text-lg text-[#1A2332] shadow-[0_2px_8px_rgba(26,35,50,0.06)]">
-                  🛒
-                  {cartItemCount > 0 ? (
-                    <span className="absolute -right-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-[#2DD4A0] px-1 text-[10px] font-bold text-white">
-                      {cartItemCount > 99 ? "99+" : cartItemCount}
-                    </span>
-                  ) : null}
-                </div>
-                <Link
-                  to="/cart"
-                  className="inline-flex items-center rounded-full bg-[#2DD4A0] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#1BAF82]"
-                >
-                  View Cart
-                </Link>
-              </>
+  <div className="relative inline-flex">
+    <Link
+      to="/cart"
+      className="inline-flex items-center rounded-full bg-[#2DD4A0] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#1BAF82]"
+    >
+      View Cart
+    </Link>
+
+    {cartItemCount > 0 ? (
+      <span className="absolute -right-2 -top-2 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-[#ca6e4a] px-1 text-[10px] font-bold text-white">
+        {cartItemCount > 99 ? "99+" : cartItemCount}
+      </span>
+    ) : null}
+  </div>
+</>
             }
           />
 
