@@ -15,6 +15,7 @@ export default function CartPage() {
   const { cart, cartItemCount, fetchCart, isLoading, updateItem, removeItem } = useCart();
   const { showToast } = useToast();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [busyItems, setBusyItems] = useState({});
 
   const ownerName = useMemo(() => getLoggedInName(), []);
@@ -92,9 +93,9 @@ export default function CartPage() {
 
   return (
     <div className="min-h-screen bg-[#EBF4F8] text-[#1A2332]">
-      <Sidebar user={owner} navItems={navItems} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <Sidebar user={owner} navItems={navItems} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} collapsed={sidebarCollapsed} onToggleCollapse={() => setSidebarCollapsed((prev) => !prev)} />
 
-      <main className="px-4 pb-8 pt-5 md:ml-[260px] md:p-7">
+      <main className={`px-4 pb-8 pt-5 ${sidebarCollapsed ? "md:ml-[92px]" : "md:ml-[270px]"} md:p-7`}>
         <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-5">
           <TopBar
             variant="page"
@@ -197,3 +198,5 @@ export default function CartPage() {
     </div>
   );
 }
+
+

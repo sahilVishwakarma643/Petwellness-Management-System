@@ -3,6 +3,7 @@ export default function TopBar({
   petsCount,
   dateText,
   onOpenSidebar,
+  onViewProfile,
   variant = "dashboard",
   petsSearchValue = "",
   onPetsSearchChange,
@@ -113,21 +114,32 @@ export default function TopBar({
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <input
-            type="text"
-            placeholder="Search..."
-            className="h-10 w-full rounded-full bg-app-bg px-4 text-sm text-app-navy placeholder:text-app-slate focus:outline-none sm:w-56"
-          />
-          <button type="button" className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-app-border bg-app-card text-base">
-            {"\uD83D\uDD14"}
-            <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-app-red" />
-          </button>
-          <button type="button" className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-app-teal text-sm font-bold text-white">
-            {userName?.charAt(0)?.toUpperCase() || "P"}
-          </button>
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              placeholder="Search..."
+              className="h-10 w-full rounded-full bg-app-bg px-4 text-sm text-app-navy placeholder:text-app-slate focus:outline-none sm:w-56"
+            />
+            <button type="button" className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-app-border bg-app-card text-base">
+              {"\uD83D\uDD14"}
+              <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-app-red" />
+            </button>
+            <button
+              type="button"
+              onClick={onViewProfile}
+              className="inline-flex h-10 items-center gap-2 rounded-full border border-app-border bg-white px-3 text-sm font-bold text-app-navy transition duration-200 hover:border-app-teal hover:text-app-teal"
+              title="View Profile"
+            >
+              <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-app-teal-light text-xs font-extrabold text-app-teal-dark">
+                V
+              </span>
+              <span className="hidden sm:inline">Profile</span>
+            </button>
+            <button type="button" className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-app-teal text-sm font-bold text-white">
+              {userName?.charAt(0)?.toUpperCase() || "P"}
+            </button>
+          </div>
         </div>
-      </div>
     </div>
   );
 }

@@ -24,6 +24,7 @@ import AppointmentListingPage from "./pages/user/AppointmentListingPage";
 import MyAppointmentsPage from "./pages/user/MyAppointmentsPage";
 import { CartProvider } from "./context/CartContext";
 import { ToastProvider } from "./components/shared/Toast";
+import MyProfile from "./pages/user/MyProfile.jsx";
 
 function UserRouteProviders({ children }) {
   return (
@@ -59,11 +60,20 @@ function App() {
           </UserRouteProviders>
         }
       />
+      
       <Route
-        path="/my-pets"
+        path="/profile/me"
         element={
           <UserRouteProviders>
-            <MyPets />
+            <MyProfile />
+          </UserRouteProviders>
+        }
+      />
+      <Route
+        path="/profile/edit"
+        element={
+          <UserRouteProviders>
+            <MyProfile />
           </UserRouteProviders>
         }
       />

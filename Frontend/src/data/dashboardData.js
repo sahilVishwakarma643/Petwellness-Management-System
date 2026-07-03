@@ -88,7 +88,7 @@ export const vaccines = [
 
 export const products = [
   { id: 1, name: "Dental Chews", price: "\u20B9299", emoji: "\uD83E\uDDB4", bgClass: "bg-app-teal-light" },
-  { id: 2, name: "Cat Kibble", price: "\u20B9499", emoji: "\uD83D\uDC31", bgClass: "bg-app-blue-light" },
+  { id: 2, name: "Cat Food", price: "\u20B9499", emoji: "\uD83D\uDC31", bgClass: "bg-app-blue-light" },
   { id: 3, name: "Squeaky Toy", price: "\u20B9149", emoji: "\uD83E\uDDF8", bgClass: "bg-app-yellow-light" },
   { id: 4, name: "Flea Drops", price: "\u20B9350", emoji: "\uD83D\uDC8A", bgClass: "bg-app-red-light" },
 ];

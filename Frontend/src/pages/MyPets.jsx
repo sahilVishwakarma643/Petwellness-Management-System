@@ -95,6 +95,7 @@ function buildUiPet(basePet, index) {
 
 export default function MyPets() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [pets, setPets] = useState([]);
   const [activeFilter, setActiveFilter] = useState("all");
   const [viewMode, setViewMode] = useState("grid");
@@ -401,8 +402,8 @@ export default function MyPets() {
 
   return (
     <div className="min-h-screen bg-app-bg text-app-navy" style={{ fontFamily: '"Plus Jakarta Sans", "Segoe UI", sans-serif' }}>
-      <Sidebar user={owner} navItems={navItems} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <main className="px-4 pb-7 pt-5 md:ml-[260px] md:px-8 md:pb-8 md:pt-7">
+      <Sidebar user={owner} navItems={navItems} isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} collapsed={sidebarCollapsed} onToggleCollapse={() => setSidebarCollapsed((prev) => !prev)} />
+      <main className={`px-4 pb-7 pt-5 ${sidebarCollapsed ? "md:ml-[92px]" : "md:ml-[270px]"} md:px-8 md:pb-8 md:pt-7`}>
         <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-5">
           <TopBar
             variant="pets"
@@ -511,3 +512,5 @@ export default function MyPets() {
     </div>
   );
 }
+
+

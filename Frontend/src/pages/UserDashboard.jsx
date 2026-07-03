@@ -1,5 +1,6 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import API from "../api/api";
 
 const sidebarItems = [
   { label: "Dashboard", icon: "🏠", active: true },
@@ -38,7 +39,7 @@ const vaccines = [
 
 const products = [
   { icon: "🦴", name: "Dental Chews", price: "$9.99", tone: "bg-orange-100" },
-  { icon: "🐱", name: "Cat Kibble", price: "$16.99", tone: "bg-amber-100" },
+  { icon: "🐱", name: "Cat Food", price: "$16.99", tone: "bg-amber-100" },
   { icon: "🧸", name: "Squeaky Toy", price: "$4.49", tone: "bg-emerald-100" },
   { icon: "💊", name: "Flea Drops", price: "$11.99", tone: "bg-rose-100" },
 ];
@@ -107,6 +108,24 @@ function getDisplayName() {
 export default function UserDashboard() {
   const userName = useMemo(() => getDisplayName(), []);
   const userInitial = useMemo(() => userName.trim().charAt(0).toUpperCase() || "P", [userName]);
+  const [profileLoading, setProfileLoading] = useState(false);
+  const [profileError, setProfileError] = useState("");
+  const [profileData, setProfileData] = useState(null);
+
+  const handleProfileClick = async () => {
+    try {
+      setProfileLoading(true);
+      setProfileError("");
+      const response = await API.get("/profile/me");
+      setProfileData(response.data);
+      console.log("Profile data:", response.data);
+    } catch (error) {
+      console.error(error);
+      setProfileError("Unable to fetch profile data.");
+    } finally {
+      setProfileLoading(false);
+    }
+  };
 
   return (
     <motion.div
@@ -174,9 +193,30 @@ export default function UserDashboard() {
                   🔔
                   <span className="absolute right-2 top-2 h-1.5 w-1.5 rounded-full bg-rose-500" />
                 </button>
-                <button type="button" className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white shadow-sm">👤</button>
+                <button
+                  type="button"
+                  onClick={handleProfileClick}
+                  className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-app-teal text-sm font-bold text-white"
+                >
+                  {profileLoading ? "..." : userInitial}
+                </button>
               </div>
             </header>
+
+            {(profileError || profileData) && (
+              <div className="mb-5 rounded-2xl border px-4 py-3 text-sm shadow-sm"
+                style={{ borderColor: profileError ? "#fecaca" : "#cbd5e1", backgroundColor: profileError ? "#fef2f2" : "#f8fafc" }}
+              >
+                {profileError ? (
+                  <p className="text-rose-700">{profileError}</p>
+                ) : (
+                  <div>
+                    <p className="font-semibold text-slate-900">Profile loaded</p>
+                    <pre className="mt-2 overflow-x-auto text-xs text-slate-700">{JSON.stringify(profileData, null, 2)}</pre>
+                  </div>
+                )}
+              </div>
+            )}
 
             <motion.section variants={stagger} initial="hidden" animate="show" className="mb-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
               {stats.map((stat) => (

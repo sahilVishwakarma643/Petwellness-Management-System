@@ -53,7 +53,7 @@ export default function Sidebar({
         <button
           type="button"
           aria-label="Close sidebar overlay"
-          className="fixed inset-0 z-30 bg-slate-900/40 lg:hidden"
+          className="fixed inset-0 z-30 bg-slate-900/40 md:hidden"
           onClick={onCloseMobile}
         />
       ) : null}
@@ -65,7 +65,7 @@ export default function Sidebar({
           x: mobileOpen ? 0 : -300,
         }}
         transition={{ type: "spring", stiffness: 220, damping: 25 }}
-        className="fixed left-0 top-0 z-40 h-screen border-r border-teal-200/60 bg-gradient-to-b from-teal-50 via-cyan-50 to-white shadow-xl lg:!translate-x-0"
+        className="fixed left-0 top-0 z-40 h-screen border-r border-teal-200/60 bg-gradient-to-b from-teal-50 via-cyan-50 to-white shadow-xl md:!translate-x-0"
       >
         <div className="flex h-full flex-col px-3 py-4">
           <div className="mb-4 flex items-center justify-between">
@@ -82,7 +82,7 @@ export default function Sidebar({
             </div>
             <button
               type="button"
-              className="hidden rounded-lg border border-teal-200 bg-white p-1 text-slate-600 hover:bg-teal-50 lg:block"
+              className="hidden rounded-lg border border-teal-200 bg-white p-1 text-slate-600 hover:bg-teal-50 md:block"
               onClick={onToggleCollapse}
               aria-label="Toggle sidebar width"
             >

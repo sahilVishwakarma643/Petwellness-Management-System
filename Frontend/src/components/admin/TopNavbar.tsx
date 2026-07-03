@@ -1,4 +1,4 @@
-import { BellIcon, MenuIcon, SearchIcon } from "./Icons";
+import { BellIcon, SearchIcon } from "./Icons";
 
 type TopNavbarProps = {
   onOpenSidebar: () => void;
@@ -10,11 +10,11 @@ export default function TopNavbar({ onOpenSidebar }: TopNavbarProps) {
       <div className="flex items-center gap-3">
         <button
           type="button"
-          className="rounded-lg border border-teal-200 bg-teal-50 p-2 text-teal-700 lg:hidden"
+          className="rounded-lg border border-teal-200 bg-teal-50 px-2 py-1 text-sm font-bold text-teal-700 lg:hidden"
           onClick={onOpenSidebar}
           aria-label="Open menu"
         >
-          <MenuIcon className="h-5 w-5" />
+          {"<"}
         </button>
 
         <div className="relative flex-1">
