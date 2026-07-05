@@ -42,7 +42,7 @@ export default function ProductCard({ product, onOpen, onAddToCart, isAdding }) 
           <h3 className="line-clamp-2 min-h-[2.5rem] text-[14px] font-bold text-[#1A2332]">{product.productName}</h3>
           <p className="line-clamp-2 min-h-[2rem] text-[12px] leading-5 text-[#6B7A8D]">{product.description}</p>
           <p className="text-[18px] font-extrabold text-[#2DD4A0]">₹{product.price.toFixed(2)}</p>
-          <p className="text-[11px] text-[#6B7A8D]">{product.stockQuantity} in stock</p>
+          {/*<p className="text-[11px] text-[#6B7A8D]">{product.stockQuantity} in stock</p>*/}
         </div>
       </button>
 

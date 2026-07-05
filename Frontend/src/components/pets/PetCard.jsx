@@ -36,7 +36,7 @@ export default function PetCard({
   return (
     <article
       className={[
-        "group overflow-visible rounded-2xl border border-app-border bg-app-card shadow-sm transition duration-[220ms] hover:-translate-y-1 hover:shadow-md",
+        "group overflow-visible rounded-3xl border border-app-border bg-app-card shadow-sm transition duration-[220ms] hover:-translate-y-1 hover:shadow-md",
         isList ? "flex min-h-[320px]" : "",
         "opacity-0 animate-[fadeSlideUp_0.35s_ease_forwards]",
       ].join(" ")}
@@ -75,7 +75,7 @@ export default function PetCard({
               event.stopPropagation();
               setMenuOpen((prev) => !prev);
             }}
-            className="absolute left-2 top-2 inline-flex h-[30px] w-[30px] items-center justify-center rounded-full bg-white/85 text-base text-app-navy backdrop-blur transition hover:bg-white"
+            className="absolute left-2 top-2 inline-flex h-[30px] w-[30px] items-center justify-center rounded-full bg-white/85 text-base text-app-navy backdrop-blur transition hover:bg-slate-400"
           >
             ⋯
           </button>
@@ -85,14 +85,14 @@ export default function PetCard({
               onClick={(event) => event.stopPropagation()}
               className="absolute left-2 top-8 z-50 min-w-[170px] overflow-hidden rounded-xl border border-app-border bg-app-card shadow-md"
             >
-              <button type="button" onClick={() => { setMenuOpen(false); onEdit(); }} className="flex w-full items-center gap-2 px-3.5 py-2.5 text-left text-[13px] text-app-navy transition hover:bg-app-bg">
+              <button type="button" onClick={() => { setMenuOpen(false); onEdit(); }} className="flex w-full items-center gap-2 px-3.5 py-2.5  font-semibold text-left text-[13px] text-app-navy transition hover:bg-app-bg">
                 ✏️ Edit Pet Profile
               </button>
-              <button type="button" onClick={() => { setMenuOpen(false); onOpen(); }} className="flex w-full items-center gap-2 px-3.5 py-2.5 text-left text-[13px] text-app-navy transition hover:bg-app-bg">
+              <button type="button" onClick={() => { setMenuOpen(false); onOpen(); }} className="flex w-full items-center gap-2 px-3.5 py-2.5 font-semibold text-left text-[13px] text-app-navy transition hover:bg-app-bg">
                 📋 View Full Records
               </button>
               <div className="h-px bg-app-border" />
-              <button type="button" onClick={() => { setMenuOpen(false); onDelete(); }} className="flex w-full items-center gap-2 px-3.5 py-2.5 text-left text-[13px] text-app-red transition hover:bg-app-red-light">
+              <button type="button" onClick={() => { setMenuOpen(false); onDelete(); }} className="flex w-full items-center gap-2 px-3.5 py-2.5 font-semibold text-left text-[13px] text-app-red transition hover:bg-app-red-light">
                 🗑 Delete Pet
               </button>
             </div>
@@ -144,7 +144,7 @@ export default function PetCard({
             event.stopPropagation();
             onOpenMedical();
           }}
-          className="flex-1 rounded-xl border border-app-border bg-app-bg py-2 text-[11px] font-bold text-app-navy transition duration-200 hover:border-app-blue hover:bg-app-blue-light hover:text-app-blue"
+          className="flex-1 rounded-xl border border-app-border bg-app-bg py-2 text-[11px] font-bold text-app-navy transition duration-200 hover:border-app-blue hover:bg-app-blue-light hover:text-app-teal-dark"
         >
           📋 Medical History
         </button>
@@ -164,7 +164,7 @@ export default function PetCard({
             event.stopPropagation();
             onEdit();
           }}
-          className="flex-1 rounded-xl bg-app-teal py-2 text-[11px] font-bold text-white transition duration-200 hover:bg-app-teal-dark"
+         className="flex-1 rounded-xl border border-app-border bg-app-bg py-2 text-[11px] font-bold text-app-navy transition duration-200 hover:border-app-teal hover:bg-app-teal-light hover:text-app-teal-dark"
         >
           ✏️ Edit
         </button>

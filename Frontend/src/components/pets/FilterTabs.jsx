@@ -57,6 +57,7 @@ export default function FilterTabs({ activeFilter, onChangeFilter, counts, viewM
         })}
       </div>
 
+      {/*{ commented the grid and list view icons}
       <div className="inline-flex w-fit rounded-full border border-app-border bg-app-card p-1">
         <button
           type="button"
@@ -80,7 +81,7 @@ export default function FilterTabs({ activeFilter, onChangeFilter, counts, viewM
         >
           <ListIcon />
         </button>
-      </div>
+      </div>*/}
     </div>
   );
 }

@@ -1,4 +1,5 @@
-﻿function statusClass(type) {
+﻿import{Link} from "react-router-dom"
+function statusClass(type) {
   if (type === "healthy") return "bg-app-green-light text-[#047857]";
   if (type === "warning") return "bg-app-yellow-light text-[#92400E]";
   return "bg-app-bg text-app-slate";
@@ -9,12 +10,12 @@ export default function MyPets({ pets }) {
     <section className="rounded-2xl border border-app-border bg-app-card shadow-sm">
       <div className="flex items-center justify-between px-5 pb-0 pt-5">
         <h2 className="text-base font-bold text-app-navy">My Pets</h2>
-        <button
-          type="button"
-          className="rounded-full border border-app-teal px-3 py-1 text-xs font-bold text-app-teal transition duration-200 hover:bg-app-teal hover:text-white"
-        >
-          Manage All
-        </button>
+       <Link
+  to="/pets"
+  className="rounded-full border border-app-teal px-3 py-1 text-xs font-bold text-app-teal transition duration-200 hover:bg-app-teal hover:text-white"
+>
+  Manage All
+</Link>
       </div>
       <div className="px-5 pb-5 pt-4">
         <div className="flex flex-wrap gap-3">
@@ -35,8 +36,8 @@ export default function MyPets({ pets }) {
                 )}
               </div>
               <p className="mt-2 text-xl font-bold text-app-navy">{pet.name}</p>
-              <p className="text-xs text-app-slate">{pet.breed} · {pet.age}</p>
-              <span className={["mt-2 inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold", statusClass(pet.statusType)].join(" ")}>
+              <p className="text-x1 font-semibold text-app-slate">{pet.breed} </p>
+              <span className={["mt-2 inline-flex rounded-full px-2.5 py-1 text-[15px] font-bold", statusClass(pet.statusType)].join(" ")}>
                 {pet.status}
               </span>
             </article>

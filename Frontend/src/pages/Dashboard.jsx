@@ -255,7 +255,7 @@ export default function Dashboard() {
       {
         icon: "\uD83D\uDCC5",
         value: String(appointments.length),
-        label: "Upcoming Appts",
+        label: "Upcoming Appointments",
         badge: appointments.length ? "From checkup dates" : "No upcoming",
         badgeTone: appointments.length ? "yellow" : "blue",
         iconBg: "bg-app-blue-light",

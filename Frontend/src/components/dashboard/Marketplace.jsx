@@ -1,14 +1,15 @@
+import { Link } from "react-router-dom";
 export default function Marketplace({ products }) {
   return (
     <section className="rounded-2xl border border-app-border bg-app-card shadow-sm">
       <div className="flex items-center justify-between px-5 pb-0 pt-5">
         <h3 className="text-base font-bold text-app-navy">Shop Products</h3>
-        <button
-          type="button"
+         <Link
+          to="/marketplace"
           className="rounded-full border border-app-teal px-3 py-1 text-xs font-bold text-app-teal transition duration-200 hover:bg-app-teal hover:text-white"
         >
-          Marketplace
-        </button>
+          See all
+        </Link>
       </div>
 
       <div className="px-5 pb-5 pt-4">

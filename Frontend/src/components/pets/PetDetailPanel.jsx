@@ -47,8 +47,8 @@ export default function PetDetailPanel({ pet, onClose, onEdit, onOpenMedical, on
               ) : (
                 <div className={["flex h-full items-center justify-center", pet.gradientClass].join(" ")}>📷</div>
               )}
-              <button type="button" onClick={onEdit} className="absolute left-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/85">✏️</button>
-              <button type="button" onClick={onClose} className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/85">✕</button>
+              <button type="button" onClick={onEdit} className="absolute left-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/85 hover:bg-slate-400">✏️</button>
+              <button type="button" onClick={onClose} className="absolute right-3 top-3 inline-flex h-9 w-9 items-center justify-center rounded-full bg-white/85  hover:bg-slate-400" >✕</button>
             </div>
 
             <div className="flex border-b border-app-border">
