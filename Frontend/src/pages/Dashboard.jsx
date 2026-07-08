@@ -337,6 +337,7 @@ export default function Dashboard() {
               </motion.div>
             </div>
 
+            {/*{These cards are not needed yet}
             <div className="space-y-5">
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.2 }}>
                 <HealthSummary health={healthSummary} />
@@ -344,7 +345,7 @@ export default function Dashboard() {
               <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.2 }}>
                 <QuickActions actions={quickActions} />
               </motion.div>
-            </div>
+            </div>*/}
           </div>
         </div>
       </main>

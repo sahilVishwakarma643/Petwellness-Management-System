@@ -243,14 +243,14 @@ function Register() {
   };
 
   const inputBase =
-    "w-full rounded-xl border-[1.5px] border-[#E2EBF0] bg-[#EBF4F8] px-4 py-3 text-[13px] text-[#1A2332] outline-none transition-all duration-200 placeholder:text-[#6B7A8D] focus:border-[#2DD4A0] focus:bg-white focus:shadow-[0_0_0_3px_rgba(45,212,160,0.12)]";
+    "w-full rounded-xl border-[1.5px] border-[#E2EBF0] bg-[#EBF4F8] px-4 py-3 text-base text-[#1A2332] outline-none transition-all duration-200 placeholder:text-[#6B7A8D] focus:border-[#2DD4A0] focus:bg-white focus:shadow-[0_0_0_3px_rgba(45,212,160,0.12)]";
   const iconInput = `${inputBase} pl-10`;
   const fieldClass = (value, withIcon = false) =>
     `${withIcon ? iconInput : inputBase} ${value ? "border-[#34D399]" : ""}`;
 
   return (
     <div
-      className="relative min-h-screen overflow-hidden px-4 py-6 text-[#1A2332] sm:px-6 sm:py-8"
+      className="fixed inset-0 overflow-x-hidden overflow-y-auto text-[#1A2332]"
       style={{
         background: "linear-gradient(135deg, #EBF4F8 0%, #D0F5EB 50%, #DAEAF8 100%)",
         fontFamily: '"Plus Jakarta Sans", sans-serif',
@@ -291,28 +291,28 @@ function Register() {
         style={{ background: "rgba(45, 212, 160, 0.05)", filter: "blur(40px)" }}
       />
 
-      <div className="relative z-10 flex min-h-screen items-center justify-center">
+      <div className="relative z-10 flex min-h-full w-full items-stretch justify-stretch px-4 py-4 sm:px-6 sm:py-6 lg:px-8 lg:py-8">
         <div
-          className="w-full max-w-[540px] overflow-hidden rounded-2xl border border-[#E2EBF0] bg-white shadow-[0_20px_60px_rgba(26,35,50,0.12),0_4px_16px_rgba(26,35,50,0.06)] sm:rounded-[24px]"
+          className="flex w-full min-h-[calc(100vh-2rem)] flex-col overflow-hidden rounded-[28px] border border-[#E2EBF0] bg-white shadow-[0_20px_60px_rgba(26,35,50,0.12),0_4px_16px_rgba(26,35,50,0.06)] sm:rounded-[32px]"
           style={{ animation: "cardEntrance 0.5s ease forwards" }}
         >
           <div
             className="border-b border-[#E2EBF0] px-5 py-6 text-center sm:px-8 sm:py-7"
-            style={{ background: "linear-gradient(135deg, #D0F5EB 0%, #DAEAF8 100%)" }}
+            style={{ background: "linear-gradient(135deg, #EBF4F8 0%, #D0F5EB 55%, #DAEAF8 100%)" }}
           >
             <div className="mb-3 flex items-center justify-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#2DD4A0] text-[22px] text-white">
                 🐾
               </div>
               <div className="text-left">
-                <p className="text-[20px] font-extrabold text-[#1A2332]">PetCare</p>
-                <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[#6B7A8D]">
+                <p className="text-[22px] font-extrabold text-[#1A2332]">PetCare</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#6B7A8D]">
                   Admin Hub
                 </p>
               </div>
             </div>
-            <h1 className="text-[22px] font-extrabold text-[#1A2332]">Create Your Account</h1>
-            <p className="mx-auto mt-2 max-w-md text-[13px] leading-6 text-[#6B7A8D]">
+            <h1 className="text-[24px] font-extrabold text-[#1A2332]">Create Your Account</h1>
+            <p className="mx-auto mt-2 max-w-md text-base leading-7 text-[#6B7A8D]">
               Join PetCare and manage your pets in one place
             </p>
           </div>
@@ -329,7 +329,7 @@ function Register() {
                 >
                   {otpVerified ? "✓" : "1"}
                 </div>
-                <p className="mt-2 text-center text-[11px] font-bold text-[#1BAF82]">OTP Verification</p>
+                <p className="mt-2 text-center text-sm font-bold text-[#1BAF82]">OTP Verification</p>
               </div>
               <div className={`mt-4 h-[2px] flex-1 rounded-full ${otpVerified ? "bg-[#2DD4A0]" : "bg-[#E2EBF0]"}`} />
               <div className="flex min-w-[96px] flex-col items-center">
@@ -342,7 +342,7 @@ function Register() {
                 >
                   2
                 </div>
-                <p className={`mt-2 text-center text-[11px] font-bold ${otpVerified ? "text-[#1BAF82]" : "text-[#6B7A8D]"}`}>
+                <p className={`mt-2 text-center text-sm font-bold ${otpVerified ? "text-[#1BAF82]" : "text-[#6B7A8D]"}`}>
                   Registration Details
                 </p>
               </div>
@@ -351,33 +351,33 @@ function Register() {
 
           <div className="px-5 pb-7 pt-6 sm:px-8">
             {error ? (
-              <p className="mb-4 rounded-xl border border-[#FECACA] bg-[#FFF8F8] px-4 py-3 text-sm text-[#F87171]">
+              <p className="mb-4 rounded-xl border border-[#FECACA] bg-[#FFF8F8] px-4 py-3 text-base text-[#F87171]">
                 {error}
               </p>
             ) : null}
             {success && !otpVerified ? (
-              <p className="mb-4 rounded-xl border border-[#BBF7D0] bg-[#F0FDF4] px-4 py-3 text-sm text-[#15803D]">
+              <p className="mb-4 rounded-xl border border-[#BBF7D0] bg-[#F0FDF4] px-4 py-3 text-base text-[#15803D]">
                 {success}
               </p>
             ) : null}
 
             <div className="mb-6">
-              <div className="mb-4 flex items-center gap-3 text-[15px] font-extrabold text-[#1A2332]">
+              <div className="mb-4 flex items-center gap-3 text-lg font-extrabold text-[#1A2332]">
                 <span className="h-[18px] w-[3px] rounded-full bg-[#2DD4A0]" />
                 <span>Step 1: OTP Verification</span>
               </div>
               <div className="space-y-4">
                 <div style={{ animation: "fadeUp 0.3s ease 0.1s both" }}>
-                  <label className="mb-1.5 block text-[11px] font-bold text-[#1A2332]">Email Address</label>
+                  <label className="mb-1.5 block text-sm font-bold text-[#1A2332]">Email Address</label>
                   <div className="flex flex-col gap-3 sm:flex-row">
                     <div className="relative flex-1">
-                      <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[15px] text-[#6B7A8D]">✉️</span>
+                      <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-base text-[#6B7A8D]">✉️</span>
                       <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className={fieldClass(email, true)} disabled={otpVerified} />
                     </div>
                     <button
                       type="button"
                       onClick={handleSendOtp}
-                      className="inline-flex min-w-[120px] items-center justify-center gap-2 rounded-[10px] bg-[#2DD4A0] px-5 py-3 text-[13px] font-bold text-white transition-all hover:bg-[#1BAF82] hover:shadow-[0_4px_12px_rgba(45,212,160,0.35)] disabled:cursor-not-allowed disabled:bg-[#A8E8D5] disabled:shadow-none"
+                      className="inline-flex min-w-[120px] items-center justify-center gap-2 rounded-[10px] bg-[#2DD4A0] px-5 py-3 text-base font-bold text-white transition-all hover:bg-[#1BAF82] hover:shadow-[0_4px_12px_rgba(45,212,160,0.35)] disabled:cursor-not-allowed disabled:bg-[#A8E8D5] disabled:shadow-none"
                       disabled={loadingAction === "sendOtp" || otpVerified}
                     >
                       {loadingAction === "sendOtp" ? (
@@ -394,16 +394,16 @@ function Register() {
 
                 {otpSent ? (
                   <div style={{ animation: "fadeUp 0.3s ease forwards" }}>
-                    <label className="mb-1.5 block text-[11px] font-bold text-[#1A2332]">Enter OTP</label>
+                    <label className="mb-1.5 block text-sm font-bold text-[#1A2332]">Enter OTP</label>
                     <div className="flex flex-col gap-3 sm:flex-row">
                       <div className="relative flex-1">
-                        <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[15px] text-[#6B7A8D]">🔐</span>
+                        <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-base text-[#6B7A8D]">🔐</span>
                         <input type="text" inputMode="numeric" maxLength={6} placeholder="6-digit OTP" value={otp} onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))} className={`${fieldClass(otp, true)} text-base font-bold tracking-[0.25em]`} disabled={!otpSent || otpVerified} />
                       </div>
                       <button
                         type="button"
                         onClick={handleVerifyOtp}
-                        className={`inline-flex min-w-[132px] items-center justify-center gap-2 rounded-[10px] px-5 py-3 text-[13px] font-bold text-white transition-all ${
+                        className={`inline-flex min-w-[132px] items-center justify-center gap-2 rounded-[10px] px-5 py-3 text-base font-bold text-white transition-all ${
                           !otpSent || otpVerified || loadingAction === "verifyOtp"
                             ? "cursor-not-allowed bg-[#E2EBF0] text-[#6B7A8D]"
                             : "bg-[#1E6FD9] hover:shadow-[0_4px_12px_rgba(30,111,217,0.25)]"
@@ -426,7 +426,7 @@ function Register() {
                 ) : null}
 
                 {otpVerified ? (
-                  <div className="rounded-[10px] border border-[#34D399] bg-[#D1FAE5] px-4 py-3 text-[13px] font-semibold text-[#065F46]" style={{ animation: "slideDown 0.25s ease forwards" }}>
+                  <div className="rounded-[10px] border border-[#34D399] bg-[#D1FAE5] px-4 py-3 text-base font-semibold text-[#065F46]" style={{ animation: "slideDown 0.25s ease forwards" }}>
                     ✓ Email verified successfully!
                   </div>
                 ) : null}
@@ -439,51 +439,46 @@ function Register() {
               className="space-y-5"
               style={otpVerified ? { animation: "slideInRight 0.35s ease forwards" } : undefined}
             >
-              <div className="mb-4 flex items-center gap-3 text-[15px] font-extrabold text-[#1A2332]">
+              <div className="mb-4 flex items-center gap-3 text-lg font-extrabold text-[#1A2332]">
                 <span className="h-[18px] w-[3px] rounded-full bg-[#2DD4A0]" />
                 <span>Step 2: Registration Details</span>
               </div>
 
               <section style={{ animation: "fadeUp 0.3s ease 0.05s both" }}>
                 <div className="mb-3 flex items-center gap-2">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#6B7A8D]">Personal Information</p>
+                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#6B7A8D]">Personal Information</p>
                   <div className="h-px flex-1 bg-[#E2EBF0]" />
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="relative">
-                    <label className="mb-1.5 flex items-center gap-1 text-[11px] font-bold text-[#1A2332]">Full Name <span className="text-[#F87171]">*</span></label>
-                    <span className="pointer-events-none absolute left-3 top-[38px] text-sm text-[#6B7A8D]">👤</span>
-                    <input name="fullName" placeholder="Your full name" value={form.fullName} onChange={handleFieldChange} className={fieldClass(form.fullName, true)} />
+                  <div>
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Full Name <span className="text-[#F87171]">*</span></label>
+                    <input name="fullName" placeholder="Your full name" value={form.fullName} onChange={handleFieldChange} className={fieldClass(form.fullName)} />
                   </div>
 
-                  <div className="relative">
-                    <label className="mb-1.5 flex items-center gap-1 text-[11px] font-bold text-[#1A2332]">Phone Number <span className="text-[#F87171]">*</span></label>
-                    <span className="pointer-events-none absolute left-3 top-[38px] text-sm text-[#6B7A8D]">📱</span>
-                    <input name="phoneNumber" type="tel" placeholder="Phone number" value={form.phoneNumber} onChange={handleFieldChange} className={fieldClass(form.phoneNumber, true)} />
+                  <div>
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Phone Number <span className="text-[#F87171]">*</span></label>
+                    <input name="phoneNumber" type="tel" placeholder="Phone number" value={form.phoneNumber} onChange={handleFieldChange} className={fieldClass(form.phoneNumber)} />
                   </div>
 
-                  <div className="relative">
-                    <label className="mb-1.5 flex items-center gap-1 text-[11px] font-bold text-[#1A2332]">Highest Qualification <span className="text-[#F87171]">*</span></label>
-                    <span className="pointer-events-none absolute left-3 top-[38px] text-sm text-[#6B7A8D]">🎓</span>
-                    <input name="highestQualification" placeholder="e.g. Bachelor of Science" value={form.highestQualification} onChange={handleFieldChange} className={fieldClass(form.highestQualification, true)} />
+                  <div>
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Highest Qualification <span className="text-[#F87171]">*</span></label>
+                    <input name="highestQualification" placeholder="e.g. Bachelor of Science" value={form.highestQualification} onChange={handleFieldChange} className={fieldClass(form.highestQualification)} />
                   </div>
 
-                  <div className="relative">
-                    <label className="mb-1.5 flex items-center gap-1 text-[11px] font-bold text-[#1A2332]">Occupation <span className="text-[#F87171]">*</span></label>
-                    <span className="pointer-events-none absolute left-3 top-[38px] text-sm text-[#6B7A8D]">💼</span>
-                    <input name="occupation" placeholder="e.g. Software Engineer" value={form.occupation} onChange={handleFieldChange} className={fieldClass(form.occupation, true)} />
+                  <div>
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Occupation <span className="text-[#F87171]">*</span></label>
+                    <input name="occupation" placeholder="e.g. Software Engineer" value={form.occupation} onChange={handleFieldChange} className={fieldClass(form.occupation)} />
                   </div>
 
-                  <div className="relative">
-                    <label className="mb-1.5 flex items-center gap-1 text-[11px] font-bold text-[#1A2332]">Date of Birth <span className="text-[#F87171]">*</span></label>
-                    <span className="pointer-events-none absolute left-3 top-[38px] text-sm text-[#6B7A8D]">🎂</span>
-                    <input name="dateOfBirth" type="date" max={maxDate} value={form.dateOfBirth} onChange={handleFieldChange} className={fieldClass(form.dateOfBirth, true)} />
-                    <p className="mt-1 text-[10px] text-[#6B7A8D]">Must be a past date</p>
+                  <div>
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Date of Birth <span className="text-[#F87171]">*</span></label>
+                    <input name="dateOfBirth" type="date" max={maxDate} value={form.dateOfBirth} onChange={handleFieldChange} className={fieldClass(form.dateOfBirth)} />
+                    <p className="mt-1 text-sm text-[#6B7A8D]">Must be a past date</p>
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="mb-1.5 flex items-center gap-1 text-[11px] font-bold text-[#1A2332]">Gender <span className="text-[#F87171]">*</span></label>
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Gender <span className="text-[#F87171]">*</span></label>
                     <div className="flex flex-wrap gap-2">
                       {["MALE", "FEMALE", "OTHER"].map((option) => {
                         const active = form.gender === option;
@@ -492,7 +487,7 @@ function Register() {
                         return (
                           <label
                             key={option}
-                            className={`flex cursor-pointer items-center gap-2 rounded-[10px] border-[1.5px] px-4 py-2 text-xs font-semibold transition-all ${
+                            className={`flex cursor-pointer items-center gap-2 rounded-[10px] border-[1.5px] px-4 py-2 text-sm font-semibold transition-all ${
                               active
                                 ? "border-[#2DD4A0] bg-[#2DD4A0] text-white"
                                 : "border-[#E2EBF0] bg-[#EBF4F8] text-[#6B7A8D] hover:border-[#2DD4A0] hover:bg-[#D0F5EB] hover:text-[#1BAF82]"
@@ -507,76 +502,69 @@ function Register() {
                     </div>
                   </div>
 
-                  <div className="relative">
-                    <label className="mb-1.5 flex items-center gap-2 text-[11px] font-bold text-[#1A2332]">
+                  <div>
+                    <label className="mb-1.5 flex items-center gap-2 text-base font-bold text-[#1A2332]">
                       Father&apos;s Name
-                      <span className="rounded-full bg-[#D0F5EB] px-2 py-0.5 text-[9px] font-bold text-[#1BAF82]">Optional</span>
+                      <span className="rounded-full bg-[#D0F5EB] px-2 py-0.5 text-xs font-bold text-[#1BAF82]">Optional</span>
                     </label>
-                    <span className="pointer-events-none absolute left-3 top-[38px] text-sm text-[#6B7A8D]">👨</span>
-                    <input name="fatherName" placeholder="Father Name (Optional)" value={form.fatherName} onChange={handleFieldChange} className={fieldClass(form.fatherName, true)} />
+                    <input name="fatherName" placeholder="Father Name (Optional)" value={form.fatherName} onChange={handleFieldChange} className={fieldClass(form.fatherName)} />
                   </div>
 
-                  <div className="relative">
-                    <label className="mb-1.5 flex items-center gap-2 text-[11px] font-bold text-[#1A2332]">
+                  <div>
+                    <label className="mb-1.5 flex items-center gap-2 text-base font-bold text-[#1A2332]">
                       Mother&apos;s Name
-                      <span className="rounded-full bg-[#D0F5EB] px-2 py-0.5 text-[9px] font-bold text-[#1BAF82]">Optional</span>
+                      <span className="rounded-full bg-[#D0F5EB] px-2 py-0.5 text-xs font-bold text-[#1BAF82]">Optional</span>
                     </label>
-                    <span className="pointer-events-none absolute left-3 top-[38px] text-sm text-[#6B7A8D]">👩</span>
-                    <input name="motherName" placeholder="Mother Name (Optional)" value={form.motherName} onChange={handleFieldChange} className={fieldClass(form.motherName, true)} />
+                    <input name="motherName" placeholder="Mother Name (Optional)" value={form.motherName} onChange={handleFieldChange} className={fieldClass(form.motherName)} />
                   </div>
                 </div>
               </section>
 
               <section style={{ animation: "fadeUp 0.3s ease 0.1s both" }}>
                 <div className="mb-3 flex items-center gap-2">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#6B7A8D]">Address Details</p>
+                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#6B7A8D]">Address Details</p>
                   <div className="h-px flex-1 bg-[#E2EBF0]" />
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  <div className="relative sm:col-span-2">
-                    <label className="mb-1.5 flex items-center gap-1 text-[11px] font-bold text-[#1A2332]">Street <span className="text-[#F87171]">*</span></label>
-                    <span className="pointer-events-none absolute left-3 top-[38px] text-sm text-[#6B7A8D]">🏠</span>
-                    <input name="street" placeholder="Street address" value={form.street} onChange={handleFieldChange} className={fieldClass(form.street, true)} />
+                  <div className="sm:col-span-2">
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Street <span className="text-[#F87171]">*</span></label>
+                    <input name="street" placeholder="Street address" value={form.street} onChange={handleFieldChange} className={fieldClass(form.street)} />
                   </div>
 
-                  <div className="relative">
-                    <label className="mb-1.5 flex items-center gap-1 text-[11px] font-bold text-[#1A2332]">City <span className="text-[#F87171]">*</span></label>
-                    <span className="pointer-events-none absolute left-3 top-[38px] text-sm text-[#6B7A8D]">🏙️</span>
-                    <input name="city" placeholder="City" value={form.city} onChange={handleFieldChange} className={fieldClass(form.city, true)} />
+                  <div>
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">City <span className="text-[#F87171]">*</span></label>
+                    <input name="city" placeholder="City" value={form.city} onChange={handleFieldChange} className={fieldClass(form.city)} />
                   </div>
 
-                  <div className="relative">
-                    <label className="mb-1.5 flex items-center gap-1 text-[11px] font-bold text-[#1A2332]">State <span className="text-[#F87171]">*</span></label>
-                    <span className="pointer-events-none absolute left-3 top-[38px] text-sm text-[#6B7A8D]">🗺️</span>
-                    <input name="state" placeholder="State" value={form.state} onChange={handleFieldChange} className={fieldClass(form.state, true)} />
+                  <div>
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">State <span className="text-[#F87171]">*</span></label>
+                    <input name="state" placeholder="State" value={form.state} onChange={handleFieldChange} className={fieldClass(form.state)} />
                   </div>
 
-                  <div className="relative">
-                    <label className="mb-1.5 flex items-center gap-1 text-[11px] font-bold text-[#1A2332]">Pincode <span className="text-[#F87171]">*</span></label>
-                    <span className="pointer-events-none absolute left-3 top-[38px] text-sm text-[#6B7A8D]">📌</span>
-                    <input name="pincode" placeholder="Pincode (6 digits)" value={form.pincode} onChange={handleFieldChange} className={fieldClass(form.pincode, true)} />
-                    <p className="mt-1 text-[10px] text-[#6B7A8D]">Exactly 6 digits</p>
+                  <div>
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Pincode <span className="text-[#F87171]">*</span></label>
+                    <input name="pincode" placeholder="Pincode (6 digits)" value={form.pincode} onChange={handleFieldChange} className={fieldClass(form.pincode)} />
+                    <p className="mt-1 text-sm text-[#6B7A8D]">Exactly 6 digits</p>
                   </div>
                 </div>
               </section>
 
               <section style={{ animation: "fadeUp 0.3s ease 0.15s both" }}>
                 <div className="mb-3 flex items-center gap-2">
-                  <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#6B7A8D]">Identity &amp; Documents</p>
+                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#6B7A8D]">Identity &amp; Documents</p>
                   <div className="h-px flex-1 bg-[#E2EBF0]" />
                 </div>
 
                 <div className="space-y-4">
-                  <div className="relative">
-                    <label className="mb-1.5 flex items-center gap-1 text-[11px] font-bold text-[#1A2332]">ID Proof Type <span className="text-[#F87171]">*</span></label>
-                    <span className="pointer-events-none absolute left-3 top-[38px] text-sm text-[#6B7A8D]">🪪</span>
-                    <input name="idProofType" placeholder="ID Proof Type" value={form.idProofType} onChange={handleFieldChange} className={fieldClass(form.idProofType, true)} />
+                  <div>
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">ID Proof Type <span className="text-[#F87171]">*</span></label>
+                    <input name="idProofType" placeholder="ID Proof Type" value={form.idProofType} onChange={handleFieldChange} className={fieldClass(form.idProofType)} />
                   </div>
 
                   <div>
-                    <label className="mb-1.5 flex items-center gap-1 text-[11px] font-bold text-[#1A2332]">Upload ID Proof <span className="text-[#F87171]">*</span></label>
-                    <p className="mb-2 text-[10px] text-[#6B7A8D]">PDF, JPG, PNG</p>
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Upload ID Proof <span className="text-[#F87171]">*</span></label>
+                    <p className="mb-2 text-sm text-[#6B7A8D]">PDF, JPG, PNG</p>
                     <label
                       className={`flex min-h-[90px] cursor-pointer items-center justify-center rounded-xl border-2 border-dashed px-4 py-4 transition-all ${
                         idProofFile
@@ -591,21 +579,21 @@ function Register() {
                             {idProofFile.type.startsWith("image/") ? "🖼️" : "📄"}
                           </div>
                           <div className="min-w-0 flex-1">
-                            <p className="truncate text-[12px] font-semibold text-[#1A2332]">{idProofFile.name}</p>
+                            <p className="truncate text-sm font-semibold text-[#1A2332]">{idProofFile.name}</p>
                           </div>
                         </div>
                       ) : (
                         <div className="text-center">
                           <div className="text-xl text-[#6B7A8D]">📎</div>
-                          <p className="mt-1 text-[12px] font-semibold text-[#1A2332]">Click to upload ID Proof</p>
-                          <p className="mt-1 text-[10px] text-[#6B7A8D]">PDF, JPG, PNG · Max 5MB</p>
+                          <p className="mt-1 text-sm font-semibold text-[#1A2332]">Click to upload ID Proof</p>
+                          <p className="mt-1 text-sm text-[#6B7A8D]">PDF, JPG, PNG · Max 5MB</p>
                         </div>
                       )}
                     </label>
                   </div>
 
                   <div>
-                    <label className="mb-1.5 flex items-center gap-1 text-[11px] font-bold text-[#1A2332]">Profile Photo <span className="text-[#F87171]">*</span></label>
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Profile Photo <span className="text-[#F87171]">*</span></label>
                     <div className="flex flex-col gap-4 rounded-xl border border-[#E2EBF0] bg-white p-4 sm:flex-row sm:items-start">
                       <label
                         className={`flex h-20 w-20 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 text-xl ${
@@ -623,13 +611,13 @@ function Register() {
                       </label>
 
                       <div className="flex-1">
-                        <p className="text-[13px] font-bold text-[#1A2332]">Upload your photo</p>
-                        <p className="mt-1 text-[10px] text-[#6B7A8D]">JPG, PNG, WebP · Max 5MB</p>
-                        <label className="mt-3 inline-flex cursor-pointer items-center rounded-full bg-[#D0F5EB] px-4 py-2 text-[11px] font-bold text-[#1BAF82] transition-all hover:bg-[#2DD4A0] hover:text-white">
+                        <p className="text-sm font-bold text-[#1A2332]">Upload your photo</p>
+                        <p className="mt-1 text-sm text-[#6B7A8D]">JPG, PNG, WebP · Max 5MB</p>
+                        <label className="mt-3 inline-flex cursor-pointer items-center rounded-full bg-[#D0F5EB] px-4 py-2 text-sm font-bold text-[#1BAF82] transition-all hover:bg-[#2DD4A0] hover:text-white">
                           📷 Choose Photo
                           <input type="file" onChange={(e) => setProfileImageFile(e.target.files?.[0] || null)} className="hidden" />
                         </label>
-                        {profileImageFile ? <p className="mt-2 text-[11px] text-[#6B7A8D]">{profileImageFile.name}</p> : null}
+                        {profileImageFile ? <p className="mt-2 text-sm text-[#6B7A8D]">{profileImageFile.name}</p> : null}
                       </div>
                     </div>
                   </div>
@@ -639,7 +627,7 @@ function Register() {
               <button
                 type="submit"
                 disabled={!canSubmit || loadingAction === "register"}
-                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl border-0 px-4 py-3 text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(45,212,160,0.4)] disabled:cursor-not-allowed disabled:transform-none disabled:bg-[#A8E8D5] disabled:shadow-none"
+                className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-xl border-0 px-4 py-3 text-base font-bold text-white transition-all hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(45,212,160,0.4)] disabled:cursor-not-allowed disabled:transform-none disabled:bg-[#A8E8D5] disabled:shadow-none"
                 style={{
                   background:
                     !canSubmit || loadingAction === "register"
@@ -658,7 +646,7 @@ function Register() {
               </button>
             </form>
 
-            <p className="mt-5 text-center text-[13px] text-[#6B7A8D]">
+            <p className="mt-5 text-center text-base text-[#6B7A8D]">
               Already have an account?{" "}
               <Link to="/login" className="font-bold text-[#2DD4A0] transition-colors hover:text-[#1BAF82]">
                 Sign In

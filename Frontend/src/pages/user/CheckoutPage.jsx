@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { Link, useNavigate } from "react-router-dom";
 import { checkout } from "../../api/services/cartService";
 import Sidebar from "../../components/dashboard/Sidebar";
 import TopBar from "../../components/dashboard/TopBar";
@@ -147,7 +148,7 @@ export default function CheckoutPage() {
 
           {isLoading ? (
             <div className="rounded-[20px] border border-[#E2EBF0] bg-white px-6 py-12 text-center shadow-[0_2px_8px_rgba(26,35,50,0.06)]">
-              <p className="text-sm font-semibold text-[#6B7A8D]">Loading checkout...</p>
+              <p className="text-base font-semibold text-[#6B7A8D]">Loading checkout...</p>
             </div>
           ) : (
             <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
@@ -155,14 +156,14 @@ export default function CheckoutPage() {
                 onSubmit={handleSubmit}
                 className="rounded-[20px] border border-[#E2EBF0] bg-white p-6 shadow-[0_2px_8px_rgba(26,35,50,0.06)]"
               >
-                <h2 className="text-[16px] font-extrabold text-[#1A2332]">Shipping Details</h2>
-                <p className="mt-2 text-xs text-[#6B7A8D]">Where should we deliver your order?</p>
+                <h2 className="text-lg font-extrabold text-[#1A2332]">Shipping Details</h2>
+                <p className="mt-2 text-base text-[#6B7A8D]">Where should we deliver your order?</p>
 
                 <div className="my-4 border-t border-[#E2EBF0]" />
 
                 <div className="space-y-5">
                   <div>
-                    <label className="mb-[5px] block text-[11px] font-bold text-[#1A2332]">Delivery Address *</label>
+                    <label className="mb-[5px] block text-base font-bold text-[#1A2332]">Delivery Address *</label>
                     <textarea
                       ref={addressRef}
                       rows={4}
@@ -172,21 +173,21 @@ export default function CheckoutPage() {
                       onBlur={() => setTouched((current) => ({ ...current, shippingAddress: true }))}
                       placeholder={"Enter your full delivery address including\nflat/house number, street, area, city..."}
                       className={[
-                        "w-full resize-y rounded-xl border px-[14px] py-[10px] text-[13px] text-[#1A2332] outline-none transition",
+                        "w-full resize-y rounded-xl border px-[14px] py-[10px] text-base text-[#1A2332] outline-none transition",
                         touched.shippingAddress && shippingError
                           ? "border-[#F87171] bg-[#FFF8F8] shadow-[0_0_0_3px_rgba(248,113,113,0.1)]"
                           : "border-[#E2EBF0] bg-[#EBF4F8] focus:border-[#2DD4A0] focus:bg-white focus:shadow-[0_0_0_3px_rgba(45,212,160,0.12)]",
                       ].join(" ")}
                     />
-                    <div className="mt-1 flex justify-end text-[10px] text-[#6B7A8D]">{shippingAddress.length}/500</div>
+                    <div className="mt-1 flex justify-end text-base text-[#6B7A8D]">{shippingAddress.length}/500</div>
                     {touched.shippingAddress && shippingError ? (
-                      <p className="mt-1 flex items-center gap-1 text-[11px] text-[#F87171]">⚠ {shippingError}</p>
+                      <p className="mt-1 flex items-center gap-1 text-base text-[#F87171]">⚠ {shippingError}</p>
                     ) : null}
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-[#1A2332]">Pincode *</label>
-                    <p className="mt-1 text-[10px] text-[#6B7A8D]">6-digit postal code</p>
+                    <label className="block text-base font-bold text-[#1A2332]">Pincode *</label>
+                    <p className="mt-1 text-base text-[#6B7A8D]">6-digit postal code</p>
                     <input
                       ref={pincodeRef}
                       type="text"
@@ -197,14 +198,14 @@ export default function CheckoutPage() {
                       onBlur={() => setTouched((current) => ({ ...current, pincode: true }))}
                       placeholder="e.g. 560001"
                       className={[
-                        "mt-2 w-full rounded-xl border px-[14px] py-[10px] text-[13px] text-[#1A2332] outline-none transition",
+                        "mt-2 w-full rounded-xl border px-[14px] py-[10px] text-base text-[#1A2332] outline-none transition",
                         touched.pincode && pincodeError
                           ? "border-[#F87171] bg-[#FFF8F8] shadow-[0_0_0_3px_rgba(248,113,113,0.1)]"
                           : "border-[#E2EBF0] bg-[#EBF4F8] focus:border-[#2DD4A0] focus:bg-white focus:shadow-[0_0_0_3px_rgba(45,212,160,0.12)]",
                       ].join(" ")}
                     />
                     {touched.pincode && pincodeError ? (
-                      <p className="mt-1 flex items-center gap-1 text-[11px] text-[#F87171]">⚠ {pincodeError}</p>
+                      <p className="mt-1 flex items-center gap-1 text-base text-[#F87171]">⚠ {pincodeError}</p>
                     ) : null}
                   </div>
                 </div>
@@ -213,25 +214,32 @@ export default function CheckoutPage() {
                   type="submit"
                   disabled={isPlacingOrder}
                   className={[
-                    "mt-5 inline-flex w-full items-center justify-center rounded-full px-4 py-3 text-sm font-bold text-white transition",
+                    "mt-5 inline-flex w-full items-center justify-center rounded-full px-4 py-3 text-base font-bold text-white transition",
                     isPlacingOrder
                       ? "cursor-not-allowed bg-[#A8E8D5]"
                       : "bg-[#2DD4A0] hover:bg-[#1BAF82] hover:shadow-[0_4px_14px_rgba(45,212,160,0.4)]",
                   ].join(" ")}
-                >
-                  {isPlacingOrder ? (
-                    <span className="flex items-center gap-2">
-                      <span className="inline-flex h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
-                      Placing Order...
+                  >
+                    {isPlacingOrder ? (
+                      <span className="flex items-center gap-2">
+                        <span className="inline-flex h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                        Placing Order...
                     </span>
                   ) : (
                     "Place Order"
                   )}
                 </button>
+
+                <Link
+                  to="/cart"
+                  className="mt-3 inline-flex w-full items-center justify-center rounded-full border border-[#E2EBF0] bg-white px-4 py-3 text-base font-bold text-[#1A2332] transition hover:border-[#2DD4A0] hover:bg-[#F0FCF8] hover:text-[#1BAF82]"
+                >
+                  Back
+                </Link>
               </form>
 
               <aside className="rounded-[20px] border border-[#E2EBF0] bg-white px-6 py-5 shadow-[0_2px_8px_rgba(26,35,50,0.06)] lg:sticky lg:top-24 lg:self-start">
-                <h2 className="text-[15px] font-extrabold text-[#1A2332]">Order Summary</h2>
+                <h2 className="text-lg font-extrabold text-[#1A2332]">Order Summary</h2>
 
                 <div className="mt-4">
                   {visibleItems.map((item) => (
@@ -240,14 +248,14 @@ export default function CheckoutPage() {
                       className="flex items-start justify-between border-b border-dashed border-[#E2EBF0] py-2"
                     >
                       <div className="pr-3">
-                        <p className="text-[13px] font-semibold text-[#1A2332]">{item.productName}</p>
-                        <p className="text-xs text-[#6B7A8D]">x{item.quantity}</p>
+                        <p className="text-base font-semibold text-[#1A2332]">{item.productName}</p>
+                        <p className="text-base text-[#6B7A8D]">x{item.quantity}</p>
                       </div>
-                      <p className="text-[13px] font-bold text-[#1A2332]">{formatMoney(item.price * item.quantity)}</p>
+                      <p className="text-base font-bold text-[#1A2332]">{formatMoney(item.price * item.quantity)}</p>
                     </div>
                   ))}
                   {remainingItems > 0 ? (
-                    <p className="py-2 text-xs italic text-[#6B7A8D]">+ {remainingItems} more items</p>
+                    <p className="py-2 text-base italic text-[#6B7A8D]">+ {remainingItems} more items</p>
                   ) : null}
                 </div>
 
@@ -255,23 +263,23 @@ export default function CheckoutPage() {
 
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-[13px] text-[#6B7A8D]">Subtotal</span>
-                    <span className="text-[13px] font-bold text-[#1A2332]">{formatMoney(cart.totalAmount)}</span>
+                    <span className="text-base text-[#6B7A8D]">Subtotal</span>
+                    <span className="text-base font-bold text-[#1A2332]">{formatMoney(cart.totalAmount)}</span>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-[13px] text-[#6B7A8D]">Shipping</span>
-                    <span className="text-xs italic text-[#6B7A8D]">Calculated after order</span>
+                    <span className="text-base text-[#6B7A8D]">Shipping</span>
+                    <span className="text-base italic text-[#6B7A8D]">Calculated after order</span>
                   </div>
                 </div>
 
                 <div className="my-3 border-t border-[#E2EBF0]" />
 
                 <div className="flex items-center justify-between">
-                  <span className="text-sm font-bold text-[#1A2332]">Total</span>
-                  <span className="text-[18px] font-extrabold text-[#1A2332]">{formatMoney(cart.totalAmount)}</span>
+                  <span className="text-base font-bold text-[#1A2332]">Total</span>
+                  <span className="text-lg font-extrabold text-[#1A2332]">{formatMoney(cart.totalAmount)}</span>
                 </div>
 
-                <p className="mt-2 flex items-center gap-1 text-[11px] text-[#34D399]">✓ Secure checkout</p>
+                <p className="mt-2 flex items-center gap-1 text-base text-[#34D399]">✓ Secure checkout</p>
               </aside>
             </div>
           )}
