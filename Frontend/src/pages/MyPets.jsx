@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import Sidebar from "../components/dashboard/Sidebar";
 import TopBar from "../components/dashboard/TopBar";
 import AddPetCard from "../components/pets/AddPetCard";
@@ -94,6 +95,7 @@ function buildUiPet(basePet, index) {
 }
 
 export default function MyPets() {
+  const location = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [pets, setPets] = useState([]);
@@ -116,6 +118,7 @@ export default function MyPets() {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [petToDelete, setPetToDelete] = useState(null);
   const [busyAction, setBusyAction] = useState(false);
+  const handledVaccinationRouteRef = useRef("");
 
   const ownerName = useMemo(() => getLoggedInName(), []);
   const owner = useMemo(
@@ -243,6 +246,26 @@ export default function MyPets() {
       }
     }
   };
+
+  useEffect(() => {
+    const routeState = location.state;
+    const targetName = typeof routeState?.openVaccinationPetName === "string" ? routeState.openVaccinationPetName.trim() : "";
+    const targetId = routeState?.openVaccinationPetId != null ? String(routeState.openVaccinationPetId) : "";
+    const routeKey = targetId || targetName;
+
+    if (!routeKey || !petsWithUi.length) return;
+    if (handledVaccinationRouteRef.current === routeKey) return;
+
+    const targetPet = petsWithUi.find((pet) => {
+      if (targetId) return String(pet.id) === targetId;
+      return String(pet.name || "").trim().toLowerCase() === targetName.toLowerCase();
+    });
+
+    if (!targetPet) return;
+
+    handledVaccinationRouteRef.current = routeKey;
+    openVaccinationModal(targetPet);
+  }, [location.state, openVaccinationModal, petsWithUi]);
 
   const openDetail = async (pet) => {
     setSelectedPet(pet);

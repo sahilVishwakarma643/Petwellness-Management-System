@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
@@ -17,8 +18,10 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     boolean existsByAppointmentDateAndStartTime(LocalDate appointmentDate, LocalTime startTime);
     boolean existsByAppointmentDateAndStartTimeAndIdNot(LocalDate appointmentDate, LocalTime startTime, Long id);
 
+    @EntityGraph(attributePaths = { "pet" })
     List<Appointment> findByStatus(AppointmentStatus status, Pageable pageable);
 
+    @EntityGraph(attributePaths = { "pet" })
     List<Appointment> findByUserIdAndStatus(Long userId, AppointmentStatus status, Pageable pageable);
 
     @Query("""
