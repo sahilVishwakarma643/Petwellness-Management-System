@@ -1,6 +1,9 @@
 package com.petcare.petwellness.DTO.Request;
 
+import com.petcare.petwellness.Enums.UserRole;
+
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 
 public class LoginRequestDto {
@@ -10,6 +13,8 @@ public class LoginRequestDto {
 
     @NotBlank(message = "Password is required")
     private String password;
+    @NotNull(message= "role is required")
+    private UserRole role;
 
     public LoginRequestDto() {
     }
@@ -28,5 +33,13 @@ public class LoginRequestDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 }

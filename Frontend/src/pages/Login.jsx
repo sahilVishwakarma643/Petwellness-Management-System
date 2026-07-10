@@ -67,7 +67,7 @@ function getNameFromToken(token) {
 function Login() {
   const navigate = useNavigate();
 
-  const [selectedRole, setSelectedRole] = useState("PET_OWNER");
+  const [selectedRole, setSelectedRole] = useState("OWNER");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -83,7 +83,15 @@ function Login() {
     setLoadingAction("login");
 
     try {
-      const response = await API.post("/auth/login", { email, password });
+      const requestedRole = selectedRole === "ADMIN" ? "ADMIN" : "OWNER";
+
+      const response = await API.post("/auth/login", {
+        email,
+        password,
+        role: requestedRole,
+      });
+
+
       const payload = response?.data || {};
       const token = payload?.token || "";
       const role = getRoleFromToken(token);
@@ -146,9 +154,9 @@ function Login() {
           <button
             type="button"
             role="tab"
-            aria-selected={selectedRole === "PET_OWNER"}
-            className={`role-toggle-option ${selectedRole === "PET_OWNER" ? "active" : ""}`}
-            onClick={() => setSelectedRole("PET_OWNER")}
+            aria-selected={selectedRole === "OWNER"}
+            className={`role-toggle-option ${selectedRole === "OWNER" ? "active" : ""}`}
+            onClick={() => setSelectedRole("OWNER")}
           >
             Pet Owner
           </button>

@@ -52,6 +52,7 @@ public class SecurityConfig {
                           ).permitAll()
                          .requestMatchers(HttpMethod.POST, "/api/auth/set-password").hasRole("OWNER")
                          .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                         .requestMatchers("/actuator/**").hasRole("ADMIN")
                          .requestMatchers(
                                  "/api/vaccinations/**",
                                  "/api/pets/**",

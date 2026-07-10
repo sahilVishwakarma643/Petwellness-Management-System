@@ -53,6 +53,10 @@ public LoginResponseDto login(LoginRequestDto request) {
         throw new UnauthorizedException("Invalid credentials");
     }
 
+    if (!request.getRole().equals(user.getRole())) {
+        throw new UnauthorizedException("Invalid role selection");
+}
+
     if (user.getStatus() == null || user.getStatus() == UserStatus.PENDING) {
         throw new BadRequestException("Admin approval pending");
     }
