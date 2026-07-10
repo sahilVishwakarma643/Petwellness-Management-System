@@ -84,3 +84,19 @@ logging:
     org.springframework.web.servlet.PageNotFound: DEBUG
     org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: TRACE
     com.petcare.petwellness: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+         - health
+         - info
+         - metrics
+         - mapping
+
+info:
+ app:
+  name: "Petwellness and Management System"
+  version: "1.0.0"
+  description: "Backend APIs for pet management and healthcare"
