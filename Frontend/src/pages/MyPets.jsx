@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import API from "../api/api";
 import Sidebar from "../components/dashboard/Sidebar";
 import TopBar from "../components/dashboard/TopBar";
 import AddPetCard from "../components/pets/AddPetCard";
@@ -74,8 +75,34 @@ function gradientClass(colorClass) {
 }
 
 function normalizeStatusFromVaccinations(vaccinations) {
-  if (vaccinations.some((item) => item.status === "overdue")) return { status: "attention", statusLabel: "⚠ Attention" };
-  if (vaccinations.some((item) => item.status === "soon" || item.status === "upcoming")) return { status: "vaccine-due", statusLabel: "⚠ Vaccine Due" };
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const getDaysUntil = (dateString) => {
+    if (!dateString) return null;
+    const date = new Date(dateString);
+    if (Number.isNaN(date.getTime())) return null;
+    date.setHours(0, 0, 0, 0);
+    return Math.ceil((date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+  };
+
+  const hasCompleted = vaccinations.some((item) => String(item.status || "").toUpperCase() === "COMPLETED" || item.status === "done");
+  if (hasCompleted && vaccinations.every((item) => String(item.status || "").toUpperCase() === "COMPLETED" || item.status === "done")) {
+    return { status: "healthy", statusLabel: "✓ Healthy" };
+  }
+
+  if (vaccinations.some((item) => {
+    const status = String(item.status || "").toUpperCase();
+    const daysUntil = getDaysUntil(item.date || item.vaccinationDate);
+    return status === "OVERDUE" || daysUntil != null && daysUntil < 0;
+  })) return { status: "attention", statusLabel: "⚠ Attention" };
+
+  if (vaccinations.some((item) => {
+    const status = String(item.status || "").toUpperCase();
+    const daysUntil = getDaysUntil(item.date || item.vaccinationDate);
+    return status === "UPCOMING" || status === "SOON" || daysUntil != null && daysUntil >= 0 && daysUntil <= 30;
+  })) return { status: "vaccine-due", statusLabel: "⚠ Vaccine Due" };
+
   return { status: "healthy", statusLabel: "✓ Healthy" };
 }
 
@@ -362,6 +389,20 @@ export default function MyPets() {
     }
   };
 
+  const handleCompleteVaccination = async (petId, vaccinationId) => {
+    try {
+      setBusyAction(true);
+      await API.post(`/vaccinations/${vaccinationId}/complete`);
+      await hydratePetDetails(petId);
+      return true;
+    } catch (error) {
+      alert(error?.response?.data?.message || "Failed to mark vaccination as completed.");
+      return false;
+    } finally {
+      setBusyAction(false);
+    }
+  };
+
   const handleDelete = async () => {
     if (!petToDelete) return;
     try {
@@ -512,6 +553,7 @@ export default function MyPets() {
         }}
         onSaveVaccination={handleSaveVaccination}
         onDeleteVaccination={deleteVaccination}
+        onCompleteVaccination={handleCompleteVaccination}
       />
 
       <PetDetailPanel

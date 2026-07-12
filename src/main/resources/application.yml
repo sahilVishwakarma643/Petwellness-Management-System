@@ -53,6 +53,10 @@ spring:
 file:
   upload-dir: ${user.home}/petwellness/uploads
 
+admin:
+  email:${ADMIN_EMAIL}
+  password:${ADMIN_PASSWORD}
+
 jwt:
   secret: ${JWT_SECRET:dev-jwt-secret-key-256-bits-minimum-length}
   expiration: 86400000

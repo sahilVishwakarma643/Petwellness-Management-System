@@ -32,12 +32,12 @@ function fieldState(hasError: boolean, touched: boolean, hasValue: boolean) {
 }
 
 function ErrorText({ message }: { message?: string }) {
-  return message ? <p className="mt-1 text-[11px] font-medium text-rose-600">⚠ {message}</p> : null;
+  return message ? <p className="mt-1 text-sm font-semibold text-rose-600">⚠ {message}</p> : null;
 }
 
 function Label({ children, optional }: { children: ReactNode; optional?: boolean }) {
   return (
-    <label className="mb-1 flex items-center gap-1 text-[11px] font-semibold text-slate-700">
+    <label className="mb-1 flex items-center gap-1 text-sm font-semibold text-slate-700">
       {children}
       {optional ? (
         <span className="rounded-full bg-teal-50 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-teal-700">
@@ -130,7 +130,7 @@ export default function PersonalSection({ formData, errors, touched, maxDate, on
             onBlur={() => onBlur("dateOfBirth")}
             className={`${inputBase} ${fieldState(!!errors.dateOfBirth, !!touched.dateOfBirth, !!formData.dateOfBirth)}`}
           />
-          <p className="mt-1 text-[10px] text-slate-500">Must be a past date</p>
+          <p className="mt-1 text-xs text-slate-500">Must be a past date</p>
           {touched.dateOfBirth ? <ErrorText message={errors.dateOfBirth} /> : null}
         </div>
 

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import API from "../../api/api";
 
 function SectionLabel({ text }) {
   return (
@@ -10,24 +11,37 @@ function SectionLabel({ text }) {
 }
 
 function statusBadge(status) {
-  if (status === "done") return "bg-app-green-light text-[#065F46]";
-  if (status === "soon") return "bg-app-yellow-light text-[#92400E]";
-  if (status === "overdue") return "bg-app-red-light text-app-red";
+  const normalized = String(status || "").toUpperCase();
+  if (normalized === "COMPLETED") return "bg-app-green-light text-[#065F46]";
+  if (normalized === "UPCOMING") return "bg-app-yellow-light text-[#92400E]";
+  if (normalized === "OVERDUE") return "bg-app-red-light text-app-red";
   return "bg-app-bg text-app-slate";
 }
 
 function statusLabel(status) {
-  if (status === "done") return "Done";
-  if (status === "soon") return "Due Soon";
-  if (status === "overdue") return "Overdue";
+  const normalized = String(status || "").toUpperCase();
+  if (normalized === "COMPLETED") return "Completed";
+  if (normalized === "UPCOMING") return "Upcoming";
+  if (normalized === "OVERDUE") return "Overdue";
   return "Scheduled";
 }
 
 function leftBorder(status) {
-  if (status === "done") return "border-l-app-green";
-  if (status === "soon") return "border-l-app-yellow";
-  if (status === "overdue") return "border-l-app-red";
+  const normalized = String(status || "").toUpperCase();
+  if (normalized === "COMPLETED") return "border-l-app-green";
+  if (normalized === "UPCOMING") return "border-l-app-yellow";
+  if (normalized === "OVERDUE") return "border-l-app-red";
   return "border-l-app-slate";
+}
+
+function daysUntil(dateString) {
+  if (!dateString) return null;
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return null;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  date.setHours(0, 0, 0, 0);
+  return Math.ceil((date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 }
 
 const initialForm = {
@@ -43,14 +57,29 @@ const initialForm = {
   prescriptionFile: null,
 };
 
-export default function VaccinationModal({ isOpen, pet, onClose, onSaveVaccination, onDeleteVaccination }) {
+export default function VaccinationModal({ isOpen, pet, onClose, onSaveVaccination, onDeleteVaccination, onCompleteVaccination }) {
   const [expanded, setExpanded] = useState(true);
   const [savedState, setSavedState] = useState(false);
   const [errors, setErrors] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
   const [form, setForm] = useState(initialForm);
+  const [vaccinations, setVaccinations] = useState([]);
+  const [markingCompletedId, setMarkingCompletedId] = useState(null);
   const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
+
+  const resolveStatus = (item) => {
+    const normalized = String(item?.status || "").toUpperCase();
+    if (normalized === "COMPLETED" || normalized === "DONE") return "COMPLETED";
+    if (normalized === "OVERDUE") return "OVERDUE";
+    if (normalized === "UPCOMING" || normalized === "SOON") return "UPCOMING";
+
+    const delta = daysUntil(item?.date);
+    if (delta == null) return normalized || "UPCOMING";
+    if (delta < 0) return "OVERDUE";
+    if (delta <= 30) return "UPCOMING";
+    return "UPCOMING";
+  };
 
   useEffect(() => {
     if (!isOpen || !pet) return;
@@ -60,13 +89,14 @@ export default function VaccinationModal({ isOpen, pet, onClose, onSaveVaccinati
     setIsEditing(false);
     setEditId(null);
     setForm(initialForm);
+    setVaccinations(Array.isArray(pet.vaccinations) ? pet.vaccinations : []);
   }, [isOpen, pet]);
 
   if (!isOpen || !pet) return null;
 
-  const doneCount = pet.vaccinations.filter((item) => item.status === "done").length;
-  const soonCount = pet.vaccinations.filter((item) => item.status === "soon" || item.status === "upcoming").length;
-  const overdueCount = pet.vaccinations.filter((item) => item.status === "overdue").length;
+  const doneCount = vaccinations.filter((item) => resolveStatus(item) === "COMPLETED").length;
+  const soonCount = vaccinations.filter((item) => resolveStatus(item) === "UPCOMING").length;
+  const overdueCount = vaccinations.filter((item) => resolveStatus(item) === "OVERDUE").length;
 
   const inputCls =
     "w-full rounded-xl border-[1.5px] border-app-border bg-app-bg px-3.5 py-2.5 text-[13px] text-app-navy outline-none transition focus:border-app-teal focus:bg-white focus:shadow-[0_0_0_3px_rgba(45,212,160,0.12)]";
@@ -88,6 +118,45 @@ export default function VaccinationModal({ isOpen, pet, onClose, onSaveVaccinati
       prescriptionName: "",
       prescriptionFile: null,
     });
+  };
+
+  const markAsCompleted = async (vaccinationId) => {
+    const currentItem = vaccinations.find((item) => item.id === vaccinationId);
+    const previousStatus = currentItem?.status;
+
+    try {
+      setMarkingCompletedId(vaccinationId);
+      setVaccinations((prev) =>
+        prev.map((item) => (item.id === vaccinationId ? { ...item, status: "COMPLETED" } : item))
+      );
+
+      if (typeof onCompleteVaccination === "function") {
+        const completed = await onCompleteVaccination(pet.id, vaccinationId);
+        if (completed === false) {
+          setVaccinations((prev) => prev.map((item) => (item.id === vaccinationId ? { ...item, status: previousStatus } : item)));
+        }
+      } else {
+        const response = await API.post(`/vaccinations/${vaccinationId}/complete`);
+        const updated = response?.data;
+
+        setVaccinations((prev) =>
+          prev.map((item) =>
+            item.id === vaccinationId
+              ? {
+                  ...item,
+                  ...updated,
+                  status: updated?.status || "COMPLETED",
+                }
+              : item
+          )
+        );
+      }
+    } catch (error) {
+      setVaccinations((prev) => prev.map((item) => (item.id === vaccinationId ? { ...item, status: previousStatus } : item)));
+      alert(error?.response?.data?.message || "Failed to mark vaccination as completed.");
+    } finally {
+      setMarkingCompletedId(null);
+    }
   };
 
   const save = async () => {
@@ -155,18 +224,35 @@ export default function VaccinationModal({ isOpen, pet, onClose, onSaveVaccinati
           </div>
 
           <SectionLabel text="Vaccination History" />
-          {pet.vaccinations?.length ? (
+          {vaccinations.length ? (
             <div className="space-y-2.5">
-              {pet.vaccinations.map((item) => (
-                <div key={item.id} className={["flex items-center gap-2 rounded-xl border border-app-border border-l-[3px] bg-white px-3.5 py-3", leftBorder(item.status)].join(" ")}>
+              {vaccinations.map((item) => (
+                <div key={item.id} className={["flex items-center gap-2 rounded-xl border border-app-border border-l-[3px] bg-white px-3.5 py-3", leftBorder(resolveStatus(item))].join(" ")}>
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-bold text-app-navy">{item.name}</p>
                     <p className="text-xs text-app-slate">
                       {item.date || "Not administered"}
-                      {item.nextDueDate ? ` - Next ${item.nextDueDate}` : ""}
+                      {daysUntil(item.date) != null && String(resolveStatus(item)) !== "COMPLETED"
+                        ? daysUntil(item.date) < 0
+                          ? " - Overdue"
+                          : ` - ${daysUntil(item.date)} day${daysUntil(item.date) === 1 ? "" : "s"} remaining`
+                        : item.nextDueDate
+                          ? ` - Next ${item.nextDueDate}`
+                          : ""}
                     </p>
                   </div>
-                  <span className={["rounded-full px-2 py-0.5 text-[10px] font-bold", statusBadge(item.status)].join(" ")}>{statusLabel(item.status)}</span>
+                  <span className={["rounded-full px-2 py-0.5 text-[10px] font-bold", statusBadge(resolveStatus(item))].join(" ")}>{statusLabel(resolveStatus(item))}</span>
+                  {String(resolveStatus(item)).toUpperCase() !== "COMPLETED" ? (
+                    <button
+                      type="button"
+                      onClick={() => markAsCompleted(item.id)}
+                      disabled={markingCompletedId === item.id}
+                      className="rounded-full border border-app-green px-3 py-1 text-xs font-bold text-app-green transition hover:bg-app-green-light disabled:cursor-not-allowed disabled:opacity-60"
+                      title="Mark as completed"
+                    >
+                      {markingCompletedId === item.id ? "Saving..." : "Done"}
+                    </button>
+                  ) : null}
                   <button type="button" onClick={() => startEdit(item)} className="rounded-full border border-app-border px-3 py-1 text-xs font-bold text-app-teal transition hover:bg-app-teal-light">Edit</button>
                   <button type="button" onClick={() => onDeleteVaccination(pet.id, item.id)} className="rounded-full border border-app-border px-3 py-1 text-xs font-bold text-app-red transition hover:bg-app-red-light">Delete</button>
                 </div>

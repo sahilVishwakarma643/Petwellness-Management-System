@@ -28,10 +28,12 @@ function decodeJwtPayload(token) {
 function getLoggedInName() {
   const payload = decodeJwtPayload(localStorage.getItem("token"));
   const candidates = [
+    localStorage.getItem("firstName"),
     localStorage.getItem("userName"),
+    payload?.firstName,
+    payload?.first_name,
     payload?.fullName,
     payload?.name,
-    payload?.firstName,
     payload?.username,
     payload?.sub,
     payload?.email,
@@ -41,7 +43,11 @@ function getLoggedInName() {
   if (!chosen) return user.name;
 
   const clean = chosen.trim();
-  return clean.includes("@") ? clean.split("@")[0] : clean;
+  if (clean.includes("@")) {
+    return clean.split("@")[0];
+  }
+
+  return clean.split(" ")[0];
 }
 
 function formatDate(dateText) {
@@ -257,8 +263,6 @@ export default function Dashboard() {
         <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-5">
           <TopBar
             userName={owner.name}
-            petsCount={summary.appointments.length}
-            dateText={dateText}
             onOpenSidebar={() => setSidebarOpen(true)}
             onViewProfile={() => navigate("/profile/me")}
           />

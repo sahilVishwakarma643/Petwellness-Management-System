@@ -14,18 +14,23 @@ function resolveMediaUrl(rawUrl) {
   return rawUrl;
 }
 
-function normalizeVaccinationStatus(rawStatus, nextDueDate) {
+function getDaysUntil(dateString) {
+  if (!dateString) return null;
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return null;
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  date.setHours(0, 0, 0, 0);
+  return Math.ceil((date.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
+}
+
+function normalizeVaccinationStatus(rawStatus, vaccinationDate) {
   const status = String(rawStatus || "").toUpperCase();
   if (status === "COMPLETED") return "done";
-  if (status === "OVERDUE") return "overdue";
-  if (status === "UPCOMING") {
-    if (!nextDueDate) return "upcoming";
-    const due = new Date(nextDueDate);
-    const now = new Date();
-    const diffDays = Math.ceil((due.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-    if (diffDays <= 30) return "soon";
-    return "upcoming";
-  }
+  const daysUntilVaccination = getDaysUntil(vaccinationDate);
+  if (daysUntilVaccination == null) return "upcoming";
+  if (daysUntilVaccination < 0) return "overdue";
+  if (daysUntilVaccination <= 30) return "soon";
   return "upcoming";
 }
 
@@ -83,7 +88,7 @@ export function mapVaccinationResponse(dto) {
     doctor: dto.veterinarianName || "",
     clinic: "",
     notes: dto.notes || "",
-    status: normalizeVaccinationStatus(dto.status, dto.nextDueDate),
+    status: normalizeVaccinationStatus(dto.status, dto.vaccinationDate),
     prescriptionFile: dto.prescriptionFile || "",
   };
 }

@@ -23,9 +23,9 @@ function statusLabel(status) {
 export default function PetDetailPanel({ pet, onClose, onEdit, onOpenMedical, onOpenVaccination, onDelete }) {
   const [tab, setTab] = useState("info");
 
-  const doneCount = pet?.vaccinations?.filter((item) => item.status === "done").length || 0;
-  const upcomingCount = pet?.vaccinations?.filter((item) => item.status === "soon" || item.status === "upcoming").length || 0;
-  const overdueCount = pet?.vaccinations?.filter((item) => item.status === "overdue").length || 0;
+  const doneCount = pet?.vaccinations?.filter((item) => ["done", "completed", "completed"].includes(String(item?.status || "").toLowerCase())).length || 0;
+  const upcomingCount = pet?.vaccinations?.filter((item) => ["soon", "upcoming"].includes(String(item?.status || "").toLowerCase())).length || 0;
+  const overdueCount = pet?.vaccinations?.filter((item) => String(item?.status || "").toLowerCase() === "overdue").length || 0;
 
   return (
     <>

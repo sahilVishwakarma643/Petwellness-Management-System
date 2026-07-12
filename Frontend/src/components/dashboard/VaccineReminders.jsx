@@ -36,7 +36,7 @@ export default function VaccineReminders({ vaccines }) {
           </article>
         ) : (
           vaccines.map((vax) => (
-            <article key={vax.id} className="flex items-center gap-3 rounded-xl border border-app-border bg-app-bg p-3">
+            <article key={vax.id}className="flex items-center gap-3 rounded-xl border border-app-border bg-app-bg p-3 transition duration-200 hover:bg-app-teal-light">
               <span className="text-xl">{vax.icon}</span>
               <div>
                 <p className="text-[13px] font-bold text-app-navy">

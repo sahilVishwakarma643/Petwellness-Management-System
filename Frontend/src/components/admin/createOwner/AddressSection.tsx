@@ -20,12 +20,12 @@ function fieldState(hasError: boolean, touched: boolean, hasValue: boolean) {
 }
 
 function ErrorText({ message }: { message?: string }) {
-  return message ? <p className="mt-1 text-[11px] font-medium text-rose-600">⚠ {message}</p> : null;
+  return message ? <p className="mt-1 text-sm font-semibold text-rose-600">⚠ {message}</p> : null;
 }
 
 function Label({ children }: { children: ReactNode }) {
   return (
-    <label className="mb-1 flex items-center gap-1 text-[11px] font-semibold text-slate-700">
+    <label className="mb-1 flex items-center gap-1 text-sm font-semibold text-slate-700">
       {children}
       <span className="text-sm text-rose-500">*</span>
     </label>
@@ -109,7 +109,7 @@ export default function AddressSection({ formData, errors, touched, onBlur, onCh
               className={`${iconInput} ${fieldState(!!errors.pincode, !!touched.pincode, !!formData.pincode.trim())}`}
             />
           </div>
-          <p className="mt-1 text-[10px] text-slate-500">Exactly 6 digits</p>
+          <p className="mt-1 text-xs text-slate-500">Exactly 6 digits</p>
           {touched.pincode ? <ErrorText message={errors.pincode} /> : null}
         </div>
       </div>

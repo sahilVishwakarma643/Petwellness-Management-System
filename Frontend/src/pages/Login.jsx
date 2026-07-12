@@ -58,10 +58,35 @@ function getNameFromToken(token) {
     if (!raw) return "";
 
     const clean = raw.trim();
-    return clean.includes("@") ? clean.split("@")[0] : clean;
+    return clean.includes("@") ? clean.split("@")[0] : clean.split(" ")[0];
   } catch {
     return "";
   }
+}
+
+function getFirstNameFromPayload(payload, fallbackEmail = "") {
+  const candidates = [
+    payload?.firstName,
+    payload?.first_name,
+    payload?.user?.firstName,
+    payload?.user?.first_name,
+    payload?.fullName,
+    payload?.name,
+    payload?.user?.fullName,
+    payload?.user?.name,
+  ];
+
+  const raw = candidates.find((value) => typeof value === "string" && value.trim());
+  if (!raw) {
+    return fallbackEmail ? fallbackEmail.split("@")[0] : "";
+  }
+
+  const clean = raw.trim();
+  if (clean.includes("@")) {
+    return clean.split("@")[0];
+  }
+
+  return clean.split(" ")[0];
 }
 
 function Login() {
@@ -96,12 +121,18 @@ function Login() {
       const token = payload?.token || "";
       const role = getRoleFromToken(token);
       const tokenName = getNameFromToken(token);
+      const firstName = getFirstNameFromPayload(payload, email);
 
       if (token) {
         localStorage.setItem("token", token);
       }
+      if (firstName) {
+        localStorage.setItem("firstName", firstName);
+      }
       if (tokenName) {
         localStorage.setItem("userName", tokenName);
+      } else if (firstName) {
+        localStorage.setItem("userName", firstName);
       } else if (email) {
         localStorage.setItem("userName", email.split("@")[0]);
       }

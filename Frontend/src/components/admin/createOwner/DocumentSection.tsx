@@ -21,7 +21,7 @@ function fieldState(hasError: boolean, touched: boolean, hasValue: boolean) {
 }
 
 function ErrorText({ message }: { message?: string }) {
-  return message ? <p className="mt-1 text-[11px] font-medium text-rose-600">⚠ {message}</p> : null;
+  return message ? <p className="mt-1 text-sm font-semibold text-rose-600">⚠ {message}</p> : null;
 }
 
 export default function DocumentSection({
@@ -55,7 +55,7 @@ export default function DocumentSection({
 
       <div className="space-y-5 px-5 py-5">
         <div data-error="idProofType">
-          <label className="mb-1 flex items-center gap-1 text-[11px] font-semibold text-slate-700">
+          <label className="mb-1 flex items-center gap-1 text-sm font-semibold text-slate-700">
             ID Proof Type
             <span className="text-sm text-rose-500">*</span>
           </label>
@@ -82,8 +82,8 @@ export default function DocumentSection({
         </div>
 
         <div data-error="idProof">
-          <p className="text-[11px] font-semibold text-slate-700">Upload ID Proof <span className="text-sm text-rose-500">*</span></p>
-          <p className="mt-0.5 text-[10px] text-slate-500">PDF, JPG, PNG accepted</p>
+          <p className="text-sm font-semibold text-slate-700">Upload ID Proof <span className="text-sm text-rose-500">*</span></p>
+          <p className="mt-0.5 text-xs text-slate-500">PDF, JPG, PNG accepted</p>
           <label
             onDragOver={(event) => {
               event.preventDefault();
@@ -145,8 +145,8 @@ export default function DocumentSection({
         </div>
 
         <div data-error="profileImage">
-          <p className="text-[11px] font-semibold text-slate-700">Profile Photo <span className="text-sm text-rose-500">*</span></p>
-          <p className="mt-0.5 text-[10px] text-slate-500">This will be the owner&apos;s avatar</p>
+          <p className="text-sm font-semibold text-slate-700">Profile Photo <span className="text-sm text-rose-500">*</span></p>
+          <p className="mt-0.5 text-xs text-slate-500">This will be the owner&apos;s avatar</p>
           <div className="mt-3 flex flex-col gap-4 sm:flex-row sm:items-center">
             <label className="group relative flex h-24 w-24 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-dashed border-teal-300 bg-teal-50 text-3xl text-teal-700">
               <input
