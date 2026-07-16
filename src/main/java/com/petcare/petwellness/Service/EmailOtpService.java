@@ -9,6 +9,7 @@ public interface EmailOtpService {
 
     SendOtpResponseDto sendOtp(SendOtpRequestDto request);
     VerifyOtpResponseDto verifyOtp(VerifyOtpRequestDto request);
+    void validateOtp(String email,String otp);
 }
 
 
