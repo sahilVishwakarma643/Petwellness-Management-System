@@ -5,7 +5,6 @@ import com.petcare.petwellness.DTO.Request.LoginRequestDto;
 import com.petcare.petwellness.DTO.Request.SendOtpRequestDto;
 import com.petcare.petwellness.DTO.Request.SetNewPasswordRequestDto;
 import com.petcare.petwellness.DTO.Response.LoginResponseDto;
-import com.petcare.petwellness.Domain.Entity.EmailOtp;
 import com.petcare.petwellness.Domain.Entity.User;
 import com.petcare.petwellness.Enums.UserStatus;
 import com.petcare.petwellness.Exceptions.CustomException.BadRequestException;
@@ -20,7 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 
 @Service
 public class LoginServiceImp implements LoginService {
@@ -109,24 +107,28 @@ public void sendForgotPasswordOtp(SendOtpRequestDto request) {
 @Override
 @Transactional
 public void resetForgotPassword(ForgotPasswordResetRequestDto request) {
+
     User user = userRepository.findByEmail(request.getEmail())
-            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+            .orElseThrow(() ->
+                    new ResourceNotFoundException("User not found")
+            );
 
     validateForgotPasswordEligibility(user);
 
-    EmailOtp emailOtp = emailOtpRepository.findByEmail(request.getEmail())
-            .orElseThrow(() -> new ResourceNotFoundException("OTP not requested for this email"));
+    // Centralized OTP validation:
+    // expiry + failed-attempt limit + OTP comparison
+    emailOtpService.validateOtp(
+            request.getEmail(),
+            request.getOtp()
+    );
 
-    if (emailOtp.getExpiryTime().isBefore(LocalDateTime.now())) {
-        throw new BadRequestException("OTP has expired");
-    }
+    user.setPassword(
+            passwordEncoder.encode(request.getNewPassword())
+    );
 
-    if (!request.getOtp().equals(emailOtp.getOtp())) {
-        throw new BadRequestException("Invalid OTP");
-    }
-
-    user.setPassword(passwordEncoder.encode(request.getNewPassword()));
     userRepository.save(user);
+
+    // Password-reset OTP is consumed completely after successful use.
     emailOtpRepository.deleteByEmail(request.getEmail());
 }
 
