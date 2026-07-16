@@ -21,7 +21,6 @@ import com.petcare.petwellness.Domain.Entity.OrderItem;
 import com.petcare.petwellness.Domain.Entity.Product;
 import com.petcare.petwellness.Domain.Entity.Vaccination;
 import com.petcare.petwellness.Enums.AppointmentStatus;
-import com.petcare.petwellness.Enums.OrderStatus;
 import com.petcare.petwellness.Enums.ProductStatus;
 import com.petcare.petwellness.Enums.VaccinationStatus;
 import com.petcare.petwellness.Repository.AppointmentRepository;

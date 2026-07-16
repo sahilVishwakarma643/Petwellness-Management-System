@@ -17,6 +17,7 @@ import com.petcare.petwellness.Enums.AppointmentStatus;
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
     boolean existsByAppointmentDateAndStartTime(LocalDate appointmentDate, LocalTime startTime);
     boolean existsByAppointmentDateAndStartTimeAndIdNot(LocalDate appointmentDate, LocalTime startTime, Long id);
+    List<Appointment> findByPetId(Long petId);
 
     @EntityGraph(attributePaths = { "pet" })
     List<Appointment> findByStatus(AppointmentStatus status, Pageable pageable);

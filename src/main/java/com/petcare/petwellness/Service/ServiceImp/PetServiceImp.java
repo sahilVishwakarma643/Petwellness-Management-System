@@ -3,24 +3,30 @@ package com.petcare.petwellness.Service.ServiceImp;
 import com.petcare.petwellness.DTO.Request.PetRequestDto;
 import com.petcare.petwellness.DTO.Request.PetUpdateRequestDto;
 import com.petcare.petwellness.DTO.Response.PetResponseDto;
+import com.petcare.petwellness.Domain.Entity.Appointment;
 import com.petcare.petwellness.Domain.Entity.MedicalHistory;
 import com.petcare.petwellness.Domain.Entity.Pet;
 import com.petcare.petwellness.Domain.Entity.User;
 import com.petcare.petwellness.Domain.Entity.Vaccination;
+import com.petcare.petwellness.Enums.AppointmentStatus;
 import com.petcare.petwellness.Exceptions.CustomException.BadRequestException;
 import com.petcare.petwellness.Exceptions.CustomException.PetLimitExceededException;
 import com.petcare.petwellness.Exceptions.CustomException.ResourceNotFoundException;
 import com.petcare.petwellness.Exceptions.CustomException.UnauthorizedException;
+import com.petcare.petwellness.Repository.AppointmentRepository;
 import com.petcare.petwellness.Repository.MedicalHistoryRepository;
 import com.petcare.petwellness.Repository.PetRepository;
 import com.petcare.petwellness.Repository.UserRepository;
 import com.petcare.petwellness.Repository.VaccinationRepository;
+import com.petcare.petwellness.Service.AppointmentService;
 import com.petcare.petwellness.Service.PetService;
 import com.petcare.petwellness.Util.FileStorageUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Value;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -47,17 +53,26 @@ public class PetServiceImp implements PetService {
     private final UserRepository userRepository;
     private final MedicalHistoryRepository medicalHistoryRepository;
     private final VaccinationRepository vaccinationRepository;
+    private final AppointmentRepository appointmentRepository;
+    private final AppointmentService appointmentService;
     private final FileStorageUtil fileStorageUtil;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public PetServiceImp(PetRepository petRepository,
             UserRepository userRepository,
             MedicalHistoryRepository medicalHistoryRepository,
             VaccinationRepository vaccinationRepository,
+            AppointmentRepository appointmentRepository,
+            AppointmentService appointmentService,
             FileStorageUtil fileStorageUtil) {
         this.petRepository = petRepository;
         this.userRepository = userRepository;
         this.medicalHistoryRepository = medicalHistoryRepository;
         this.vaccinationRepository = vaccinationRepository;
+        this.appointmentRepository = appointmentRepository;
+        this.appointmentService = appointmentService;
         this.fileStorageUtil = fileStorageUtil;
     }
 
@@ -151,6 +166,16 @@ public class PetServiceImp implements PetService {
     @Transactional
     public String deletePet(Long petId, Long userId) {
         Pet pet = getOwnedPetOrThrow(petId, userId);
+
+        List<Appointment> appointments = appointmentRepository.findByPetId(petId);
+        for (Appointment appointment : appointments) {
+            Long bookedUserId = appointment.getUser() != null ? appointment.getUser().getId() : null;
+            if (bookedUserId == null) {
+                throw new BadRequestException("Cannot cancel appointment because booking user is missing");
+            }
+            appointmentService.cancelAppointment(appointment.getId(), bookedUserId);
+        }
+        appointmentRepository.flush();
 
         List<MedicalHistory> medicalHistories = medicalHistoryRepository.findByPetId(petId);
         for (MedicalHistory history : medicalHistories) {

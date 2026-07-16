@@ -208,13 +208,18 @@ public class AppointmentServiceImp implements AppointmentService {
     }
 
     @Override
-    @Transactional
-    public String deleteAppointment(Long appointmentId) {
-        Appointment appointment = appointmentRepository.findById(appointmentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Appointment not found"));
-        appointmentRepository.delete(appointment);
-        return "Appointment deleted successfully";
+@Transactional
+public String deleteAppointment(Long appointmentId) {
+    Appointment appointment = appointmentRepository.findById(appointmentId)
+            .orElseThrow(() -> new ResourceNotFoundException("Appointment not found"));
+
+    if (appointment.getStatus() == AppointmentStatus.BOOKED) {
+        throw new BadRequestException("Cannot delete a booked slot");
     }
+
+    appointmentRepository.delete(appointment);
+    return "Appointment deleted successfully";
+}
 
     @Override
     @Transactional

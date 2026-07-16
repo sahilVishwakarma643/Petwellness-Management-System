@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
 
-
 @Entity
 @Table(
         name = "email_otp",
@@ -18,27 +17,23 @@ public class EmailOtp {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    
     @Column(nullable = false)
     private String email;
 
-    
     @Column(nullable = false, length = 6)
     private String otp;
 
-    
     @Column(name = "expiry_time", nullable = false)
     private LocalDateTime expiryTime;
 
-    
     @Column(nullable = false)
     private boolean verified;
 
+    @Column(name = "failed_attempts", nullable = false)
+    private int failedAttempts = 0;
 
     public EmailOtp() {
     }
-
-    
 
     public Long getId() {
         return id;
@@ -74,5 +69,21 @@ public class EmailOtp {
 
     public void setVerified(boolean verified) {
         this.verified = verified;
+    }
+
+    public int getFailedAttempts() {
+        return failedAttempts;
+    }
+
+    public void setFailedAttempts(int failedAttempts) {
+        this.failedAttempts = failedAttempts;
+    }
+
+    public void incrementFailedAttempts() {
+        this.failedAttempts++;
+    }
+
+    public void resetFailedAttempts() {
+        this.failedAttempts = 0;
     }
 }

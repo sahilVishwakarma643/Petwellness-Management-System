@@ -27,4 +27,5 @@ public interface AppointmentService {
     AppointmentResponseDto bookAppointment(Long appointmentId, Long petId, Long userId);
 
     AppointmentResponseDto cancelAppointment(Long appointmentId, Long userId);
+
 }
