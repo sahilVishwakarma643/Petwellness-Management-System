@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getMyAppointments } from "../../api/services/appointmentService";
+import { cancelAppointment, getMyAppointments } from "../../api/services/appointmentService";
 import Sidebar from "../../components/dashboard/Sidebar";
 import TopBar from "../../components/dashboard/TopBar";
 import { useToast } from "../../components/shared/Toast";
@@ -48,6 +48,7 @@ const TYPE_BADGES = {
 const STATUS_BADGES = {
   AVAILABLE: "bg-[#D1FAE5] text-[#065F46]",
   BOOKED: "bg-[#FEF3C7] text-[#92400E]",
+  CANCELLED: "bg-[#FEE2E2] text-[#B91C1C]",
 };
 
 function SkeletonCard() {
@@ -85,6 +86,20 @@ export default function MyAppointmentsPage() {
     ],
     []
   );
+
+  const handleCancelAppointment = async (appointmentId) => {
+    try {
+      await cancelAppointment(appointmentId);
+      setAppointments((prev) =>
+        prev.map((appointment) =>
+          appointment.id === appointmentId ? { ...appointment, status: "CANCELLED" } : appointment
+        )
+      );
+      showToast("Appointment cancelled successfully", "success");
+    } catch (error) {
+      showToast(error?.response?.data?.message || "Unable to cancel appointment", "error");
+    }
+  };
 
   useEffect(() => {
     let active = true;
@@ -172,7 +187,18 @@ export default function MyAppointmentsPage() {
                       <span className={`rounded-full px-3 py-1 text-[11px] font-bold ${STATUS_BADGES[appointment.status] || STATUS_BADGES.BOOKED}`}>
                         {appointment.status}
                       </span>
-                      <span className="text-[10px] text-[#6B7A8D]">Booked on {formatDateTime(appointment.createdAt)}</span>
+                      <div className="flex items-center gap-2">
+                        {appointment.status === "BOOKED" && (
+                          <button
+                            type="button"
+                            onClick={() => handleCancelAppointment(appointment.id)}
+                            className="rounded-full bg-[#EF4444] px-3 py-1 text-[11px] font-bold text-white transition hover:bg-[#DC2626]"
+                          >
+                            Cancel
+                          </button>
+                        )}
+                        <span className="text-[10px] text-[#6B7A8D]">Booked on {formatDateTime(appointment.createdAt)}</span>
+                      </div>
                     </div>
                   </div>
                 </article>

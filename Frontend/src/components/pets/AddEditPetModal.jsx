@@ -39,6 +39,7 @@ export default function AddEditPetModal({ isOpen, editingPet, petsCount, onClose
   const [fileName, setFileName] = useState("");
   const [fileObj, setFileObj] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
   const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
 
@@ -98,10 +99,16 @@ export default function AddEditPetModal({ isOpen, editingPet, petsCount, onClose
     return Object.keys(next).length === 0;
   };
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault();
     if (!validate()) return;
-    onSave(form, previewUrl, fileObj);
+
+    setIsSaving(true);
+    try {
+      await onSave(form, previewUrl, fileObj);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (
@@ -119,7 +126,7 @@ export default function AddEditPetModal({ isOpen, editingPet, petsCount, onClose
             </div>
             <div className="flex items-center gap-2">
               {!editingPet ? <span className="rounded-full bg-app-teal-light px-3 py-1 text-[11px] font-bold text-app-teal-dark">{petsCount}/5 pets</span> : null}
-              <button type="button" onClick={onClose} className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-app-bg text-lg text-app-slate transition hover:bg-app-red-light">
+              <button type="button" onClick={onClose} disabled={isSaving} className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-app-bg text-lg text-app-slate transition hover:bg-app-red-light disabled:cursor-not-allowed disabled:opacity-60">
                 ✕
               </button>
             </div>
@@ -217,11 +224,11 @@ export default function AddEditPetModal({ isOpen, editingPet, petsCount, onClose
         </div>
 
         <div className="sticky bottom-0 z-10 flex gap-2 border-t border-app-border bg-white px-6 py-4">
-          <button type="button" onClick={onClose} className="flex-1 rounded-full border border-app-border bg-white px-4 py-2 text-sm font-bold text-app-slate transition hover:border-app-slate">
+          <button type="button" onClick={onClose} disabled={isSaving} className="flex-1 rounded-full border border-app-border bg-white px-4 py-2 text-sm font-bold text-app-slate transition hover:border-app-slate disabled:cursor-not-allowed disabled:opacity-60">
             Cancel
           </button>
-          <button type="submit" className="flex-[2] rounded-full bg-app-teal px-4 py-2 text-sm font-bold text-white transition hover:bg-app-teal-dark hover:shadow-[0_4px_14px_rgba(45,212,160,0.4)]">
-            🐾 Save Pet
+          <button type="submit" disabled={isSaving} className="flex-[2] rounded-full bg-app-teal px-4 py-2 text-sm font-bold text-white transition hover:bg-app-teal-dark hover:shadow-[0_4px_14px_rgba(45,212,160,0.4)] disabled:cursor-not-allowed disabled:bg-app-teal/70">
+            {isSaving ? "Saving Pet..." : "🐾 Save Pet"}
           </button>
         </div>
       </form>

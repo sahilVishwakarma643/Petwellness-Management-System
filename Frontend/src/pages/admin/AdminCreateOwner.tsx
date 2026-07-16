@@ -308,11 +308,8 @@ export default function AdminCreateOwner() {
       />
 
       <div
-        className={`min-h-screen pb-28 transition-[margin] duration-300 ${
-          sidebarCollapsed ? "lg:ml-[92px]" : "lg:ml-[270px]"
-        }`}
+        className={`min-h-screen w-full pb-28 overflow-x-hidden transition-[margin-left,width] duration-300 ${sidebarCollapsed ? "md:ml-[92px] md:w-[calc(100%-92px)]" : "md:ml-[270px] md:w-[calc(100%-270px)]"}`}
       >
-        <TopNavbar onOpenSidebar={() => setMobileSidebarOpen(true)} />
 
         <main className="space-y-5 px-4 py-5 sm:px-6">
           <div className="flex flex-wrap items-center gap-2 text-sm">
@@ -539,3 +536,5 @@ export default function AdminCreateOwner() {
     </div>
   );
 }
+
+

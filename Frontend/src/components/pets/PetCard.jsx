@@ -28,6 +28,7 @@ export default function PetCard({
   onDownloadReport,
 }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isDownloadingReport, setIsDownloadingReport] = useState(false);
   const isList = viewMode === "list";
   const hasImage = Boolean(pet.imageUrl);
   const weightText = pet.weight ? `${pet.weight} kg` : "-";
@@ -172,13 +173,27 @@ export default function PetCard({
       <div className="px-[18px] pb-3">
         <button
           type="button"
-          onClick={(event) => {
+          onClick={async (event) => {
             event.stopPropagation();
-            onDownloadReport();
+            if (isDownloadingReport) return;
+            setIsDownloadingReport(true);
+            try {
+              await onDownloadReport();
+            } finally {
+              setIsDownloadingReport(false);
+            }
           }}
-          className="w-full rounded-xl border border-app-blue bg-app-blue-light py-2 text-[11px] font-bold text-app-blue transition duration-200 hover:bg-app-blue hover:text-white"
+          disabled={isDownloadingReport}
+          className="flex w-full items-center justify-center gap-2 rounded-xl border border-app-blue bg-app-blue-light py-2 text-[11px] font-bold text-app-blue transition duration-200 hover:bg-app-blue hover:text-white disabled:cursor-not-allowed disabled:opacity-70"
         >
-          ⬇️ Download Health Report
+          {isDownloadingReport ? (
+            <>
+              <span className="inline-flex h-3.5 w-3.5 animate-spin rounded-full border-2 border-app-blue border-t-transparent" />
+              Preparing Report...
+            </>
+          ) : (
+            <>⬇️ Download Health Report</>
+          )}
         </button>
       </div>
     </article>

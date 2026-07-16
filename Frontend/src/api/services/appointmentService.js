@@ -29,3 +29,8 @@ export async function getMyAppointments() {
   const response = await API.get("/appointments/my");
   return Array.isArray(response.data) ? response.data.map(normalizeAppointment) : [];
 }
+
+export async function cancelAppointment(appointmentId) {
+  const response = await API.post(`/appointments/${appointmentId}/cancel`);
+  return normalizeAppointment(response.data);
+}

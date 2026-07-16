@@ -66,6 +66,7 @@ export default function VaccinationModal({ isOpen, pet, onClose, onSaveVaccinati
   const [form, setForm] = useState(initialForm);
   const [vaccinations, setVaccinations] = useState([]);
   const [markingCompletedId, setMarkingCompletedId] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
   const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
 
   const resolveStatus = (item) => {
@@ -169,29 +170,34 @@ export default function VaccinationModal({ isOpen, pet, onClose, onSaveVaccinati
     setErrors(next);
     if (Object.keys(next).length) return;
 
-    const isSaved = await onSaveVaccination(pet.id, {
-      name: form.name.trim(),
-      date: form.date,
-      nextDueDate: form.nextDueDate || null,
-      veterinarianName: form.veterinarianName.trim(),
-      doseNumber: Number(form.doseNumber),
-      batchNo: form.batchNo.trim() || null,
-      clinic: form.clinic.trim() || null,
-      notes: form.notes.trim() || null,
-      prescriptionFile: form.prescriptionFile,
-      isEditing,
-      editId,
-    });
-    if (isSaved === false) return;
+    setIsSaving(true);
+    try {
+      const isSaved = await onSaveVaccination(pet.id, {
+        name: form.name.trim(),
+        date: form.date,
+        nextDueDate: form.nextDueDate || null,
+        veterinarianName: form.veterinarianName.trim(),
+        doseNumber: Number(form.doseNumber),
+        batchNo: form.batchNo.trim() || null,
+        clinic: form.clinic.trim() || null,
+        notes: form.notes.trim() || null,
+        prescriptionFile: form.prescriptionFile,
+        isEditing,
+        editId,
+      });
+      if (isSaved === false) return;
 
-    if (isEditing) {
-      onClose();
-      return;
+      if (isEditing) {
+        onClose();
+        return;
+      }
+
+      setForm(initialForm);
+      setSavedState(true);
+      setTimeout(() => setSavedState(false), 1500);
+    } finally {
+      setIsSaving(false);
     }
-
-    setForm(initialForm);
-    setSavedState(true);
-    setTimeout(() => setSavedState(false), 1500);
   };
 
   return (
@@ -337,9 +343,9 @@ export default function VaccinationModal({ isOpen, pet, onClose, onSaveVaccinati
         </div>
 
         <div className="sticky bottom-0 z-10 flex gap-2 border-t border-app-border bg-white px-7 py-4">
-          <button type="button" onClick={onClose} className="flex-1 rounded-full border border-app-border px-4 py-2 text-sm font-bold text-app-slate">Cancel</button>
-          <button type="button" onClick={save} className={["flex-[1.6] rounded-full px-4 py-2 text-sm font-bold text-white transition", savedState ? "bg-app-green" : "bg-app-teal hover:bg-app-teal-dark"].join(" ")}>
-            {savedState ? "Saved!" : isEditing ? "Update Vaccination" : "Save Vaccination"}
+          <button type="button" onClick={onClose} disabled={isSaving} className="flex-1 rounded-full border border-app-border px-4 py-2 text-sm font-bold text-app-slate disabled:cursor-not-allowed disabled:opacity-60">Cancel</button>
+          <button type="button" onClick={save} disabled={isSaving} className={["flex-[1.6] rounded-full px-4 py-2 text-sm font-bold text-white transition disabled:cursor-not-allowed disabled:opacity-70", savedState ? "bg-app-green" : "bg-app-teal hover:bg-app-teal-dark"].join(" ")}>
+            {isSaving ? (isEditing ? "Updating..." : "Saving...") : savedState ? "Saved!" : isEditing ? "Update Vaccination" : "Save Vaccination"}
           </button>
         </div>
       </div>

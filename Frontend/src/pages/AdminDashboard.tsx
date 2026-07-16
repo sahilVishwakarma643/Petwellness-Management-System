@@ -280,11 +280,8 @@ export default function AdminDashboard() {
         onToggleCollapse={() => setSidebarCollapsed((prev) => !prev)}
         onCloseMobile={() => setMobileSidebarOpen(false)}
       />
-
       <div
-        className={`min-h-screen transition-[margin] duration-300 ${
-          sidebarCollapsed ? "lg:ml-[92px]" : "lg:ml-[270px]"
-        }`}
+        className={`min-h-screen w-full overflow-x-hidden transition-[margin-left,width] duration-300 ${sidebarCollapsed ? "md:ml-[92px] md:w-[calc(100%-92px)]" : "md:ml-[270px] md:w-[calc(100%-270px)]"}`} 
       >
         <TopNavbar onOpenSidebar={() => setMobileSidebarOpen(true)} />
 
@@ -336,3 +333,6 @@ export default function AdminDashboard() {
     </div>
   );
 }
+
+
+

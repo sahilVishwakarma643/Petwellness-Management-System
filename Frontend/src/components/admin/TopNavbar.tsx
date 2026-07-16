@@ -8,15 +8,6 @@ export default function TopNavbar({ onOpenSidebar }: TopNavbarProps) {
   return (
     <header className="sticky top-0 z-20 border-b border-teal-100 bg-white/85 px-4 py-3 backdrop-blur-sm sm:px-6">
       <div className="flex items-center gap-3">
-        <button
-          type="button"
-          className="rounded-lg border border-teal-200 bg-teal-50 px-2 py-1 text-sm font-bold text-teal-700 lg:hidden"
-          onClick={onOpenSidebar}
-          aria-label="Open menu"
-        >
-          {"<"}
-        </button>
-
         <div className="relative flex-1">
           <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <input

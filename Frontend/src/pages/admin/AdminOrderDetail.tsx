@@ -146,7 +146,7 @@ export default function AdminOrderDetail() {
         onCloseMobile={() => setMobileSidebarOpen(false)}
       />
 
-      <div className={`min-h-screen transition-[margin] duration-300 ${sidebarCollapsed ? "lg:ml-[92px]" : "lg:ml-[270px]"}`}>
+      <div className={`min-h-screen w-full overflow-x-hidden transition-[margin-left,width] duration-300 ${sidebarCollapsed ? "md:ml-[92px] md:w-[calc(100%-92px)]" : "md:ml-[270px] md:w-[calc(100%-270px)]"}`}>
         <TopNavbar onOpenSidebar={() => setMobileSidebarOpen(true)} />
 
         <motion.main initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }} className="space-y-5 px-4 py-5 sm:px-6">
@@ -340,3 +340,5 @@ export default function AdminOrderDetail() {
     </div>
   );
 }
+
+

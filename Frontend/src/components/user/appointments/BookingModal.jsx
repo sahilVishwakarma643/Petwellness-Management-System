@@ -141,7 +141,7 @@ export default function BookingModal({ appointment, isOpen, onClose, onBooked })
               type="button"
               onClick={() => {
                 onClose?.();
-                navigate("/my-pets");
+                navigate("/pets");
               }}
               className="mt-3 rounded-full bg-[#2DD4A0] px-5 py-2.5 text-sm font-bold text-white transition hover:bg-[#1BAF82]"
             >

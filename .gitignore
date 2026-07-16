@@ -41,3 +41,4 @@ backup/
 UP.txt
 # Frontend dependencies
 node_modules/
+Frontend/dist/

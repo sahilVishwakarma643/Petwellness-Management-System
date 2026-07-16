@@ -31,6 +31,7 @@ const TYPE_STYLES = {
 };
 
 export default function AppointmentCard({ appointment, onBook }) {
+  const [isOpeningBooking, setIsOpeningBooking] = useState(false);
   const typeConfig = TYPE_STYLES[appointment.appointmentType] || TYPE_STYLES.ONLINE;
 
   return (
@@ -59,10 +60,19 @@ export default function AppointmentCard({ appointment, onBook }) {
       <div className="border-t border-[#E2EBF0] px-[18px] py-3">
         <button
           type="button"
-          onClick={onBook}
-          className="inline-flex w-full items-center justify-center rounded-full bg-[#2DD4A0] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#1BAF82]"
+          onClick={async () => {
+            if (isOpeningBooking) return;
+            setIsOpeningBooking(true);
+            try {
+              await onBook?.();
+            } finally {
+              setIsOpeningBooking(false);
+            }
+          }}
+          disabled={isOpeningBooking}
+          className="inline-flex w-full items-center justify-center rounded-full bg-[#2DD4A0] px-4 py-3 text-sm font-bold text-white transition hover:bg-[#1BAF82] disabled:cursor-not-allowed disabled:bg-[#A8E8D5]"
         >
-          Book Appointment
+          {isOpeningBooking ? "Opening..." : "Book Appointment"}
         </button>
       </div>
     </article>
