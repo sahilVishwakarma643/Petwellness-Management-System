@@ -1,0 +1,25 @@
+spring:
+  web:
+    error:
+      include-exception: true
+      include-stacktrace: always
+      include-binding-errors: always
+      include-message: always
+
+logging:
+  level:
+    org.springframework.web: DEBUG
+    org.springframework.web.servlet.DispatcherServlet: DEBUG
+    org.springframework.web.servlet.PageNotFound: DEBUG
+    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: TRACE
+    com.petcare.petwellness: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+          - metrics
+          - mappings

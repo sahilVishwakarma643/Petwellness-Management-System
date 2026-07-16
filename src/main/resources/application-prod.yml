@@ -1,0 +1,20 @@
+spring:
+  web:
+    error:
+      include-exception: false
+      include-stacktrace: never
+      include-binding-errors: never
+      include-message: never
+
+logging:
+  level:
+    root: INFO
+    com.petcare.petwellness: INFO
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info

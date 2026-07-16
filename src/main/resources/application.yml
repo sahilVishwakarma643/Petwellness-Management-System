@@ -2,18 +2,15 @@ server:
   port: 8080
   tomcat:
     max-part-count: 50
-
 spring:
   config:
     import: optional:file:./secrets.properties
-
   application:
     name: petwellnessdb
-
   datasource:
     url: ${DB_URL:jdbc:mysql://localhost:3306/petwellnessdb}
     username: ${DB_USERNAME:root}
-    password: ${DB_PASSWORD:}
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -35,35 +32,28 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: ${MAIL_USERNAME:dev@example.com}
-    password: ${MAIL_PASSWORD:dev-password}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
           auth: true
           starttls:
             enable: true
-  web:
-    error:
-      include-exception: true
-      include-stacktrace: always
-      include-binding-errors: always
-      include-message: always
-
 file:
   upload-dir: ${user.home}/petwellness/uploads
 
 admin:
-  email:${ADMIN_EMAIL}
-  password:${ADMIN_PASSWORD}
+  email: ${ADMIN_EMAIL}
+  password: ${ADMIN_PASSWORD}
 
 jwt:
-  secret: ${JWT_SECRET:dev-jwt-secret-key-256-bits-minimum-length}
+  secret: ${JWT_SECRET}
   expiration: 86400000
 
 razorpay:
-  key-id: ${RAZORPAY_KEY_ID:}
-  key-secret: ${RAZORPAY_KEY_SECRET:}
+  key-id: ${RAZORPAY_KEY_ID}
+  key-secret: ${RAZORPAY_KEY_SECRET}
   api-base: ${RAZORPAY_API_BASE:https://api.razorpay.com/v1}
   reconcile:
     enabled: ${RAZORPAY_RECONCILE_ENABLED:false}
@@ -81,26 +71,28 @@ springdoc:
   swagger-ui:
     path: /swagger-ui.html
 
-logging:
-  level:
-    org.springframework.web: DEBUG
-    org.springframework.web.servlet.DispatcherServlet: DEBUG
-    org.springframework.web.servlet.PageNotFound: DEBUG
-    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: TRACE
-    com.petcare.petwellness: DEBUG
-
 management:
   endpoints:
-    web:
-      exposure:
-        include:
-         - health
-         - info
-         - metrics
-         - mapping
+    web: {}
+
+otp:
+  expiry-minutes: 5
+  max-failed-attempts: 5
+
+  rate-limit:
+    cooldown:
+      capacity: 1
+      refill-tokens: 1
+      duration-seconds: 60
+
+    window:
+      capacity: 5
+      refill-tokens: 5
+      duration-minutes: 15
 
 info:
- app:
-  name: "Petwellness and Management System"
-  version: "1.0.0"
-  description: "Backend APIs for pet management and healthcare"
+  app:
+    name: Petwellness and Management System
+    version: 1.0.0
+    description: Backend APIs for pet management and healthcare
+
