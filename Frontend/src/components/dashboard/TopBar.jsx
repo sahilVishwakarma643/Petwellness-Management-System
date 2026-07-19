@@ -4,6 +4,9 @@ export default function TopBar({
   dateText,
   onOpenSidebar,
   onViewProfile,
+  searchValue = "",
+  onSearchChange,
+  searchPlaceholder = "Search...",
   variant = "dashboard",
   petsSearchValue = "",
   onPetsSearchChange,
@@ -109,7 +112,7 @@ export default function TopBar({
               Welcome, <span className="text-app-teal">{userName}</span> {"\uD83C\uDF3F"}
             </h1>
             <p className="mt-1 text-sm text-app-slate">
-              {dateText} - {petsCount} pets registered
+              {dateText}
             </p>
           </div>
         </div>
@@ -117,7 +120,10 @@ export default function TopBar({
           <div className="flex items-center gap-2">
             <input
               type="text"
-              placeholder="Search..."
+              placeholder={searchPlaceholder}
+              value={searchValue}
+              onChange={(event) => onSearchChange?.(event.target.value)}
+              readOnly={!onSearchChange}
               className="h-10 w-full rounded-full bg-app-bg px-4 text-sm text-app-navy placeholder:text-app-slate focus:outline-none sm:w-56"
             />
             <button type="button" className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-app-border bg-app-card text-base">
