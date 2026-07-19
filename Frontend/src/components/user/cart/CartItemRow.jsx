@@ -14,7 +14,7 @@ export default function CartItemRow({ item, isBusy, onIncrease, onDecrease, onRe
           </div>
           <div>
             <h3 className="text-sm font-bold text-[#1A2332]">{item.productName}</h3>
-            <p className="text-[11px] text-[#6B7A8D]">{item.brand || item.category || `Product #${item.productId}`}</p>
+            <p className="text-[11px] text-[#6B7A8D]">{item.brand || item.category || ""}</p>
           </div>
         </div>
 
@@ -53,7 +53,7 @@ export default function CartItemRow({ item, isBusy, onIncrease, onDecrease, onRe
       </div>
 
       {outOfStock ? (
-        <div className="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-[#FFF7ED] px-3 py-2 text-xs font-medium text-[#9A3412]">
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-2xl bg-[#FFF7ED] px-3 py-2 text-xs font-medium text-[rgb(154,52,18)]">
           <span>⚠ Out of stock — remove to continue</span>
           <button
             type="button"
