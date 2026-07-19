@@ -101,9 +101,10 @@ export default function AddressSection({ formData, errors, touched, onBlur, onCh
             <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">📌</span>
             <input
               type="text"
+              inputMode="numeric"
               maxLength={6}
               value={formData.pincode}
-              onChange={(event) => onChange("pincode", event.target.value)}
+              onChange={(event) => onChange("pincode", event.target.value.replace(/\D/g, "").slice(0, 6))}
               onBlur={() => onBlur("pincode")}
               placeholder="e.g. 560001"
               className={`${iconInput} ${fieldState(!!errors.pincode, !!touched.pincode, !!formData.pincode.trim())}`}

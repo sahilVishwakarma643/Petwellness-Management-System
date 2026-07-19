@@ -108,10 +108,11 @@ export default function PersonalSection({ formData, errors, touched, maxDate, on
           <div className="relative">
             <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">📱</span>
             <input
-              type="tel"
-              maxLength={15}
+              type="text"
+              inputMode="numeric"
+              maxLength={10}
               value={formData.phoneNumber}
-              onChange={(event) => onChange("phoneNumber", event.target.value)}
+              onChange={(event) => onChange("phoneNumber", event.target.value.replace(/\D/g, "").slice(0, 10))}
               onBlur={() => onBlur("phoneNumber")}
               placeholder="e.g. 9876543210"
               className={`${iconInput} ${fieldState(!!errors.phoneNumber, !!touched.phoneNumber, !!formData.phoneNumber.trim())}`}
