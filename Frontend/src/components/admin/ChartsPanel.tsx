@@ -28,7 +28,7 @@ export default function ChartsPanel({ registrationTrend, weeklyAppointments, loa
         className="rounded-2xl border border-teal-100 bg-white p-4 shadow-md shadow-teal-100/60"
       >
         <h3 className="mb-3 text-base font-bold text-slate-900">User Registrations Over Time</h3>
-        <div className="h-64 w-full">
+        <div className="h-64 min-h-[260px] w-full min-w-0">
           {loading ? (
             <div className="flex h-full items-center justify-center rounded-xl border border-dashed border-teal-200 bg-teal-50/60 text-sm text-slate-600">
               Loading chart...
@@ -38,7 +38,7 @@ export default function ChartsPanel({ registrationTrend, weeklyAppointments, loa
               No registration data available.
             </div>
           ) : (
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={260}>
               <LineChart data={registrationTrend}>
                 <CartesianGrid strokeDasharray="4 4" stroke="#d1fae5" />
                 <XAxis dataKey="month" stroke="#0f766e" />
@@ -66,7 +66,7 @@ export default function ChartsPanel({ registrationTrend, weeklyAppointments, loa
         className="rounded-2xl border border-teal-100 bg-white p-4 shadow-md shadow-teal-100/60"
       >
         <h3 className="mb-3 text-base font-bold text-slate-900">Appointments Per Week</h3>
-        <div className="h-64 w-full">
+        <div className="h-64 min-h-[260px] w-full min-w-0">
           {loading ? (
             <div className="flex h-full items-center justify-center rounded-xl border border-dashed border-teal-200 bg-teal-50/60 text-sm text-slate-600">
               Loading chart...
@@ -76,7 +76,7 @@ export default function ChartsPanel({ registrationTrend, weeklyAppointments, loa
               No appointment data available.
             </div>
           ) : (
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={260}>
               <BarChart data={weeklyAppointments}>
                 <CartesianGrid strokeDasharray="4 4" stroke="#d1fae5" />
                 <XAxis dataKey="week" stroke="#0f766e" />

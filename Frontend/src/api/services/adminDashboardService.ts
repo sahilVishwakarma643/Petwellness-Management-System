@@ -127,8 +127,10 @@ function buildRecentActivities(
   appointments: AdminAppointment[],
   products: Awaited<ReturnType<typeof getAdminProducts>>
 ): ActivityItem[] {
+  type ActivityRow = ActivityItem & { sortKey: number };
+
   const userActivities = users
-    .map((user) => {
+    .map<ActivityRow | null>((user) => {
       const createdAt = parseDate(user.createdAt);
       if (!createdAt) return null;
 
@@ -142,14 +144,14 @@ function buildRecentActivities(
           hour: "2-digit",
           minute: "2-digit",
         }),
-        tone: (user.status === "Approved" ? "success" : "info") as const,
+        tone: user.status === "Approved" ? "success" : "info",
         sortKey: createdAt.getTime(),
       };
     })
-    .filter(Boolean);
+    .filter((item): item is NonNullable<typeof item> => item !== null);
 
   const appointmentActivities = appointments
-    .map((appointment) => {
+    .map<ActivityRow | null>((appointment) => {
       const createdAt = parseDate(appointment.createdAt);
       if (!createdAt) return null;
 
@@ -167,10 +169,10 @@ function buildRecentActivities(
         sortKey: createdAt.getTime(),
       };
     })
-    .filter(Boolean);
+    .filter((item): item is NonNullable<typeof item> => item !== null);
 
   const productActivities = products
-    .map((product) => {
+    .map<ActivityRow | null>((product) => {
       const createdAt = parseDate(product.createdDate);
       if (!createdAt) return null;
 
@@ -188,7 +190,7 @@ function buildRecentActivities(
         sortKey: createdAt.getTime(),
       };
     })
-    .filter(Boolean);
+    .filter((item): item is NonNullable<typeof item> => item !== null);
 
   return [...userActivities, ...appointmentActivities, ...productActivities]
     .sort((a, b) => b.sortKey - a.sortKey)
@@ -255,7 +257,9 @@ export async function getAdminDashboardOverview(): Promise<AdminDashboardOvervie
 
     const missingDashboardEndpoint =
       maybeStatus === 404 ||
+      maybeStatus === 500 ||
       /no static resource\s+api\/admin\/dashboard/i.test(maybeMessage) ||
+      /noresourcefoundexception/i.test(maybeMessage) ||
       /\/api\/admin\/dashboard/i.test(maybeMessage);
 
     if (missingDashboardEndpoint) {
@@ -265,3 +269,4 @@ export async function getAdminDashboardOverview(): Promise<AdminDashboardOvervie
     throw error;
   }
 }
+

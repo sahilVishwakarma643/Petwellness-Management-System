@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import type { PendingApproval } from "../../types/adminDashboard";
-import { CheckIcon, CloseIcon } from "./Icons";
+import { CheckIcon, CloseIcon, EyeIcon } from "./Icons";
 
 type PendingApprovalsPanelProps = {
   approvals: PendingApproval[];
@@ -8,6 +8,7 @@ type PendingApprovalsPanelProps = {
   processingIds: number[];
   onApprove: (item: PendingApproval) => void;
   onReject: (item: PendingApproval) => void;
+  onViewProfile: (item: PendingApproval) => void;
 };
 
 export default function PendingApprovalsPanel({
@@ -16,11 +17,15 @@ export default function PendingApprovalsPanel({
   processingIds,
   onApprove,
   onReject,
+  onViewProfile,
 }: PendingApprovalsPanelProps) {
   return (
     <section className="rounded-2xl border border-teal-100 bg-white p-4 shadow-md shadow-teal-100/60 sm:p-5">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-bold text-slate-900">Pending Approval Requests</h2>
+        <div>
+          <h2 className="text-lg font-bold text-slate-900">Pending Approval Requests</h2>
+          <p className="mt-1 text-xs text-slate-500">Registration date shows when the profile was first created.</p>
+        </div>
         <span className="rounded-full bg-amber-100 px-2 py-1 text-xs font-semibold text-amber-700">
           {approvals.length} pending
         </span>
@@ -59,7 +64,15 @@ export default function PendingApprovalsPanel({
                     </span>
                   </td>
                   <td className="rounded-r-xl px-2 py-3">
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        className="inline-flex items-center gap-1 rounded-lg border border-teal-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-teal-50"
+                        onClick={() => onViewProfile(item)}
+                      >
+                        <EyeIcon className="h-3.5 w-3.5" />
+                        View
+                      </button>
                       <button
                         type="button"
                         className="inline-flex items-center gap-1 rounded-lg bg-emerald-600 px-2.5 py-1.5 text-xs font-semibold text-white hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-slate-400"
