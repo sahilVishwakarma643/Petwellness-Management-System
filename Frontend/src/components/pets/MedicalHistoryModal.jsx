@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { toDateInputValue } from "../../utils/date";
 
 function SectionLabel({ text }) {
   return (
@@ -45,7 +46,7 @@ export default function MedicalHistoryModal({ isOpen, pet, onClose, onSaveRecord
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
   const [form, setForm] = useState(initialForm);
-  const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
+  const today = useMemo(() => toDateInputValue(new Date()), []);
 
   useEffect(() => {
     if (!isOpen || !pet) return;
@@ -68,7 +69,7 @@ export default function MedicalHistoryModal({ isOpen, pet, onClose, onSaveRecord
     setExpanded(true);
     setErrors({});
     setForm({
-      visitDate: item.visitDate || "",
+      visitDate: toDateInputValue(item.visitDate),
       doctorName: item.doctorName || "",
       clinicName: item.clinicName || "",
       weight: item.weight ? String(item.weight) : "",
@@ -76,7 +77,7 @@ export default function MedicalHistoryModal({ isOpen, pet, onClose, onSaveRecord
       diagnosis: item.diagnosis || "",
       treatment: item.treatment || "",
       medication: item.medication || "",
-      nextVisitDate: item.nextVisitDate || "",
+      nextVisitDate: toDateInputValue(item.nextVisitDate),
       patchNotes: item.notes || "",
       prescriptionName: "",
       prescriptionFile: null,

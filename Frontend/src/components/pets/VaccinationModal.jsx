@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import API from "../../api/api";
+import { toDateInputValue } from "../../utils/date";
 
 function SectionLabel({ text }) {
   return (
@@ -67,7 +68,7 @@ export default function VaccinationModal({ isOpen, pet, onClose, onSaveVaccinati
   const [vaccinations, setVaccinations] = useState([]);
   const [markingCompletedId, setMarkingCompletedId] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
-  const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
+  const today = useMemo(() => toDateInputValue(new Date()), []);
 
   const resolveStatus = (item) => {
     const normalized = String(item?.status || "").toUpperCase();
@@ -109,8 +110,8 @@ export default function VaccinationModal({ isOpen, pet, onClose, onSaveVaccinati
     setErrors({});
     setForm({
       name: item.name || "",
-      date: item.date || "",
-      nextDueDate: item.nextDueDate || "",
+      date: toDateInputValue(item.date),
+      nextDueDate: toDateInputValue(item.nextDueDate),
       veterinarianName: item.doctor || "",
       doseNumber: String(item.doseNumber || 1),
       batchNo: item.batchNo || "",

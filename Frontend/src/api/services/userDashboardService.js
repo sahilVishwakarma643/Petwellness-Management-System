@@ -50,7 +50,20 @@ export async function getUserDashboardSummary() {
   const response = await API.get("/user/dashboard/summary");
   const data = response.data || {};
 
+  const activeOrderCount =
+    typeof data.activeOrderCount === "number"
+      ? data.activeOrderCount
+      : Array.isArray(data.orders)
+        ? data.orders.filter((item) => {
+            const status = String(item?.status || "").toUpperCase();
+            return status !== "CANCELLED" && status !== "FAILED";
+          }).length
+        : 0;
+
   return {
+    ownerFullName: typeof data.ownerFullName === "string" ? data.ownerFullName : "",
+    petCount: Number.isFinite(Number(data.petCount)) ? Number(data.petCount) : 0,
+    activeOrderCount,
     appointments: Array.isArray(data.appointments)
       ? data.appointments.map((item, index) => ({
           id: item?.id ?? `appointment-${index}`,

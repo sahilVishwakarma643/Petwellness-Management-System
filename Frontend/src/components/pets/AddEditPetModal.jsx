@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { toDateInputValue } from "../../utils/date";
 
 const EMPTY_FORM = {
   name: "",
@@ -41,7 +42,7 @@ export default function AddEditPetModal({ isOpen, editingPet, petsCount, onClose
   const [isDragging, setIsDragging] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  const today = useMemo(() => new Date().toISOString().slice(0, 10), []);
+  const today = useMemo(() => toDateInputValue(new Date()), []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -52,7 +53,7 @@ export default function AddEditPetModal({ isOpen, editingPet, petsCount, onClose
         species: editingPet.species || "",
         breed: editingPet.breed || "",
         gender: editingPet.gender || "",
-        dateOfBirth: editingPet.dateOfBirth || "",
+        dateOfBirth: toDateInputValue(editingPet.dateOfBirth),
         weight: editingPet.weight ?? "",
       });
       setPreviewUrl(editingPet.imageUrl || "");
