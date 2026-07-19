@@ -159,7 +159,7 @@ function App() {
                 </h1>
 
                 <p className="max-w-xl text-sm leading-relaxed text-slate-600 sm:text-base">
-                  PetWell is your all-in-one pet wellness companion — track
+                  Pet care is your all-in-one pet wellness companion — track
                   vet visits, monitor activity, and get
                   proactive insights tailored to your furry best friend.
                 </p>
@@ -403,12 +403,9 @@ function App() {
                 Back to top
               </a>
               <span className="h-3 w-px bg-slate-200" />
-              <a href="#" className="hover:text-slate-900">
-                Privacy
-              </a>
-              <a href="#" className="hover:text-slate-900">
-                Terms
-              </a>
+              <Link to="/legal" className="hover:text-slate-900">
+                Privacy Terms & Condition
+              </Link>
             </div>
           </div>
         </footer>
