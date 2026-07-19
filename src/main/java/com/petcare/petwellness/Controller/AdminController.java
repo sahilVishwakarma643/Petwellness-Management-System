@@ -2,6 +2,7 @@ package com.petcare.petwellness.Controller;
 
 import com.petcare.petwellness.DTO.Request.AdminCreateOwnerRequestDto;
 import com.petcare.petwellness.DTO.Request.AdminRejectUserRequestDto;
+import com.petcare.petwellness.DTO.Response.AdminDashboardOverviewResponseDto;
 import com.petcare.petwellness.DTO.Response.AdminUserProfileResponseDto;
 import com.petcare.petwellness.DTO.Response.ApprovedUserResponseDto;
 import com.petcare.petwellness.DTO.Response.PendingUserResponseDto;
@@ -43,6 +44,12 @@ public class AdminController {
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "10") int limit) {
         return ResponseEntity.ok(adminService.getApprovedUsers(offset, limit));
+    }
+
+    @GetMapping("/dashboard")
+    public ResponseEntity<AdminDashboardOverviewResponseDto> getDashboardOverview(
+            @RequestParam(required = false) Integer year) {
+        return ResponseEntity.ok(adminService.getDashboardOverview(year));
     }
 
     @GetMapping("/users/{userId}/profile")

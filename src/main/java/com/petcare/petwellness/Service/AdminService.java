@@ -1,6 +1,7 @@
 package com.petcare.petwellness.Service;
 
 import com.petcare.petwellness.DTO.Request.AdminCreateOwnerRequestDto;
+import com.petcare.petwellness.DTO.Response.AdminDashboardOverviewResponseDto;
 import com.petcare.petwellness.DTO.Response.AdminUserProfileResponseDto;
 import com.petcare.petwellness.DTO.Response.ApprovedUserResponseDto;
 import com.petcare.petwellness.DTO.Response.PendingUserResponseDto;
@@ -13,6 +14,8 @@ public interface AdminService {
     List<PendingUserResponseDto> getPendingUsers(int offset, int limit);
 
     List<ApprovedUserResponseDto> getApprovedUsers(int offset, int limit);
+
+    AdminDashboardOverviewResponseDto getDashboardOverview(Integer year);
 
     AdminUserProfileResponseDto getUserProfile(Long userId);
 

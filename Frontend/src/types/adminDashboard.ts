@@ -37,6 +37,28 @@ export type ApprovedUser = {
   status: "Approved";
 };
 
+export type AdminUserProfile = {
+  id: number;
+  email: string;
+  fullName: string;
+  firstName: string;
+  phoneNumber: string;
+  gender: string;
+  highestQualification: string;
+  occupation: string;
+  fatherName: string;
+  motherName: string;
+  dateOfBirth: string;
+  street: string;
+  city: string;
+  state: string;
+  pincode: string;
+  profileImagePath: string;
+  idProofType: string;
+  idProofImagePath: string;
+  createdAt: string;
+};
+
 export type RegistrationPoint = {
   month: string;
   users: number;

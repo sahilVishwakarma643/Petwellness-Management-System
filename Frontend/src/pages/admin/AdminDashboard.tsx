@@ -1,16 +1,16 @@
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import API from "../api/api";
-import { getAdminDashboardOverview } from "../api/services/adminDashboardService";
-import ActivityFeed from "../components/admin/ActivityFeed";
-import ApprovedUsersPanel from "../components/admin/ApprovedUsersPanel";
-import ChartsPanel from "../components/admin/ChartsPanel";
-import PendingApprovalsPanel from "../components/admin/PendingApprovalsPanel";
-import Sidebar from "../components/admin/Sidebar";
-import StatsCard from "../components/admin/StatsCard";
-import ToastStack from "../components/admin/ToastStack";
-import TopNavbar from "../components/admin/TopNavbar";
+import API from "../../api/api";
+import { getAdminDashboardOverview } from "../../api/services/adminDashboardService";
+import ActivityFeed from "../../components/admin/ActivityFeed";
+import ApprovedUsersPanel from "../../components/admin/ApprovedUsersPanel";
+import ChartsPanel from "../../components/admin/ChartsPanel";
+import PendingApprovalsPanel from "../../components/admin/PendingApprovalsPanel";
+import Sidebar from "../../components/admin/Sidebar";
+import StatsCard from "../../components/admin/StatsCard";
+import ToastStack from "../../components/admin/ToastStack";
+import TopNavbar from "../../components/admin/TopNavbar";
 import type {
   AdminDashboardOverview,
   AdminMetric,
@@ -19,8 +19,8 @@ import type {
   PendingApproval,
   ToastItem,
   ToastType,
-} from "../types/adminDashboard";
-import { logoutUser } from "../utils/logout";
+} from "../../types/adminDashboard";
+import { logoutUser } from "../../utils/logout";
 
 type PendingUserApi = {
   id: number;
@@ -270,6 +270,10 @@ export default function AdminDashboard() {
     }
   };
 
+  const handleViewProfile = (userId: number) => {
+    navigate(`/admin/users/${userId}/profile`);
+  };
+
   return (
     <div className="min-h-screen bg-[radial-gradient(circle_at_top_left,_#d9fdf2_0%,_#eff9ff_48%,_#f9fffe_100%)] text-slate-900">
       <Sidebar
@@ -304,6 +308,7 @@ export default function AdminDashboard() {
                 loading={loadingApprovedUsers}
                 deletingId={deletingApprovedUserId}
                 onDelete={(user, reason) => void handleDeleteApprovedUser(user, reason)}
+                onViewProfile={(user) => handleViewProfile(user.id)}
               />
             </motion.section>
           ) : (
@@ -315,6 +320,7 @@ export default function AdminDashboard() {
                   processingIds={processingIds}
                   onApprove={(item) => void handleApprovalAction(item, "approve")}
                   onReject={(item) => void handleApprovalAction(item, "reject")}
+                  onViewProfile={(item) => handleViewProfile(item.id)}
                 />
               </motion.section>
 

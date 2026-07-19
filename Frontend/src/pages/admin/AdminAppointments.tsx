@@ -224,7 +224,7 @@ export default function AdminAppointments() {
                             </span>
                           </td>
                           <td className="rounded-r-xl px-3 py-3">
-                            {appointment.status === "AVAILABLE" ? (
+                            {appointment.status !== "BOOKED" ? (
                               <div className="flex flex-wrap gap-2">
                                 <button
                                   type="button"

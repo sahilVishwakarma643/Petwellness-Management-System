@@ -187,7 +187,12 @@ export default function AdminCreateOwner() {
   };
 
   const handleChange = (field: keyof CreateOwnerData, value: string) => {
-    const normalizedValue = field === "pincode" ? value.replace(/\D/g, "") : value;
+    const normalizedValue =
+      field === "phoneNumber"
+        ? value.replace(/\D/g, "").slice(0, 10)
+        : field === "pincode"
+        ? value.replace(/\D/g, "").slice(0, 6)
+        : value;
     setFormData((prev) => {
       const next = { ...prev, [field]: normalizedValue };
       updateTouchedValidation(field, next);
