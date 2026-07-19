@@ -10,45 +10,7 @@ import TopBar from "../components/dashboard/TopBar";
 import VaccineReminders from "../components/dashboard/VaccineReminders";
 import { user } from "../data/dashboardData";
 import { getUserDashboardSummary } from "../api/services/userDashboardService";
-
-function decodeJwtPayload(token) {
-  if (!token || typeof token !== "string") return {};
-
-  try {
-    const payloadPart = token.split(".")[1];
-    if (!payloadPart) return {};
-
-    const normalized = payloadPart.replace(/-/g, "+").replace(/_/g, "/");
-    return JSON.parse(atob(normalized));
-  } catch {
-    return {};
-  }
-}
-
-function getLoggedInName() {
-  const payload = decodeJwtPayload(localStorage.getItem("token"));
-  const candidates = [
-    localStorage.getItem("firstName"),
-    localStorage.getItem("userName"),
-    payload?.firstName,
-    payload?.first_name,
-    payload?.fullName,
-    payload?.name,
-    payload?.username,
-    payload?.sub,
-    payload?.email,
-  ];
-
-  const chosen = candidates.find((value) => typeof value === "string" && value.trim());
-  if (!chosen) return user.name;
-
-  const clean = chosen.trim();
-  if (clean.includes("@")) {
-    return clean.split("@")[0];
-  }
-
-  return clean.split(" ")[0];
-}
+import { getLoggedInFirstName } from "../utils/userDisplay";
 
 function formatDate(dateText) {
   if (!dateText) return "-";
@@ -143,7 +105,11 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [summary, setSummary] = useState({
+    ownerFullName: "",
+    petCount: 0,
+    activeOrderCount: 0,
     appointments: [],
     orders: [],
     products: [],
@@ -152,13 +118,13 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [pageError, setPageError] = useState("");
 
-  const ownerName = useMemo(() => getLoggedInName(), []);
+  const resolvedOwnerName = useMemo(() => summary.ownerFullName || getLoggedInFirstName(user.name), [summary.ownerFullName]);
   const owner = useMemo(
     () => ({
-      name: ownerName,
-      avatar: (ownerName?.charAt(0) || user.avatar).toUpperCase(),
+      name: resolvedOwnerName,
+      avatar: (resolvedOwnerName?.charAt(0) || user.avatar).toUpperCase(),
     }),
-    [ownerName]
+    [resolvedOwnerName]
   );
 
   const dateText = useMemo(
@@ -198,6 +164,50 @@ export default function Dashboard() {
     };
   }, []);
 
+  const normalizedSearch = searchTerm.trim().toLowerCase();
+
+  const searchMatches = (parts) => {
+    if (!normalizedSearch) return true;
+    return parts.some((part) => String(part || "").toLowerCase().includes(normalizedSearch));
+  };
+
+  const filteredAppointments = useMemo(
+    () =>
+      mapAppointments(summary.appointments).filter((appointment) =>
+        searchMatches([appointment.pet, appointment.doctor, appointment.title, appointment.time, appointment.month, appointment.day, appointment.year])
+      ),
+    [summary.appointments, normalizedSearch]
+  );
+
+  const filteredOrders = useMemo(
+    () =>
+      mapOrders(summary.orders).filter((order) =>
+        searchMatches([order.name, order.status, order.date, order.price])
+      ),
+    [summary.orders, normalizedSearch]
+  );
+
+  const activeOrderCount = useMemo(
+    () => Number(summary.activeOrderCount || 0),
+    [summary.activeOrderCount]
+  );
+
+  const filteredProducts = useMemo(
+    () =>
+      mapProducts(summary.products).filter((product) =>
+        searchMatches([product.name, product.brand, product.price])
+      ),
+    [summary.products, normalizedSearch]
+  );
+
+  const filteredReminders = useMemo(
+    () =>
+      mapReminders(summary.vaccineReminders).filter((reminder) =>
+        searchMatches([reminder.name, reminder.pet, reminder.dueText, reminder.status])
+      ),
+    [summary.vaccineReminders, normalizedSearch]
+  );
+
   const statItems = useMemo(
     () => [
       {
@@ -210,18 +220,18 @@ export default function Dashboard() {
       },
       {
         icon: "\uD83D\uDCE6",
-        value: String(summary.orders.length),
-        label: "Recent Orders",
-        badge: summary.orders.length ? "From shop history" : "No orders yet",
-        badgeTone: summary.orders.length ? "yellow" : "blue",
+        value: String(activeOrderCount),
+        label: "Total Orders",
+        badge: activeOrderCount ? "Active orders only" : "No active orders",
+        badgeTone: activeOrderCount ? "yellow" : "blue",
         iconBg: "bg-app-blue-light",
       },
       {
-        icon: "\uD83D\uDECD\uFE0F",
-        value: String(summary.products.length),
-        label: "Marketplace Items",
-        badge: summary.products.length ? "Ready to browse" : "No products yet",
-        badgeTone: summary.products.length ? "green" : "blue",
+        icon: "\uD83D\uDC36",
+        value: String(summary.petCount),
+        label: "Total Pets",
+        badge: summary.petCount ? "Registered pets" : "No pets yet",
+        badgeTone: summary.petCount ? "green" : "blue",
         iconBg: "bg-app-red-light",
       },
       {
@@ -233,7 +243,7 @@ export default function Dashboard() {
         iconBg: "bg-app-green-light",
       },
     ],
-    [summary.appointments.length, summary.orders.length, summary.products.length, summary.vaccineReminders.length]
+    [summary.appointments.length, activeOrderCount, summary.petCount, summary.vaccineReminders.length]
   );
 
   const navItems = useMemo(
@@ -263,6 +273,9 @@ export default function Dashboard() {
         <div className="mx-auto flex w-full max-w-[1400px] flex-col gap-5">
           <TopBar
             userName={owner.name}
+            searchValue={searchTerm}
+            onSearchChange={setSearchTerm}
+            searchPlaceholder="Search dashboard..."
             onOpenSidebar={() => setSidebarOpen(true)}
             onViewProfile={() => navigate("/profile/me")}
           />
@@ -285,19 +298,19 @@ export default function Dashboard() {
 
           <div className="grid gap-5 xl:grid-cols-2">
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.2 }}>
-              <AppointmentCard appointments={mapAppointments(summary.appointments)} />
+              <AppointmentCard appointments={filteredAppointments} />
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.2 }}>
-              <VaccineReminders vaccines={mapReminders(summary.vaccineReminders)} />
+              <VaccineReminders vaccines={filteredReminders} />
             </motion.div>
           </div>
 
           <div className="space-y-5">
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.2 }}>
-              <Marketplace products={mapProducts(summary.products)} />
+              <Marketplace products={filteredProducts} />
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.25, delay: 0.2 }}>
-              <RecentOrders orders={mapOrders(summary.orders)} />
+              <RecentOrders orders={filteredOrders} />
             </motion.div>
           </div>
         </div>
@@ -305,3 +318,4 @@ export default function Dashboard() {
     </div>
   );
 }
+
