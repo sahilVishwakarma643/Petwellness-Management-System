@@ -139,10 +139,16 @@ function Register() {
 
   const handleFieldChange = (event) => {
     const { name, value } = event.target;
+    const nextValue =
+      name === "phoneNumber"
+        ? value.replace(/\D/g, "").slice(0, 10)
+        : name === "pincode"
+          ? value.replace(/\D/g, "").slice(0, 6)
+          : value;
 
     setForm((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: nextValue,
     }));
   };
 
@@ -153,6 +159,11 @@ function Register() {
 
     if (!otpVerified) {
       setError("Verify OTP before submitting registration.");
+      return;
+    }
+
+    if (!/^\d{10}$/.test(form.phoneNumber)) {
+      setError("Phone number must be exactly 10 digits.");
       return;
     }
 
@@ -458,7 +469,16 @@ function Register() {
 
                   <div>
                     <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Phone Number <span className="text-[#F87171]">*</span></label>
-                    <input name="phoneNumber" type="tel" placeholder="Phone number" value={form.phoneNumber} onChange={handleFieldChange} className={fieldClass(form.phoneNumber)} />
+                    <input
+                      name="phoneNumber"
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={10}
+                      placeholder="10 digit phone number"
+                      value={form.phoneNumber}
+                      onChange={handleFieldChange}
+                      className={fieldClass(form.phoneNumber)}
+                    />
                   </div>
 
                   <div>
@@ -474,7 +494,7 @@ function Register() {
                   <div>
                     <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Date of Birth <span className="text-[#F87171]">*</span></label>
                     <input name="dateOfBirth" type="date" max={maxDate} value={form.dateOfBirth} onChange={handleFieldChange} className={fieldClass(form.dateOfBirth)} />
-                    <p className="mt-1 text-sm text-[#6B7A8D]">Must be a past date</p>
+                    
                   </div>
 
                   <div className="sm:col-span-2">
@@ -507,7 +527,7 @@ function Register() {
                       Father&apos;s Name
                       <span className="rounded-full bg-[#D0F5EB] px-2 py-0.5 text-xs font-bold text-[#1BAF82]">Optional</span>
                     </label>
-                    <input name="fatherName" placeholder="Father Name (Optional)" value={form.fatherName} onChange={handleFieldChange} className={fieldClass(form.fatherName)} />
+                    <input name="fatherName" placeholder="Father Name" value={form.fatherName} onChange={handleFieldChange} className={fieldClass(form.fatherName)} />
                   </div>
 
                   <div>
@@ -515,7 +535,7 @@ function Register() {
                       Mother&apos;s Name
                       <span className="rounded-full bg-[#D0F5EB] px-2 py-0.5 text-xs font-bold text-[#1BAF82]">Optional</span>
                     </label>
-                    <input name="motherName" placeholder="Mother Name (Optional)" value={form.motherName} onChange={handleFieldChange} className={fieldClass(form.motherName)} />
+                    <input name="motherName" placeholder="Mother Name" value={form.motherName} onChange={handleFieldChange} className={fieldClass(form.motherName)} />
                   </div>
                 </div>
               </section>
@@ -544,8 +564,16 @@ function Register() {
 
                   <div>
                     <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Pincode <span className="text-[#F87171]">*</span></label>
-                    <input name="pincode" placeholder="Pincode (6 digits)" value={form.pincode} onChange={handleFieldChange} className={fieldClass(form.pincode)} />
-                    <p className="mt-1 text-sm text-[#6B7A8D]">Exactly 6 digits</p>
+                    <input
+                      name="pincode"
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={6}
+                      placeholder="6 digit pincode"
+                      value={form.pincode}
+                      onChange={handleFieldChange}
+                      className={fieldClass(form.pincode)}
+                    />
                   </div>
                 </div>
               </section>

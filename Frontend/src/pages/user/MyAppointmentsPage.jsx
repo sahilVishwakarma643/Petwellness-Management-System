@@ -4,10 +4,7 @@ import { cancelAppointment, getMyAppointments } from "../../api/services/appoint
 import Sidebar from "../../components/dashboard/Sidebar";
 import TopBar from "../../components/dashboard/TopBar";
 import { useToast } from "../../components/shared/Toast";
-
-function getLoggedInName() {
-  return localStorage.getItem("userName") || "Pet Parent";
-}
+import { getLoggedInFirstName } from "../../utils/userDisplay";
 
 function formatDate(value) {
   const date = new Date(value);
@@ -69,7 +66,7 @@ export default function MyAppointmentsPage() {
   const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const ownerName = useMemo(() => getLoggedInName(), []);
+  const ownerName = useMemo(() => getLoggedInFirstName(), []);
   const owner = useMemo(
     () => ({ name: ownerName, avatar: ownerName.charAt(0).toUpperCase() || "P" }),
     [ownerName]

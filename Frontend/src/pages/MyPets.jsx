@@ -11,6 +11,7 @@ import MedicalHistoryModal from "../components/pets/MedicalHistoryModal";
 import PetCard from "../components/pets/PetCard";
 import PetDetailPanel from "../components/pets/PetDetailPanel";
 import VaccinationModal from "../components/pets/VaccinationModal";
+import { getLoggedInFirstName } from "../utils/userDisplay";
 import {
   addMedicalHistoryRecord,
   addVaccinationRecord,
@@ -36,35 +37,6 @@ const navItems = [
   { label: "Cart", icon: "🛒", to: "/cart", section: "MORE" },
   { label: "My Orders", icon: "📦", to: "/my-orders", section: "MORE" },
 ];
-
-function decodeJwtPayload(token) {
-  if (!token || typeof token !== "string") return {};
-  try {
-    const payloadPart = token.split(".")[1];
-    if (!payloadPart) return {};
-    const normalized = payloadPart.replace(/-/g, "+").replace(/_/g, "/");
-    return JSON.parse(atob(normalized));
-  } catch {
-    return {};
-  }
-}
-
-function getLoggedInName() {
-  const payload = decodeJwtPayload(localStorage.getItem("token"));
-  const candidates = [
-    localStorage.getItem("userName"),
-    payload?.fullName,
-    payload?.name,
-    payload?.firstName,
-    payload?.username,
-    payload?.sub,
-    payload?.email,
-  ];
-  const chosen = candidates.find((value) => typeof value === "string" && value.trim());
-  if (!chosen) return "Pet Parent";
-  const clean = chosen.trim();
-  return clean.includes("@") ? clean.split("@")[0] : clean;
-}
 
 function gradientClass(colorClass) {
   if (colorClass === "c1") return "bg-gradient-to-br from-app-teal-light to-[#A7EDD8]";
@@ -147,7 +119,7 @@ export default function MyPets() {
   const [busyAction, setBusyAction] = useState(false);
   const handledVaccinationRouteRef = useRef("");
 
-  const ownerName = useMemo(() => getLoggedInName(), []);
+  const ownerName = useMemo(() => getLoggedInFirstName(), []);
   const owner = useMemo(
     () => ({
       name: ownerName,

@@ -1,6 +1,7 @@
 package com.petcare.petwellness.Repository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -21,6 +22,12 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
 
     @EntityGraph(attributePaths = { "pet" })
     List<Appointment> findByStatus(AppointmentStatus status, Pageable pageable);
+    long countByStatus(AppointmentStatus status);
+    List<Appointment> findTop8ByStatusOrderByCreatedAtDesc(AppointmentStatus status);
+    List<Appointment> findByStatusAndAppointmentDateBetween(
+            AppointmentStatus status,
+            LocalDate startDate,
+            LocalDate endDate);
 
     @EntityGraph(attributePaths = { "pet" })
     List<Appointment> findByUserIdAndStatus(Long userId, AppointmentStatus status, Pageable pageable);

@@ -2,6 +2,7 @@ package com.petcare.petwellness.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
@@ -13,6 +14,8 @@ import com.petcare.petwellness.Enums.OrderStatus;
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
     List<Order> findByUserId(Long userId, Pageable pageable);
+
+    long countByUserIdAndStatusNotIn(Long userId, Collection<OrderStatus> statuses);
 
     Optional<Order> findByIdAndUserId(Long id, Long userId);
 

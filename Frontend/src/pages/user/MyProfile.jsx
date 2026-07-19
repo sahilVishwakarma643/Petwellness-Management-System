@@ -123,6 +123,22 @@ export default function MyProfile() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    if (name === "phoneNumber") {
+      const normalized = value.replace(/\D/g, "").slice(0, 10);
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: normalized,
+      }));
+      return;
+    }
+    if (name === "pincode") {
+      const normalized = value.replace(/\D/g, "").slice(0, 6);
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: normalized,
+      }));
+      return;
+    }
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: name === "gender" ? normalizeGenderValue(value) : value,
@@ -330,6 +346,9 @@ export default function MyProfile() {
                       name="phoneNumber"
                       value={formData.phoneNumber}
                       onChange={handleInputChange}
+                      maxLength={10}
+                      inputMode="numeric"
+                      pattern="\\d{10}"
                       className="w-full rounded-2xl border border-teal-100 bg-white px-3 py-2.5 text-slate-800 outline-none transition focus:border-teal-400 focus:ring-2 focus:ring-teal-200"
                     />
                   </div>
@@ -400,6 +419,9 @@ export default function MyProfile() {
                       name="pincode"
                       value={formData.pincode}
                       onChange={handleInputChange}
+                      maxLength={6}
+                      inputMode="numeric"
+                      pattern="\\d{6}"
                       className="w-full rounded-2xl border border-teal-100 bg-white px-3 py-2.5 text-slate-800 outline-none transition focus:border-teal-400 focus:ring-2 focus:ring-teal-200"
                     />
                   </div>
