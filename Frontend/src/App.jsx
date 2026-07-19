@@ -1,11 +1,12 @@
 import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
-import AdminDashboard from "./pages/AdminDashboard";
+import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminOrders from "./pages/admin/AdminOrders";
 import AdminOrderDetail from "./pages/admin/AdminOrderDetail";
 import AdminAppointments from "./pages/admin/AdminAppointments";
 import AdminCreateOwner from "./pages/admin/AdminCreateOwner";
+import AdminUserProfile from "./pages/admin/AdminUserProfile";
 import Dashboard from "./pages/Dashboard";
 import MyPets from "./pages/MyPets";
 import Register from "./pages/Register";
@@ -25,6 +26,9 @@ import MyAppointmentsPage from "./pages/user/MyAppointmentsPage";
 import { CartProvider } from "./context/CartContext";
 import { ToastProvider } from "./components/shared/Toast";
 import MyProfile from "./pages/user/MyProfile.jsx";
+import LegalPage from "./pages/LegalPage";
+import Unauthorized from "./pages/Unauthorized";
+import RequireRole from "./components/routing/RequireRole";
 
 function UserRouteProviders({ children }) {
   return (
@@ -43,7 +47,16 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/approval-pending" element={<ApprovalPending />} />
       <Route path="/set-password" element={<SetPassword />} />
-      <Route path="/dashboard" element={<AdminDashboard />} />
+      <Route path="/unauthorized" element={<Unauthorized />} />
+      <Route path="/legal" element={<LegalPage />} />
+      <Route
+        path="/dashboard"
+        element={
+          <RequireRole allowedRole="ADMIN">
+            <AdminDashboard />
+          </RequireRole>
+        }
+      />
       <Route
         path="/user-dashboard"
         element={
@@ -149,11 +162,54 @@ function App() {
           </UserRouteProviders>
         }
       />
-      <Route path="/admin/orders" element={<AdminOrders />} />
-      <Route path="/admin/orders/:orderId" element={<AdminOrderDetail />} />
-      <Route path="/admin/appointments" element={<AdminAppointments />} />
-      <Route path="/admin/create-owner" element={<AdminCreateOwner />} />
-      <Route path="/admin/marketplace" element={<AdminMarketplace />} />
+      <Route
+        path="/admin/orders"
+        element={
+          <RequireRole allowedRole="ADMIN">
+            <AdminOrders />
+          </RequireRole>
+        }
+      />
+      <Route
+        path="/admin/orders/:orderId"
+        element={
+          <RequireRole allowedRole="ADMIN">
+            <AdminOrderDetail />
+          </RequireRole>
+        }
+      />
+      <Route
+        path="/admin/appointments"
+        element={
+          <RequireRole allowedRole="ADMIN">
+            <AdminAppointments />
+          </RequireRole>
+        }
+      />
+      <Route
+        path="/admin/create-owner"
+        element={
+          <RequireRole allowedRole="ADMIN">
+            <AdminCreateOwner />
+          </RequireRole>
+        }
+      />
+      <Route
+        path="/admin/marketplace"
+        element={
+          <RequireRole allowedRole="ADMIN">
+            <AdminMarketplace />
+          </RequireRole>
+        }
+      />
+      <Route
+        path="/admin/users/:userId/profile"
+        element={
+          <RequireRole allowedRole="ADMIN">
+            <AdminUserProfile />
+          </RequireRole>
+        }
+      />
     </Routes>
   );
 }
