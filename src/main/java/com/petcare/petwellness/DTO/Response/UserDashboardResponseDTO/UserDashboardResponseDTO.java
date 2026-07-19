@@ -5,10 +5,37 @@ import java.util.List;
 
 public class UserDashboardResponseDTO {
 
+    private String ownerFullName;
+    private Long petCount = 0L;
+    private Long activeOrderCount = 0L;
     private List<AppointmentSummaryResponseDTO> appointments = new ArrayList<>();
     private List<OrderSummaryResponseDTO> orders = new ArrayList<>();
     private List<ProductSummaryResponseDTO> products = new ArrayList<>();
     private List<VaccineReminderSummaryResponseDTO> vaccineReminders = new ArrayList<>();
+
+    public String getOwnerFullName() {
+        return ownerFullName;
+    }
+
+    public void setOwnerFullName(String ownerFullName) {
+        this.ownerFullName = ownerFullName;
+    }
+
+    public Long getPetCount() {
+        return petCount;
+    }
+
+    public void setPetCount(Long petCount) {
+        this.petCount = petCount;
+    }
+
+    public Long getActiveOrderCount() {
+        return activeOrderCount;
+    }
+
+    public void setActiveOrderCount(Long activeOrderCount) {
+        this.activeOrderCount = activeOrderCount;
+    }
 
     public List<AppointmentSummaryResponseDTO> getAppointments() {
         return appointments;

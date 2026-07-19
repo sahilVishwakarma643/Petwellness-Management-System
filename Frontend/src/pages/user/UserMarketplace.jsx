@@ -8,12 +8,9 @@ import CategoryFilter from "../../components/user/marketplace/CategoryFilter";
 import ProductCard from "../../components/user/marketplace/ProductCard";
 import ProductDetailModal from "../../components/user/marketplace/ProductDetailModal";
 import { useToast } from "../../components/shared/Toast";
+import { getLoggedInFirstName } from "../../utils/userDisplay";
 
 const LIMIT = 12;
-
-function getLoggedInName() {
-  return localStorage.getItem("userName") || "Pet Parent";
-}
 
 function SkeletonCard() {
   return (
@@ -48,7 +45,7 @@ export default function UserMarketplace() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [addingProductId, setAddingProductId] = useState(null);
 
-  const ownerName = useMemo(() => getLoggedInName(), []);
+  const ownerName = useMemo(() => getLoggedInFirstName(), []);
   const owner = useMemo(
     () => ({
       name: ownerName,

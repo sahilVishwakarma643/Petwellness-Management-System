@@ -19,6 +19,7 @@ import com.petcare.petwellness.Enums.ProductStatus;
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Page<Product> findByStatusIn(List<ProductStatus> statuses, Pageable pageable);
+    List<Product> findTop8ByOrderByCreatedAtDesc();
 
     Page<Product> findByStatusInAndCategory(List<ProductStatus> statuses, ProductCategory category, Pageable pageable);
 

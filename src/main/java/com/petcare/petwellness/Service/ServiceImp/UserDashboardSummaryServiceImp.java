@@ -21,13 +21,17 @@ import com.petcare.petwellness.Domain.Entity.OrderItem;
 import com.petcare.petwellness.Domain.Entity.Product;
 import com.petcare.petwellness.Domain.Entity.Vaccination;
 import com.petcare.petwellness.Enums.AppointmentStatus;
+import com.petcare.petwellness.Enums.OrderStatus;
 import com.petcare.petwellness.Enums.ProductStatus;
 import com.petcare.petwellness.Enums.VaccinationStatus;
 import com.petcare.petwellness.Repository.AppointmentRepository;
 import com.petcare.petwellness.Repository.OrderItemRepository;
 import com.petcare.petwellness.Repository.OrderRepository;
 import com.petcare.petwellness.Repository.ProductRepository;
+import com.petcare.petwellness.Repository.PetRepository;
 import com.petcare.petwellness.Repository.VaccinationRepository;
+import com.petcare.petwellness.Repository.UserRepository;
+import com.petcare.petwellness.Domain.Entity.User;
 import com.petcare.petwellness.Service.UserDashboardSummaryService;
 import com.petcare.petwellness.Util.FileStorageUtil;
 
@@ -46,7 +50,9 @@ public class UserDashboardSummaryServiceImp implements UserDashboardSummaryServi
     private final OrderRepository orderRepository;
     private final OrderItemRepository orderItemRepository;
     private final ProductRepository productRepository;
+    private final PetRepository petRepository;
     private final VaccinationRepository vaccinationRepository;
+    private final UserRepository userRepository;
     private final FileStorageUtil fileStorageUtil;
 
     public UserDashboardSummaryServiceImp(
@@ -54,13 +60,17 @@ public class UserDashboardSummaryServiceImp implements UserDashboardSummaryServi
             OrderRepository orderRepository,
             OrderItemRepository orderItemRepository,
             ProductRepository productRepository,
+            PetRepository petRepository,
             VaccinationRepository vaccinationRepository,
+            UserRepository userRepository,
             FileStorageUtil fileStorageUtil) {
         this.appointmentRepository = appointmentRepository;
         this.orderRepository = orderRepository;
         this.orderItemRepository = orderItemRepository;
         this.productRepository = productRepository;
+        this.petRepository = petRepository;
         this.vaccinationRepository = vaccinationRepository;
+        this.userRepository = userRepository;
         this.fileStorageUtil = fileStorageUtil;
     }
 
@@ -68,6 +78,14 @@ public class UserDashboardSummaryServiceImp implements UserDashboardSummaryServi
     @Transactional(readOnly = true)
     public UserDashboardResponseDTO getUserDashboardSummary(Long userId) {
         UserDashboardResponseDTO response = new UserDashboardResponseDTO();
+        response.setOwnerFullName(loadOwnerFullName(userId));
+        response.setPetCount(petRepository.countByUserId(userId));
+        response.setActiveOrderCount(
+                orderRepository.countByUserIdAndStatusNotIn(
+                        userId,
+                        List.of(OrderStatus.CANCELLED, OrderStatus.FAILED)
+                )
+        );
         response.setAppointments(loadAppointments(userId));
         response.setOrders(loadOrders(userId));
         response.setProducts(loadProducts());
@@ -127,6 +145,13 @@ public class UserDashboardSummaryServiceImp implements UserDashboardSummaryServi
                 .stream()
                 .map(this::mapReminder)
                 .collect(Collectors.toList());
+    }
+
+    private String loadOwnerFullName(Long userId) {
+        return userRepository.findById(userId)
+                .map(User::getFullName)
+                .filter(name -> name != null && !name.trim().isEmpty())
+                .orElse(null);
     }
 
     private AppointmentSummaryResponseDTO mapAppointment(Appointment appointment) {

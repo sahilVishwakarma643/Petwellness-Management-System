@@ -3,6 +3,7 @@ package com.petcare.petwellness.Repository;
 import com.petcare.petwellness.Domain.Entity.User;
 import com.petcare.petwellness.Enums.UserRole;
 import com.petcare.petwellness.Enums.UserStatus;
+import java.time.LocalDateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,12 +20,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
     
     List<User> findByProfileCompletedTrueAndStatus(UserStatus status);
     Page<User> findByProfileCompletedTrueAndStatus(UserStatus status, Pageable pageable);
+    long countByProfileCompletedTrueAndStatus(UserStatus status);
+    List<User> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
+    List<User> findTop8ByOrderByCreatedAtDesc();
 
     
     List<User> findByRole(UserRole role);
 
     List<User> findByRoleAndStatus(UserRole role, UserStatus status);
     Page<User> findByRoleAndStatus(UserRole role, UserStatus status, Pageable pageable);
+    long countByRoleAndStatus(UserRole role, UserStatus status);
 
     
 }
