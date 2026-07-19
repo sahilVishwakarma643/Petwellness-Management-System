@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.slf4j.Logger;
@@ -141,6 +142,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(
                 new ErrorResponseDto("Required multipart field is missing: " + ex.getRequestPartName(), 400),
                 HttpStatus.BAD_REQUEST
+        );
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleMissingResource(NoResourceFoundException ex) {
+        log.warn("Static resource not found: {}", ex.getResourcePath());
+
+        return new ResponseEntity<>(
+                new ErrorResponseDto("Resource not found: " + ex.getResourcePath(), 404),
+                HttpStatus.NOT_FOUND
         );
     }
 
