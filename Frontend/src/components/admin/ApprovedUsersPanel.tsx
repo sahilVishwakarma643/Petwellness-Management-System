@@ -1,13 +1,14 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import type { ApprovedUser } from "../../types/adminDashboard";
-import { CloseIcon } from "./Icons";
+import { CloseIcon, EyeIcon } from "./Icons";
 
 type ApprovedUsersPanelProps = {
   users: ApprovedUser[];
   loading: boolean;
   deletingId: number | null;
   onDelete: (user: ApprovedUser, reason: string) => void;
+  onViewProfile: (user: ApprovedUser) => void;
 };
 
 type DeleteDialogState = {
@@ -21,6 +22,7 @@ export default function ApprovedUsersPanel({
   loading,
   deletingId,
   onDelete,
+  onViewProfile,
 }: ApprovedUsersPanelProps) {
   const [dialog, setDialog] = useState<DeleteDialogState | null>(null);
 
@@ -32,7 +34,9 @@ export default function ApprovedUsersPanel({
   return (
     <section className="rounded-2xl border border-teal-100 bg-white p-4 shadow-md shadow-teal-100/60 sm:p-5">
       <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-lg font-bold text-slate-900">Approved Users</h2>
+        <div>
+          <h2 className="text-lg font-bold text-slate-900">Approved Users</h2>
+        </div>
         <span className="rounded-full bg-emerald-100 px-2 py-1 text-xs font-semibold text-emerald-700">
           {users.length} approved
         </span>
@@ -73,21 +77,31 @@ export default function ApprovedUsersPanel({
                     </span>
                   </td>
                   <td className="rounded-r-xl px-2 py-3">
-                    <button
-                      type="button"
-                      className="inline-flex items-center gap-1 rounded-lg bg-rose-600 px-2.5 py-1.5 text-xs font-semibold text-white hover:bg-rose-700 disabled:cursor-not-allowed disabled:bg-slate-400"
-                      onClick={() =>
-                        setDialog({
-                          user,
-                          enteredId: "",
-                          reason: "",
-                        })
-                      }
-                      disabled={deletingId === user.id}
-                    >
-                      <CloseIcon className="h-3.5 w-3.5" />
-                      {deletingId === user.id ? "Deleting..." : "Reject / Delete"}
-                    </button>
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        className="inline-flex items-center gap-1 rounded-lg border border-teal-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-teal-50"
+                        onClick={() => onViewProfile(user)}
+                      >
+                        <EyeIcon className="h-3.5 w-3.5" />
+                        View
+                      </button>
+                      <button
+                        type="button"
+                        className="inline-flex items-center gap-1 rounded-lg bg-rose-600 px-2.5 py-1.5 text-xs font-semibold text-white hover:bg-rose-700 disabled:cursor-not-allowed disabled:bg-slate-400"
+                        onClick={() =>
+                          setDialog({
+                            user,
+                            enteredId: "",
+                            reason: "",
+                          })
+                        }
+                        disabled={deletingId === user.id}
+                      >
+                        <CloseIcon className="h-3.5 w-3.5" />
+                        {deletingId === user.id ? "Deleting..." : "Reject"}
+                      </button>
+                    </div>
                   </td>
                 </motion.tr>
               ))}
