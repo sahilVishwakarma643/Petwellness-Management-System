@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -139,7 +140,7 @@ public class AppointmentServiceImp implements AppointmentService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<AppointmentResponseDto> getAppointments(int offset, int limit) {
+    public Page<AppointmentResponseDto> getAppointments(int offset, int limit) {
         validatePagination(offset, limit);
 
         PageRequest pageable = PageRequest.of(
@@ -149,14 +150,12 @@ public class AppointmentServiceImp implements AppointmentService {
         );
 
         return appointmentRepository.findAll(pageable)
-                .stream()
-                .map(this::mapToDto)
-                .collect(Collectors.toList());
+                .map(this::mapToDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<AppointmentResponseDto> getBookedAppointments(int offset, int limit) {
+    public Page<AppointmentResponseDto> getBookedAppointments(int offset, int limit) {
         validatePagination(offset, limit);
 
         PageRequest pageable = PageRequest.of(
@@ -166,9 +165,7 @@ public class AppointmentServiceImp implements AppointmentService {
         );
 
         return appointmentRepository.findByStatus(AppointmentStatus.BOOKED, pageable)
-                .stream()
-                .map(this::mapToDto)
-                .collect(Collectors.toList());
+                .map(this::mapToDto);
     }
 
     @Override

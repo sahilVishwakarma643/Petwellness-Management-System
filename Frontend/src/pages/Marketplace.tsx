@@ -13,6 +13,7 @@ import ProductDetailModal from "../components/marketplace/ProductDetailModal";
 import ProductFormModal from "../components/marketplace/ProductFormModal";
 import ProductGrid from "../components/marketplace/ProductGrid";
 import ProductTable from "../components/marketplace/ProductTable";
+import PaginationControls from "../components/shared/PaginationControls";
 import Sidebar from "../components/admin/Sidebar";
 import TopNavbar from "../components/admin/TopNavbar";
 import { Product } from "../types/marketplace";
@@ -82,6 +83,8 @@ function MarketplaceContent() {
   const [categoryFilter, setCategoryFilter] = useState<string>("All");
   const [sortBy, setSortBy] = useState<SortOption>("default");
   const [viewMode, setViewMode] = useState<"table" | "grid">("table");
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageMeta, setPageMeta] = useState({ totalPages: 0, totalElements: 0 });
   const [addModalOpen, setAddModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [viewingProduct, setViewingProduct] = useState<Product | null>(null);
@@ -96,13 +99,14 @@ function MarketplaceContent() {
     }, 2500);
   };
 
-  const loadProducts = async () => {
+  const loadProducts = async (page = currentPage) => {
     setIsLoading(true);
     setLoadError("");
 
     try {
-      const nextProducts = await getAdminProducts();
-      setProducts(nextProducts);
+      const nextProducts = await getAdminProducts({ offset: page, limit: 20 });
+      setProducts(nextProducts.content);
+      setPageMeta({ totalPages: nextProducts.totalPages, totalElements: nextProducts.totalElements });
     } catch (error: any) {
       setLoadError(error?.response?.data?.message || error?.message || "Failed to load products.");
     } finally {
@@ -111,8 +115,8 @@ function MarketplaceContent() {
   };
 
   useEffect(() => {
-    void loadProducts();
-  }, []);
+    void loadProducts(currentPage);
+  }, [currentPage]);
 
   const handleSaveProduct = async (payload: AdminProductInput, imageFile: File | null, productId?: number) => {
     if (!imageFile && !productId) {
@@ -124,12 +128,7 @@ function MarketplaceContent() {
         ? await updateAdminProduct(productId, payload, imageFile)
         : await createAdminProduct(payload, imageFile as File);
 
-      setProducts((current) => {
-        if (productId) {
-          return current.map((product) => (product.id === savedProduct.id ? savedProduct : product));
-        }
-        return [savedProduct, ...current];
-      });
+      await loadProducts(currentPage);
     } catch (error: any) {
       const message = error?.response?.data?.message || error?.message || "Failed to save product.";
       pushToast(message, "error");
@@ -140,7 +139,7 @@ function MarketplaceContent() {
   const handleDeleteProduct = async (product: Product) => {
     try {
       await deleteAdminProduct(product.id);
-      setProducts((current) => current.filter((item) => item.id !== product.id));
+      await loadProducts(currentPage);
       setDeletingProduct(null);
       setViewingProduct((current) => (current?.id === product.id ? null : current));
       setEditingProduct((current) => (current?.id === product.id ? null : current));
@@ -331,17 +330,17 @@ function MarketplaceContent() {
               <p className="text-sm font-semibold text-[#111827]">{loadError}</p>
               <button
                 type="button"
-                onClick={() => void loadProducts()}
+                onClick={() => void loadProducts(currentPage)}
                 className="mt-4 rounded-lg bg-[#0D9488] px-4 py-2 text-[13px] font-semibold text-white transition hover:bg-[#0B7E75]"
               >
                 Retry
               </button>
             </section>
           ) : viewMode === "table" ? (
-            <ProductTable
-              products={filteredProducts}
-              totalCount={products.length}
-              onView={(product) => setViewingProduct(product)}
+              <ProductTable
+                products={filteredProducts}
+                totalCount={pageMeta.totalElements}
+                onView={(product) => setViewingProduct(product)}
               onEdit={(product) => {
                 setViewingProduct(null);
                 setAddModalOpen(false);
@@ -361,6 +360,16 @@ function MarketplaceContent() {
               onDelete={(product) => setDeletingProduct(product)}
             />
           )}
+
+          <PaginationControls
+            page={currentPage}
+            totalPages={pageMeta.totalPages}
+            totalElements={pageMeta.totalElements}
+            label="products"
+            loading={isLoading}
+            onPrevious={() => setCurrentPage((prev) => Math.max(0, prev - 1))}
+            onNext={() => setCurrentPage((prev) => prev + 1)}
+          />
         </main>
       </div>
 

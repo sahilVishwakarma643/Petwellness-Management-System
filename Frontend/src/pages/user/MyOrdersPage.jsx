@@ -6,9 +6,10 @@ import TopBar from "../../components/dashboard/TopBar";
 import { useToast } from "../../components/shared/Toast";
 import CancelOrderModal from "../../components/user/orders/CancelOrderModal";
 import OrderCard from "../../components/user/orders/OrderCard";
+import { getLoggedInFirstName } from "../../utils/userDisplay";
 
 function getLoggedInName() {
-  return localStorage.getItem("userName") || "Pet Parent";
+  return getLoggedInFirstName();
 }
 
 function OrdersSkeleton() {

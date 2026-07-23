@@ -6,10 +6,7 @@ import TopBar from "../../components/dashboard/TopBar";
 import { useToast } from "../../components/shared/Toast";
 import AppointmentCard from "../../components/user/appointments/AppointmentCard";
 import BookingModal from "../../components/user/appointments/BookingModal";
-
-function getLoggedInName() {
-  return localStorage.getItem("userName") || "Pet Parent";
-}
+import { getLoggedInFirstName } from "../../utils/userDisplay";
 
 function SkeletonCard() {
   return (
@@ -38,7 +35,7 @@ export default function AppointmentListingPage() {
   const [typeFilter, setTypeFilter] = useState("ALL");
   const [selectedAppointment, setSelectedAppointment] = useState(null);
 
-  const ownerName = useMemo(() => getLoggedInName(), []);
+  const ownerName = useMemo(() => getLoggedInFirstName(), []);
   const owner = useMemo(
     () => ({ name: ownerName, avatar: ownerName.charAt(0).toUpperCase() || "P" }),
     [ownerName]

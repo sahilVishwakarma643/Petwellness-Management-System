@@ -11,6 +11,7 @@ import Sidebar from "../../components/admin/Sidebar";
 import StatsCard from "../../components/admin/StatsCard";
 import ToastStack from "../../components/admin/ToastStack";
 import TopNavbar from "../../components/admin/TopNavbar";
+import { getUnreadContactMessageCount } from "../../api/services/adminContactMessageService";
 import type {
   AdminDashboardOverview,
   AdminMetric,
@@ -91,6 +92,7 @@ export default function AdminDashboard() {
   const [deletingApprovedUserId, setDeletingApprovedUserId] = useState<number | null>(null);
   const [toasts, setToasts] = useState<ToastItem[]>([]);
   const [dashboardOverview, setDashboardOverview] = useState<AdminDashboardOverview>(EMPTY_OVERVIEW);
+  const [unreadMessageCount, setUnreadMessageCount] = useState(0);
 
   const metrics = useMemo(
     (): AdminMetric[] => [
@@ -143,7 +145,12 @@ export default function AdminDashboard() {
         const approvedRes = await API.get<ApprovedUserApi[]>("/admin/approved-users", {
           params: { offset: 0, limit: 1000 },
         });
-        approvedUsersFromApi = (approvedRes.data || []).map((user) => ({
+        const approvedRows = Array.isArray((approvedRes.data as any)?.content)
+          ? (approvedRes.data as any).content
+          : Array.isArray(approvedRes.data)
+          ? approvedRes.data
+          : [];
+        approvedUsersFromApi = approvedRows.map((user) => ({
           id: user.id,
           name: user.fullName,
           email: user.email,
@@ -164,7 +171,13 @@ export default function AdminDashboard() {
         }
       }
 
-      const mappedPending: PendingApproval[] = (pendingRes.data || []).map((user) => ({
+      const pendingRows = Array.isArray((pendingRes.data as any)?.content)
+        ? (pendingRes.data as any).content
+        : Array.isArray(pendingRes.data)
+        ? pendingRes.data
+        : [];
+
+      const mappedPending: PendingApproval[] = pendingRows.map((user) => ({
         id: user.id,
         name: user.fullName,
         email: user.email,
@@ -195,9 +208,19 @@ export default function AdminDashboard() {
     }
   };
 
+  const loadUnreadMessageCount = async () => {
+    try {
+      const count = await getUnreadContactMessageCount();
+      setUnreadMessageCount(count);
+    } catch (error) {
+      pushToast(getErrorMessage(error), "error");
+    }
+  };
+
   useEffect(() => {
     void loadAdminUsers();
     void loadDashboardOverview();
+    void loadUnreadMessageCount();
   }, []);
 
   useEffect(() => {
@@ -267,6 +290,8 @@ export default function AdminDashboard() {
     setSelectedMenu(key);
     if (key === "dashboard" || key === "approvals") {
       setSearchParams({ section: key });
+    } else if (key === "messages") {
+      navigate("/admin/contact-messages");
     }
   };
 
@@ -287,7 +312,11 @@ export default function AdminDashboard() {
       <div
         className={`min-h-screen w-full overflow-x-hidden transition-[margin-left,width] duration-300 ${sidebarCollapsed ? "md:ml-[92px] md:w-[calc(100%-92px)]" : "md:ml-[270px] md:w-[calc(100%-270px)]"}`} 
       >
-        <TopNavbar onOpenSidebar={() => setMobileSidebarOpen(true)} />
+        <TopNavbar
+          onOpenSidebar={() => setMobileSidebarOpen(true)}
+          notificationCount={unreadMessageCount}
+          onNotificationsClick={() => navigate("/admin/contact-messages")}
+        />
 
         <motion.main
           initial={{ opacity: 0, y: 14 }}

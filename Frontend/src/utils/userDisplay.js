@@ -28,13 +28,15 @@ function firstNameFromValue(value) {
 export function getLoggedInFirstName(fallback = "Pet Parent") {
   const payload = decodeJwtPayload(localStorage.getItem("token"));
   const candidates = [
+    localStorage.getItem("fullName"),
+    localStorage.getItem("displayName"),
+    payload?.fullName,
+    payload?.name,
     localStorage.getItem("firstName"),
-    localStorage.getItem("userName"),
     payload?.firstName,
     payload?.first_name,
     payload?.given_name,
-    payload?.fullName,
-    payload?.name,
+    localStorage.getItem("userName"),
     payload?.username,
     payload?.sub,
     payload?.email,

@@ -1,11 +1,10 @@
 package com.petcare.petwellness.Service;
 
-import java.util.List;
-
 import com.petcare.petwellness.DTO.Request.ProductCreateRequestDto;
 import com.petcare.petwellness.DTO.Request.ProductUpdateRequestDto;
 import com.petcare.petwellness.DTO.Response.ProductResponseDto;
 import com.petcare.petwellness.Enums.ProductCategory;
+import org.springframework.data.domain.Page;
 
 public interface ProductService {
 
@@ -15,9 +14,9 @@ public interface ProductService {
 
     ProductResponseDto getProductById(Long productId);
 
-    List<ProductResponseDto> getProducts(int offset, int limit, ProductCategory category);
+    Page<ProductResponseDto> getProducts(int offset, int limit, ProductCategory category);
 
-    List<ProductResponseDto> getPublicProducts(int offset, int limit, ProductCategory category);
+    Page<ProductResponseDto> getPublicProducts(int offset, int limit, ProductCategory category);
 
     String deleteProduct(Long productId);
 }

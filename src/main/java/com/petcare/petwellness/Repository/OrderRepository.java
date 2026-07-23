@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.petcare.petwellness.Domain.Entity.Order;
@@ -13,7 +14,7 @@ import com.petcare.petwellness.Enums.OrderStatus;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    List<Order> findByUserId(Long userId, Pageable pageable);
+    Page<Order> findByUserId(Long userId, Pageable pageable);
 
     long countByUserIdAndStatusNotIn(Long userId, Collection<OrderStatus> statuses);
 
@@ -21,7 +22,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     Optional<Order> findByRazorpayOrderId(String razorpayOrderId);
 
-    List<Order> findByStatus(OrderStatus status, Pageable pageable);
+    Page<Order> findByStatus(OrderStatus status, Pageable pageable);
 
     List<Order> findByStatusAndRazorpayOrderIdIsNotNullAndCreatedAtBefore(
             OrderStatus status,

@@ -15,6 +15,7 @@ import ToastStack from "../../components/admin/ToastStack";
 import TopNavbar from "../../components/admin/TopNavbar";
 import AppointmentFormModal from "../../components/admin/appointments/AppointmentFormModal";
 import DeleteAppointmentModal from "../../components/admin/appointments/DeleteAppointmentModal";
+import PaginationControls from "../../components/shared/PaginationControls";
 import type { DashboardMenuKey, ToastItem } from "../../types/adminDashboard";
 
 function getErrorMessage(error: unknown) {
@@ -49,6 +50,8 @@ export default function AdminAppointments() {
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState<CombinedFilter>("ALL");
   const [selectedDate, setSelectedDate] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageMeta, setPageMeta] = useState({ totalPages: 0, totalElements: 0 });
   const [formOpen, setFormOpen] = useState(false);
   const [formMode, setFormMode] = useState<"create" | "edit">("create");
   const [editingAppointment, setEditingAppointment] = useState<AdminAppointment | null>(null);
@@ -62,11 +65,12 @@ export default function AdminAppointments() {
     setTimeout(() => setToasts((prev) => prev.filter((toast) => toast.id !== id)), 2500);
   };
 
-  const loadAppointments = async () => {
+  const loadAppointments = async (page = currentPage) => {
     setLoading(true);
     try {
-      const data = await getAllAppointments();
-      setAppointments(data);
+      const data = await getAllAppointments({ offset: page, limit: 10 });
+      setAppointments(data.content);
+      setPageMeta({ totalPages: data.totalPages, totalElements: data.totalElements });
     } catch (error) {
       pushToast(getErrorMessage(error), "error");
     } finally {
@@ -75,8 +79,8 @@ export default function AdminAppointments() {
   };
 
   useEffect(() => {
-    void loadAppointments();
-  }, []);
+    void loadAppointments(currentPage);
+  }, [currentPage]);
 
   const filteredAppointments = useMemo(
     () =>
@@ -139,7 +143,10 @@ export default function AdminAppointments() {
                     <button
                       key={filter}
                       type="button"
-                      onClick={() => setActiveFilter(filter as CombinedFilter)}
+                      onClick={() => {
+                        setActiveFilter(filter as CombinedFilter);
+                        setCurrentPage(0);
+                      }}
                       className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
                         activeFilter === filter ? "bg-teal-600 text-white shadow-md shadow-teal-300/60" : "bg-teal-50 text-slate-700 hover:bg-teal-100"
                       }`}
@@ -162,7 +169,10 @@ export default function AdminAppointments() {
                 <input
                   type="date"
                   value={selectedDate}
-                  onChange={(event) => setSelectedDate(event.target.value)}
+                    onChange={(event) => {
+                      setSelectedDate(event.target.value);
+                      setCurrentPage(0);
+                    }}
                   className="rounded-xl border border-teal-200 px-3 py-2 text-sm outline-none ring-teal-300 focus:ring-2"
                 />
                 <button
@@ -262,6 +272,16 @@ export default function AdminAppointments() {
                 No appointment slots found.
               </p>
             ) : null}
+
+            <PaginationControls
+              page={currentPage}
+              totalPages={pageMeta.totalPages}
+              totalElements={pageMeta.totalElements}
+              label="appointments"
+              loading={loading}
+              onPrevious={() => setCurrentPage((prev) => Math.max(0, prev - 1))}
+              onNext={() => setCurrentPage((prev) => prev + 1)}
+            />
           </section>
         </motion.main>
       </div>
@@ -290,7 +310,7 @@ export default function AdminAppointments() {
             setFormOpen(false);
             setEditingAppointment(null);
             setFormMode("create");
-            await loadAppointments();
+            await loadAppointments(currentPage);
           } catch (error) {
             pushToast(getErrorMessage(error), "error");
           } finally {
@@ -311,7 +331,7 @@ export default function AdminAppointments() {
             await deleteAppointment(deleteTarget.id);
             pushToast("Appointment slot deleted", "success");
             setDeleteTarget(null);
-            await loadAppointments();
+            await loadAppointments(currentPage);
           } catch (error) {
             pushToast(getErrorMessage(error), "error");
           } finally {

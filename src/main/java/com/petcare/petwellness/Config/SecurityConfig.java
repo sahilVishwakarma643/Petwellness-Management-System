@@ -44,12 +44,15 @@ public class SecurityConfig {
                           .requestMatchers(
                                   "/api/auth/send-otp",
                                   "/api/auth/verify-otp",
-                                 "/api/auth/registration",
-                                 "/api/auth/login",
-                                 "/api/auth/forgot-password/send-otp",
-                                 "/api/auth/forgot-password/reset",
-                                 "/api/test/reminders/vaccination/run"
-                          ).permitAll()
+                                  "/api/auth/registration",
+                                  "/api/auth/login",
+                                  "/api/auth/forgot-password/send-otp",
+                                  "/api/auth/forgot-password/reset",
+                                  "/api/contact-messages",
+                                  "/api/test/reminders/vaccination/run",
+                                  "/api/contact-messages",
+                                  "/actuator/health"
+                           ).permitAll()
                          .requestMatchers(HttpMethod.POST, "/api/auth/set-password").hasRole("OWNER")
                          .requestMatchers("/api/admin/**").hasRole("ADMIN")
                          .requestMatchers("/actuator/**").hasRole("ADMIN")

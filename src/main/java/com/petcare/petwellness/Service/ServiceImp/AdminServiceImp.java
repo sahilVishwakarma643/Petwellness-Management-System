@@ -14,7 +14,6 @@ import com.petcare.petwellness.Domain.Entity.Product;
 import com.petcare.petwellness.Domain.Entity.PersonalInfo;
 import com.petcare.petwellness.Domain.Entity.User;
 import com.petcare.petwellness.Enums.AppointmentStatus;
-import com.petcare.petwellness.Enums.ProductStatus;
 import com.petcare.petwellness.Enums.UserRole;
 import com.petcare.petwellness.Enums.UserStatus;
 import com.petcare.petwellness.Exceptions.CustomException.BadRequestException;
@@ -27,6 +26,7 @@ import com.petcare.petwellness.Repository.UserRepository;
 import com.petcare.petwellness.Service.AdminService;
 import com.petcare.petwellness.Service.EmailService;
 import com.petcare.petwellness.Util.FileStorageUtil;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -75,44 +75,33 @@ public class AdminServiceImp implements AdminService {
 
     
     @Override
-    public List<PendingUserResponseDto> getPendingUsers(int offset, int limit) {
+    public Page<PendingUserResponseDto> getPendingUsers(int offset, int limit) {
         validatePagination(offset, limit);
 
-        List<User> users = userRepository
+        return userRepository
                 .findByProfileCompletedTrueAndStatus(UserStatus.PENDING,
                         PageRequest.of(offset, limit, Sort.by(Sort.Direction.DESC, "createdAt")))
-                .getContent();
-
-        return users.stream()
                 .map(user -> new PendingUserResponseDto(
                         user.getId(),
                         user.getEmail(),
                         user.getFullName(),
                         user.getCreatedAt()
-                ))
-                .collect(Collectors.toList());
+                ));
     }
 
     @Override
-    public List<ApprovedUserResponseDto> getApprovedUsers(int offset, int limit) {
+    public Page<ApprovedUserResponseDto> getApprovedUsers(int offset, int limit) {
         validatePagination(offset, limit);
-        List<User> users = userRepository
+
+        return userRepository
                 .findByRoleAndStatus(UserRole.OWNER, UserStatus.APPROVED,
                         PageRequest.of(offset, limit, Sort.by(Sort.Direction.DESC, "createdAt")))
-                .getContent();
-
-        if (users.isEmpty()) {
-            throw new ResourceNotFoundException("No approved user found");
-        }
-
-        return users.stream()
                 .map(user -> new ApprovedUserResponseDto(
                         user.getId(),
                         user.getFullName(),
                         user.getEmail(),
                         user.getCreatedAt()
-                ))
-                .collect(Collectors.toList());
+                ));
     }
 
     @Override
@@ -425,10 +414,16 @@ emailService.sendEmail(
                 .mapToObj(index -> {
                     LocalDate weekStart = currentWeekStart.minusWeeks(5L - index);
                     LocalDate weekEnd = weekStart.plusDays(6);
-                    long count = appointments.stream()
-                            .map(Appointment::getAppointmentDate)
-                            .filter(date -> date != null && !date.isBefore(weekStart) && !date.isAfter(weekEnd))
-                            .count();
+                    long count = 0;
+                    for (Appointment appointment : appointments) {
+                        if (appointment == null || appointment.getAppointmentDate() == null) {
+                            continue;
+                        }
+                        LocalDate appointmentDate = appointment.getAppointmentDate();
+                        if (!appointmentDate.isBefore(weekStart) && !appointmentDate.isAfter(weekEnd)) {
+                            count++;
+                        }
+                    }
 
                     String label = weekStart.getDayOfMonth() + " " +
                             weekStart.getMonth().getDisplayName(TextStyle.SHORT, Locale.ENGLISH);

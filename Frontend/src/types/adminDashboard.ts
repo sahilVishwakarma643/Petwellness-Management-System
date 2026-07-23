@@ -5,6 +5,7 @@ export type DashboardMenuKey =
   | "appointments"
   | "orders"
   | "marketplace"
+  | "messages"
   | "logout";
 
 export type DashboardMenuItem = {

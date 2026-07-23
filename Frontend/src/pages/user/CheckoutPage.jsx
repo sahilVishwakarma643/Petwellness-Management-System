@@ -6,9 +6,10 @@ import Sidebar from "../../components/dashboard/Sidebar";
 import TopBar from "../../components/dashboard/TopBar";
 import { useCart } from "../../context/CartContext";
 import { useToast } from "../../components/shared/Toast";
+import { getLoggedInFirstName } from "../../utils/userDisplay";
 
 function getLoggedInName() {
-  return localStorage.getItem("userName") || "Pet Parent";
+  return getLoggedInFirstName();
 }
 
 function formatMoney(value) {

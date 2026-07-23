@@ -36,7 +36,20 @@ function normalizeProduct(dto) {
   };
 }
 
+function normalizePage(data) {
+  const content = Array.isArray(data?.content) ? data.content.map(normalizeProduct) : [];
+  return {
+    content,
+    totalPages: Number(data?.totalPages || 0),
+    totalElements: Number(data?.totalElements || content.length),
+    page: Number(data?.number || 0),
+    size: Number(data?.size || 20),
+    first: Boolean(data?.first),
+    last: Boolean(data?.last),
+  };
+}
+
 export async function getUserProducts(params = {}) {
   const response = await API.get("/user/products", { params });
-  return Array.isArray(response.data) ? response.data.map(normalizeProduct) : [];
+  return normalizePage(response.data);
 }

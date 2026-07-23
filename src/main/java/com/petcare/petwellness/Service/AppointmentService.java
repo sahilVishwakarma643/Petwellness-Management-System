@@ -5,6 +5,7 @@ import java.util.List;
 import com.petcare.petwellness.DTO.Request.AppointmentCreateRequestDto;
 import com.petcare.petwellness.DTO.Request.AppointmentUpdateRequestDto;
 import com.petcare.petwellness.DTO.Response.AppointmentResponseDto;
+import org.springframework.data.domain.Page;
 
 public interface AppointmentService {
 
@@ -14,9 +15,9 @@ public interface AppointmentService {
 
     AppointmentResponseDto getAppointmentById(Long appointmentId);
 
-    List<AppointmentResponseDto> getAppointments(int offset, int limit);
+    Page<AppointmentResponseDto> getAppointments(int offset, int limit);
 
-    List<AppointmentResponseDto> getBookedAppointments(int offset, int limit);
+    Page<AppointmentResponseDto> getBookedAppointments(int offset, int limit);
 
     List<AppointmentResponseDto> getAvailableAppointments(int offset, int limit);
 

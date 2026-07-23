@@ -7,9 +7,10 @@ import { useToast } from "../../components/shared/Toast";
 import CancelOrderModal from "../../components/user/orders/CancelOrderModal";
 import OrderStatusBadge from "../../components/user/orders/OrderStatusBadge";
 import OrderStatusTracker from "../../components/user/orders/OrderStatusTracker";
+import { getLoggedInFirstName } from "../../utils/userDisplay";
 
 function getLoggedInName() {
-  return localStorage.getItem("userName") || "Pet Parent";
+  return getLoggedInFirstName();
 }
 
 function formatMoney(value) {

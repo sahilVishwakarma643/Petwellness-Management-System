@@ -58,14 +58,15 @@ function Register() {
   const [form, setForm] = useState(initialForm);
   const [idProofFile, setIdProofFile] = useState(null);
   const [profileImageFile, setProfileImageFile] = useState(null);
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [loadingAction, setLoadingAction] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [maxDate, setMaxDate] = useState("");
 
   const canSubmit = useMemo(() => {
-    return otpVerified && idProofFile && profileImageFile;
-  }, [otpVerified, idProofFile, profileImageFile]);
+    return otpVerified && idProofFile && profileImageFile && acceptedTerms;
+  }, [otpVerified, idProofFile, profileImageFile, acceptedTerms]);
 
   const profilePreview = useMemo(() => {
     if (!profileImageFile) {
@@ -172,6 +173,11 @@ function Register() {
       return;
     }
 
+    if (!acceptedTerms) {
+      setError("You must accept the Privacy Policy and Terms & Conditions before registering.");
+      return;
+    }
+
     if (
       isBlank(form.fullName) ||
       isBlank(form.phoneNumber) ||
@@ -240,6 +246,7 @@ function Register() {
       setProfileImageFile(null);
       setOtpSent(false);
       setOtpVerified(false);
+      setAcceptedTerms(false);
       setEmail("");
       localStorage.removeItem("token");
       localStorage.removeItem("userName");
@@ -651,6 +658,23 @@ function Register() {
                   </div>
                 </div>
               </section>
+
+              <div className="rounded-[12px] border border-[#E2EBF0] bg-[#F8FBFD] px-4 py-3">
+                <label className="flex cursor-pointer items-start gap-3 text-sm font-semibold text-[#1A2332]">
+                  <input
+                    type="checkbox"
+                    checked={acceptedTerms}
+                    onChange={(event) => setAcceptedTerms(event.target.checked)}
+                    className="mt-1 h-4 w-4 rounded border-[#B6C4D1] text-[#2DD4A0] focus:ring-[#2DD4A0]"
+                  />
+                  <span>
+                    I accept the{" "}
+                    <Link to="/legal" className="font-bold text-[#1BAF82] underline underline-offset-2">
+                      Privacy Policy and Terms &amp; Conditions
+                    </Link>
+                  </span>
+                </label>
+              </div>
 
               <button
                 type="submit"

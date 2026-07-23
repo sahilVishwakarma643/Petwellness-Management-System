@@ -10,7 +10,7 @@ import ProductDetailModal from "../../components/user/marketplace/ProductDetailM
 import { useToast } from "../../components/shared/Toast";
 import { getLoggedInFirstName } from "../../utils/userDisplay";
 
-const LIMIT = 12;
+const LIMIT = 20;
 
 function SkeletonCard() {
   return (
@@ -80,9 +80,9 @@ export default function UserMarketplace() {
         limit: LIMIT,
         ...(category !== "ALL" ? { category } : {}),
       });
-      setProducts((current) => (append ? [...current, ...nextProducts] : nextProducts));
+      setProducts((current) => (append ? [...current, ...nextProducts.content] : nextProducts.content));
       setOffset(nextOffset);
-      setHasMore(nextProducts.length === LIMIT);
+      setHasMore(!nextProducts.last && nextProducts.content.length === LIMIT);
     } catch (err) {
       setError(err?.message || "Failed to load products.");
     } finally {
@@ -203,7 +203,7 @@ export default function UserMarketplace() {
                 <div className="flex justify-center">
                   <button
                     type="button"
-                    onClick={() => fetchProducts({ nextOffset: offset + LIMIT, append: true })}
+                  onClick={() => fetchProducts({ nextOffset: offset + 1, append: true })}
                     disabled={loadingMore}
                     className="rounded-full border border-[#E2EBF0] bg-white px-5 py-2.5 text-sm font-bold text-[#1A2332] shadow-[0_2px_8px_rgba(26,35,50,0.06)] transition hover:border-[#2DD4A0] hover:text-[#1BAF82] disabled:cursor-not-allowed"
                   >

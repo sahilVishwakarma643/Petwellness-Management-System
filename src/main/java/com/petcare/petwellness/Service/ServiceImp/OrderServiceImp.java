@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -200,7 +201,7 @@ public class OrderServiceImp implements OrderService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<OrderResponseDto> getAllOrders(int offset, int limit, OrderStatus status) {
+    public Page<OrderResponseDto> getAllOrders(int offset, int limit, OrderStatus status) {
         validatePagination(offset, limit);
 
         PageRequest pageable = PageRequest.of(
@@ -209,13 +210,10 @@ public class OrderServiceImp implements OrderService {
                 Sort.by(Sort.Direction.DESC, "createdAt")
         );
 
-        List<Order> orders = status == null
-                ? orderRepository.findAll(pageable).getContent()
-                : orderRepository.findByStatus(status, pageable);
-
-        return orders.stream()
-                .map(order -> mapToOrderResponse(order, orderItemRepository.findByOrderId(order.getId())))
-                .collect(Collectors.toList());
+        return (status == null
+                ? orderRepository.findAll(pageable)
+                : orderRepository.findByStatus(status, pageable))
+                .map(order -> mapToOrderResponse(order, orderItemRepository.findByOrderId(order.getId())));
     }
 
     @Override
@@ -404,7 +402,7 @@ public class OrderServiceImp implements OrderService {
         dto.setCreatedAt(order.getCreatedAt());
 
         List<OrderItemResponseDto> itemDtos = items.stream()
-                .map(this::mapToOrderItem)
+                .map(item -> mapToOrderItem(item))
                 .collect(Collectors.toList());
         dto.setItems(itemDtos);
         return dto;
@@ -550,8 +548,8 @@ public class OrderServiceImp implements OrderService {
         }
 
         List<String> names = items.stream()
-                .map(OrderItem::getProductName)
-                .map(this::trimToNull)
+                .map(item -> item.getProductName())
+                .map(value -> trimToNull(value))
                 .filter(name -> name != null)
                 .distinct()
                 .collect(Collectors.toList());

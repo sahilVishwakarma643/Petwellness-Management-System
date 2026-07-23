@@ -181,12 +181,12 @@ public class CartServiceImp implements CartService {
     private CartResponseDto mapToCartResponse(Cart cart) {
         List<CartItem> items = cartItemRepository.findByCartId(cart.getId());
         List<CartItemResponseDto> itemDtos = items.stream()
-                .map(this::mapToCartItem)
+                .map(item -> mapToCartItem(item))
                 .collect(Collectors.toList());
 
         BigDecimal total = itemDtos.stream()
-                .map(CartItemResponseDto::getLineTotal)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+                .map(item -> item.getLineTotal())
+                .reduce(BigDecimal.ZERO, (left, right) -> left.add(right));
 
         CartResponseDto response = new CartResponseDto();
         response.setItems(itemDtos);
@@ -199,7 +199,7 @@ public class CartServiceImp implements CartService {
         List<CartItemResponseDto> itemDtos = cartItemRepository.findByCartId(cart.getId(), pageable)
                 .getContent()
                 .stream()
-                .map(this::mapToCartItem)
+                .map(item -> mapToCartItem(item))
                 .collect(Collectors.toList());
 
         BigDecimal total = cartItemRepository.sumCartTotal(cart.getId());

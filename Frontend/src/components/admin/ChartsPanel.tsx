@@ -38,7 +38,7 @@ export default function ChartsPanel({ registrationTrend, weeklyAppointments, loa
               No registration data available.
             </div>
           ) : (
-            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={260}>
+            <ResponsiveContainer width="100%" height={260} minWidth={0}>
               <LineChart data={registrationTrend}>
                 <CartesianGrid strokeDasharray="4 4" stroke="#d1fae5" />
                 <XAxis dataKey="month" stroke="#0f766e" />
@@ -76,7 +76,7 @@ export default function ChartsPanel({ registrationTrend, weeklyAppointments, loa
               No appointment data available.
             </div>
           ) : (
-            <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={260}>
+            <ResponsiveContainer width="100%" height={260} minWidth={0}>
               <BarChart data={weeklyAppointments}>
                 <CartesianGrid strokeDasharray="4 4" stroke="#d1fae5" />
                 <XAxis dataKey="week" stroke="#0f766e" />

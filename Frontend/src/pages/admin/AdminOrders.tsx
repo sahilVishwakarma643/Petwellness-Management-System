@@ -16,6 +16,7 @@ import TopNavbar from "../../components/admin/TopNavbar";
 import AdminCancelOrderModal from "../../components/admin/orders/AdminCancelOrderModal";
 import OrderStatusBadge from "../../components/admin/orders/OrderStatusBadge";
 import OrderStatusUpdateModal from "../../components/admin/orders/OrderStatusUpdateModal";
+import PaginationControls from "../../components/shared/PaginationControls";
 import type { DashboardMenuKey, ToastItem } from "../../types/adminDashboard";
 
 const STATUS_FILTERS = [
@@ -88,6 +89,8 @@ export default function AdminOrders() {
   const [orders, setOrders] = useState<AdminOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeStatus, setActiveStatus] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageMeta, setPageMeta] = useState({ totalPages: 0, totalElements: 0 });
   const [statusDialog, setStatusDialog] = useState<{ order: AdminOrder; nextStatus: OrderStatus } | null>(null);
   const [cancelDialog, setCancelDialog] = useState<AdminOrder | null>(null);
   const [modalLoading, setModalLoading] = useState(false);
@@ -99,15 +102,16 @@ export default function AdminOrders() {
     setTimeout(() => setToasts((prev) => prev.filter((toast) => toast.id !== id)), 2500);
   };
 
-  const loadOrders = async (status = activeStatus) => {
+  const loadOrders = async (status = activeStatus, page = currentPage) => {
     setLoading(true);
     try {
       const data = await getAdminOrders({
-        offset: 0,
-        limit: 20,
+        offset: page,
+        limit: 10,
         ...(status ? { status: status as OrderStatus } : {}),
       });
-      setOrders(data);
+      setOrders(data.content);
+      setPageMeta({ totalPages: data.totalPages, totalElements: data.totalElements });
     } catch (error) {
       pushToast(getErrorMessage(error), "error");
     } finally {
@@ -116,8 +120,8 @@ export default function AdminOrders() {
   };
 
   useEffect(() => {
-    void loadOrders(activeStatus);
-  }, [activeStatus]);
+    void loadOrders(activeStatus, currentPage);
+  }, [activeStatus, currentPage]);
 
   const metrics = useMemo(
     () => [
@@ -173,7 +177,10 @@ export default function AdminOrders() {
                   <button
                     key={filter.label}
                     type="button"
-                    onClick={() => setActiveStatus(filter.value)}
+                    onClick={() => {
+                      setActiveStatus(filter.value);
+                      setCurrentPage(0);
+                    }}
                     className={`rounded-full px-4 py-2 text-sm font-semibold transition ${
                       active ? "bg-teal-600 text-white shadow-md shadow-teal-300/60" : "bg-teal-50 text-slate-700 hover:bg-teal-100"
                     }`}
@@ -268,6 +275,16 @@ export default function AdminOrders() {
                 No orders found for this filter.
               </p>
             ) : null}
+
+            <PaginationControls
+              page={currentPage}
+              totalPages={pageMeta.totalPages}
+              totalElements={pageMeta.totalElements}
+              label="orders"
+              loading={loading}
+              onPrevious={() => setCurrentPage((prev) => Math.max(0, prev - 1))}
+              onNext={() => setCurrentPage((prev) => prev + 1)}
+            />
           </section>
         </motion.main>
       </div>
@@ -285,7 +302,7 @@ export default function AdminOrders() {
             await updateOrderStatus(statusDialog.order.id, statusDialog.nextStatus);
             pushToast("Order status updated", "success");
             setStatusDialog(null);
-            await loadOrders(activeStatus);
+            await loadOrders(activeStatus, currentPage);
           } catch (error) {
             pushToast(getErrorMessage(error), "error");
           } finally {
@@ -306,7 +323,7 @@ export default function AdminOrders() {
             await cancelOrderAdmin(cancelDialog.id, reason);
             pushToast("Order cancelled successfully", "success");
             setCancelDialog(null);
-            await loadOrders(activeStatus);
+            await loadOrders(activeStatus, currentPage);
           } catch (error) {
             pushToast(getErrorMessage(error), "error");
           } finally {

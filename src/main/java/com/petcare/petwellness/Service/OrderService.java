@@ -10,6 +10,7 @@ import com.petcare.petwellness.DTO.Request.RazorpayPaymentVerifyRequestDto;
 import com.petcare.petwellness.DTO.Response.OrderResponseDto;
 import com.petcare.petwellness.DTO.Response.RazorpayOrderResponseDto;
 import com.petcare.petwellness.Enums.OrderStatus;
+import org.springframework.data.domain.Page;
 
 public interface OrderService {
 
@@ -29,7 +30,7 @@ public interface OrderService {
 
     void reconcilePendingPayments(int batchSize, java.time.LocalDateTime cutoff);
 
-    List<OrderResponseDto> getAllOrders(int offset, int limit, OrderStatus status);
+    Page<OrderResponseDto> getAllOrders(int offset, int limit, OrderStatus status);
 
     OrderResponseDto getOrderByIdForAdmin(Long orderId);
 

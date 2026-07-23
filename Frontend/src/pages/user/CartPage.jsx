@@ -5,9 +5,10 @@ import TopBar from "../../components/dashboard/TopBar";
 import CartItemRow from "../../components/user/cart/CartItemRow";
 import { useCart } from "../../context/CartContext";
 import { useToast } from "../../components/shared/Toast";
+import { getLoggedInFirstName } from "../../utils/userDisplay";
 
 function getLoggedInName() {
-  return localStorage.getItem("userName") || "Pet Parent";
+  return getLoggedInFirstName();
 }
 
 export default function CartPage() {

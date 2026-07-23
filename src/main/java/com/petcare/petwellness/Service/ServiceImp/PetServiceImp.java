@@ -8,7 +8,6 @@ import com.petcare.petwellness.Domain.Entity.MedicalHistory;
 import com.petcare.petwellness.Domain.Entity.Pet;
 import com.petcare.petwellness.Domain.Entity.User;
 import com.petcare.petwellness.Domain.Entity.Vaccination;
-import com.petcare.petwellness.Enums.AppointmentStatus;
 import com.petcare.petwellness.Exceptions.CustomException.BadRequestException;
 import com.petcare.petwellness.Exceptions.CustomException.PetLimitExceededException;
 import com.petcare.petwellness.Exceptions.CustomException.ResourceNotFoundException;

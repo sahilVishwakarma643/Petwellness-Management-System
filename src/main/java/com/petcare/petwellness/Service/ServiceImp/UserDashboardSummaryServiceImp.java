@@ -31,7 +31,6 @@ import com.petcare.petwellness.Repository.ProductRepository;
 import com.petcare.petwellness.Repository.PetRepository;
 import com.petcare.petwellness.Repository.VaccinationRepository;
 import com.petcare.petwellness.Repository.UserRepository;
-import com.petcare.petwellness.Domain.Entity.User;
 import com.petcare.petwellness.Service.UserDashboardSummaryService;
 import com.petcare.petwellness.Util.FileStorageUtil;
 
@@ -103,7 +102,7 @@ public class UserDashboardSummaryServiceImp implements UserDashboardSummaryServi
 
         return appointmentRepository.findByUserIdAndStatus(userId, AppointmentStatus.BOOKED, pageable)
                 .stream()
-                .map(this::mapAppointment)
+                .map(appointment -> mapAppointment(appointment))
                 .collect(Collectors.toList());
     }
 
@@ -116,7 +115,7 @@ public class UserDashboardSummaryServiceImp implements UserDashboardSummaryServi
 
         return orderRepository.findByUserId(userId, pageable)
                 .stream()
-                .map(this::mapOrder)
+                .map(order -> mapOrder(order))
                 .collect(Collectors.toList());
     }
 
@@ -129,7 +128,7 @@ public class UserDashboardSummaryServiceImp implements UserDashboardSummaryServi
 
         return productRepository.findByStatusIn(List.copyOf(VISIBLE_PRODUCT_STATUSES), pageable)
                 .stream()
-                .map(this::mapProduct)
+                .map(product -> mapProduct(product))
                 .collect(Collectors.toList());
     }
 
@@ -143,13 +142,13 @@ public class UserDashboardSummaryServiceImp implements UserDashboardSummaryServi
 
         return vaccinationRepository.findByPet_User_IdAndStatusIn(userId, List.copyOf(REMINDER_STATUSES), pageable)
                 .stream()
-                .map(this::mapReminder)
+                .map(vaccination -> mapReminder(vaccination))
                 .collect(Collectors.toList());
     }
 
     private String loadOwnerFullName(Long userId) {
         return userRepository.findById(userId)
-                .map(User::getFullName)
+                .map(user -> user.getFullName())
                 .filter(name -> name != null && !name.trim().isEmpty())
                 .orElse(null);
     }
@@ -206,8 +205,8 @@ public class UserDashboardSummaryServiceImp implements UserDashboardSummaryServi
         }
 
         List<String> names = items.stream()
-                .map(OrderItem::getProductName)
-                .map(this::trimToNull)
+                .map(item -> item.getProductName())
+                .map(value -> trimToNull(value))
                 .filter(name -> name != null)
                 .distinct()
                 .collect(Collectors.toList());
