@@ -5,6 +5,7 @@ import com.petcare.petwellness.Exceptions.CustomException.BadRequestException;
 import com.petcare.petwellness.Exceptions.CustomException.PetLimitExceededException;
 import com.petcare.petwellness.Exceptions.CustomException.PdfGenerationException;
 import com.petcare.petwellness.Exceptions.CustomException.ResourceNotFoundException;
+import com.petcare.petwellness.Exceptions.CustomException.ServiceUnavailableException;
 import com.petcare.petwellness.Exceptions.CustomException.UnauthorizedException;
 
 import org.springframework.http.HttpStatus;
@@ -168,6 +169,16 @@ public class GlobalExceptionHandler {
                         500
                 ),
                 HttpStatus.INTERNAL_SERVER_ERROR
+        );
+    }
+
+    @ExceptionHandler(ServiceUnavailableException.class)
+    public ResponseEntity<ErrorResponseDto> handleServiceUnavailable(ServiceUnavailableException ex) {
+        log.warn("Service unavailable: {}", ex.getMessage());
+
+        return new ResponseEntity<>(
+                new ErrorResponseDto(ex.getMessage(), 503),
+                HttpStatus.SERVICE_UNAVAILABLE
         );
     }
 
