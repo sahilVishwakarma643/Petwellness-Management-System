@@ -29,6 +29,7 @@ import MyProfile from "./pages/user/MyProfile.jsx";
 import LegalPage from "./pages/LegalPage";
 import Unauthorized from "./pages/Unauthorized";
 import RequireRole from "./components/routing/RequireRole";
+import AdminContactMessages from "./pages/admin/AdminContactMessages";
 
 function UserRouteProviders({ children }) {
   return (
@@ -60,106 +61,132 @@ function App() {
       <Route
         path="/user-dashboard"
         element={
-          <UserRouteProviders>
-            <Dashboard />
-          </UserRouteProviders>
+          <RequireRole allowedRole="OWNER">
+            <UserRouteProviders>
+              <Dashboard />
+            </UserRouteProviders>
+          </RequireRole>
         }
       />
       <Route
         path="/pets"
         element={
-          <UserRouteProviders>
-            <MyPets />
-          </UserRouteProviders>
+          <RequireRole allowedRole="OWNER">
+            <UserRouteProviders>
+              <MyPets />
+            </UserRouteProviders>
+          </RequireRole>
         }
       />
       
       <Route
         path="/profile/me"
         element={
-          <UserRouteProviders>
-            <MyProfile />
-          </UserRouteProviders>
+          <RequireRole allowedRole="OWNER">
+            <UserRouteProviders>
+              <MyProfile />
+            </UserRouteProviders>
+          </RequireRole>
         }
       />
       <Route
         path="/profile/edit"
         element={
-          <UserRouteProviders>
-            <MyProfile />
-          </UserRouteProviders>
+          <RequireRole allowedRole="OWNER">
+            <UserRouteProviders>
+              <MyProfile />
+            </UserRouteProviders>
+          </RequireRole>
         }
       />
       <Route
         path="/appointments"
         element={
-          <UserRouteProviders>
-            <AppointmentListingPage />
-          </UserRouteProviders>
+          <RequireRole allowedRole="OWNER">
+            <UserRouteProviders>
+              <AppointmentListingPage />
+            </UserRouteProviders>
+          </RequireRole>
         }
       />
       <Route
         path="/my-appointments"
         element={
-          <UserRouteProviders>
-            <MyAppointmentsPage />
-          </UserRouteProviders>
+          <RequireRole allowedRole="OWNER">
+            <UserRouteProviders>
+              <MyAppointmentsPage />
+            </UserRouteProviders>
+          </RequireRole>
         }
       />
       <Route
         path="/marketplace"
         element={
-          <UserRouteProviders>
-            <UserMarketplace />
-          </UserRouteProviders>
+          <RequireRole allowedRole="OWNER">
+            <UserRouteProviders>
+              <UserMarketplace />
+            </UserRouteProviders>
+          </RequireRole>
         }
       />
       <Route
         path="/cart"
         element={
-          <UserRouteProviders>
-            <CartPage />
-          </UserRouteProviders>
+          <RequireRole allowedRole="OWNER">
+            <UserRouteProviders>
+              <CartPage />
+            </UserRouteProviders>
+          </RequireRole>
         }
       />
       <Route
         path="/checkout"
         element={
-          <UserRouteProviders>
-            <CheckoutPage />
-          </UserRouteProviders>
+          <RequireRole allowedRole="OWNER">
+            <UserRouteProviders>
+              <CheckoutPage />
+            </UserRouteProviders>
+          </RequireRole>
         }
       />
       <Route
         path="/payment/:orderId"
         element={
-          <UserRouteProviders>
-            <PaymentPage />
-          </UserRouteProviders>
+          <RequireRole allowedRole="OWNER">
+            <UserRouteProviders>
+              <PaymentPage />
+            </UserRouteProviders>
+          </RequireRole>
         }
       />
       <Route
         path="/order-success/:orderId"
         element={
-          <UserRouteProviders>
-            <OrderSuccessPage />
-          </UserRouteProviders>
+          <RequireRole allowedRole="OWNER">
+            <UserRouteProviders>
+              <OrderSuccessPage />
+            </UserRouteProviders>
+          </RequireRole>
         }
       />
       <Route
         path="/my-orders"
         element={
-          <UserRouteProviders>
-            <MyOrdersPage />
-          </UserRouteProviders>
+          <RequireRole allowedRole="OWNER">
+            <UserRouteProviders>
+              <MyOrdersPage />
+            </UserRouteProviders>
+          </RequireRole>
         }
       />
       <Route
         path="/orders/:orderId"
         element={
-          <UserRouteProviders>
-            <OrderDetailPage />
-          </UserRouteProviders>
+          <RequireRole allowedRole="OWNER">
+            <UserRouteProviders>
+              <OrderDetailPage />
+            </UserRouteProviders>
+          </RequireRole>
         }
       />
       <Route
@@ -199,6 +226,14 @@ function App() {
         element={
           <RequireRole allowedRole="ADMIN">
             <AdminMarketplace />
+          </RequireRole>
+        }
+      />
+      <Route
+        path="/admin/contact-messages"
+        element={
+          <RequireRole allowedRole="ADMIN">
+            <AdminContactMessages />
           </RequireRole>
         }
       />

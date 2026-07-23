@@ -2,10 +2,10 @@ package com.petcare.petwellness.Service.ServiceImp;
 
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -137,7 +137,7 @@ public class ProductServiceImp implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductResponseDto> getProducts(int offset, int limit, ProductCategory category) {
+    public Page<ProductResponseDto> getProducts(int offset, int limit, ProductCategory category) {
         validatePagination(offset, limit);
 
         PageRequest pageable = PageRequest.of(
@@ -149,14 +149,12 @@ public class ProductServiceImp implements ProductService {
         return (category == null
                 ? productRepository.findAll(pageable)
                 : productRepository.findByCategory(category, pageable))
-                .stream()
-                .map(this::mapToDto)
-                .collect(Collectors.toList());
+                .map(this::mapToDto);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProductResponseDto> getPublicProducts(int offset, int limit, ProductCategory category) {
+    public Page<ProductResponseDto> getPublicProducts(int offset, int limit, ProductCategory category) {
         validatePagination(offset, limit);
 
         PageRequest pageable = PageRequest.of(
@@ -169,9 +167,7 @@ public class ProductServiceImp implements ProductService {
         return (category == null
                 ? productRepository.findByStatusIn(visibleStatuses, pageable)
                 : productRepository.findByStatusInAndCategory(visibleStatuses, category, pageable))
-                .stream()
-                .map(this::mapToDto)
-                .collect(Collectors.toList());
+                .map(this::mapToDto);
     }
 
     @Override

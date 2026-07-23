@@ -1,7 +1,6 @@
 package com.petcare.petwellness.Controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,9 +25,9 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductResponseDto>> getProducts(
+    public ResponseEntity<Page<ProductResponseDto>> getProducts(
             @RequestParam(defaultValue = "0") int offset,
-            @RequestParam(defaultValue = "10") int limit,
+            @RequestParam(defaultValue = "20") int limit,
             @RequestParam(required = false) ProductCategory category) {
         return ResponseEntity.ok(productService.getPublicProducts(offset, limit, category));
     }

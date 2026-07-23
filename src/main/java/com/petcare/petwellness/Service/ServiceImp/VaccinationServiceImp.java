@@ -155,18 +155,10 @@ public class VaccinationServiceImp implements VaccinationService {
         PageRequest pageable = PageRequest.of(offset, limit, Sort.by(Sort.Direction.DESC, "vaccinationDate"));
         return vaccinationRepository.findByPetId(petId, pageable)
                 .stream()
-                .map(this::mapToDto)
+                .map(vaccination -> mapToDto(vaccination))
                 .collect(Collectors.toList());
     }
-    private void applyRequest(Vaccination vaccination, VaccinationRequestDto request) {
-        vaccination.setVaccineName(request.getVaccineName().trim());
-        vaccination.setVaccinationDate(request.getVaccinationDate());
-        vaccination.setNextDueDate(request.getNextDueDate());
-        vaccination.setDoseNumber(request.getDoseNumber() == null ? 1 : request.getDoseNumber());
-        vaccination.setVeterinarianName(trimToNull(request.getVeterinarianName()));
-        vaccination.setNotes(trimToNull(request.getNotes()));
-}
-
+    
     private Pet getOwnedPetOrThrow(Long petId, Long loggedInUserId) {
         Pet pet = petRepository.findById(petId)
                 .orElseThrow(() -> new ResourceNotFoundException("Pet not found"));

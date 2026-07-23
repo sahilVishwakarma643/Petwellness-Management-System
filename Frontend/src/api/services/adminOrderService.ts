@@ -35,6 +35,27 @@ type AdminOrderParams = {
   limit?: number;
 };
 
+type PageResponse<T> = {
+  content?: T[];
+  totalPages?: number;
+  totalElements?: number;
+  number?: number;
+  size?: number;
+  first?: boolean;
+  last?: boolean;
+  numberOfElements?: number;
+};
+
+export type OrderPage = {
+  content: AdminOrder[];
+  totalPages: number;
+  totalElements: number;
+  page: number;
+  size: number;
+  first: boolean;
+  last: boolean;
+};
+
 function normalizeItem(item: any): AdminOrderItem {
   return {
     id: Number(item?.id || 0),
@@ -59,9 +80,23 @@ function normalizeOrder(order: any): AdminOrder {
   };
 }
 
-export async function getAdminOrders(params: AdminOrderParams = {}): Promise<AdminOrder[]> {
+function normalizePage(data: PageResponse<any> | undefined): OrderPage {
+  const content = Array.isArray(data?.content) ? data!.content.map(normalizeOrder) : [];
+
+  return {
+    content,
+    totalPages: Number(data?.totalPages || 0),
+    totalElements: Number(data?.totalElements || content.length),
+    page: Number(data?.number || 0),
+    size: Number(data?.size || 10),
+    first: Boolean(data?.first),
+    last: Boolean(data?.last),
+  };
+}
+
+export async function getAdminOrders(params: AdminOrderParams = {}): Promise<OrderPage> {
   const response = await API.get("/admin/orders", { params });
-  return Array.isArray(response.data) ? response.data.map(normalizeOrder) : [];
+  return normalizePage(response.data);
 }
 
 export async function getAdminOrderById(id: number | string): Promise<AdminOrder> {

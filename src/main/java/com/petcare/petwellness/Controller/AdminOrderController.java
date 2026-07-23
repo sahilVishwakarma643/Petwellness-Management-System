@@ -1,7 +1,6 @@
 package com.petcare.petwellness.Controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -33,7 +32,7 @@ public class AdminOrderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OrderResponseDto>> getOrders(
+    public ResponseEntity<Page<OrderResponseDto>> getOrders(
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "10") int limit,
             @RequestParam(required = false) OrderStatus status) {

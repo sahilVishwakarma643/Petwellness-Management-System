@@ -14,11 +14,10 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import jakarta.validation.Valid;
 
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @RestController
@@ -33,14 +32,14 @@ public class AdminController {
     }
 
     @GetMapping("/pending-users")
-    public ResponseEntity<List<PendingUserResponseDto>> getPendingUsers(
+    public ResponseEntity<Page<PendingUserResponseDto>> getPendingUsers(
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "10") int limit) {
         return ResponseEntity.ok(adminService.getPendingUsers(offset, limit));
     }
 
     @GetMapping("/approved-users")
-    public ResponseEntity<List<ApprovedUserResponseDto>> getApprovedUsers(
+    public ResponseEntity<Page<ApprovedUserResponseDto>> getApprovedUsers(
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "10") int limit) {
         return ResponseEntity.ok(adminService.getApprovedUsers(offset, limit));

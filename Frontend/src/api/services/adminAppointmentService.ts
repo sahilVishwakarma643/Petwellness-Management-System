@@ -25,6 +25,27 @@ export type AppointmentPayload = {
   status?: AppointmentStatus;
 };
 
+type PageResponse<T> = {
+  content?: T[];
+  totalPages?: number;
+  totalElements?: number;
+  number?: number;
+  size?: number;
+  first?: boolean;
+  last?: boolean;
+  numberOfElements?: number;
+};
+
+export type AppointmentPage = {
+  content: AdminAppointment[];
+  totalPages: number;
+  totalElements: number;
+  page: number;
+  size: number;
+  first: boolean;
+  last: boolean;
+};
+
 function normalizeAppointment(item: any): AdminAppointment {
   return {
     id: Number(item?.id || 0),
@@ -40,14 +61,28 @@ function normalizeAppointment(item: any): AdminAppointment {
   };
 }
 
-export async function getAllAppointments(): Promise<AdminAppointment[]> {
-  const response = await API.get("/admin/appointments/all");
-  return Array.isArray(response.data) ? response.data.map(normalizeAppointment) : [];
+function normalizePage(data: PageResponse<any> | undefined): AppointmentPage {
+  const content = Array.isArray(data?.content) ? data!.content.map(normalizeAppointment) : [];
+
+  return {
+    content,
+    totalPages: Number(data?.totalPages || 0),
+    totalElements: Number(data?.totalElements || content.length),
+    page: Number(data?.number || 0),
+    size: Number(data?.size || 10),
+    first: Boolean(data?.first),
+    last: Boolean(data?.last),
+  };
 }
 
-export async function getBookedAppointments(): Promise<AdminAppointment[]> {
-  const response = await API.get("/admin/appointments/booked");
-  return Array.isArray(response.data) ? response.data.map(normalizeAppointment) : [];
+export async function getAllAppointments(params: { offset?: number; limit?: number } = {}): Promise<AppointmentPage> {
+  const response = await API.get("/admin/appointments/all", { params });
+  return normalizePage(response.data);
+}
+
+export async function getBookedAppointments(params: { offset?: number; limit?: number } = {}): Promise<AppointmentPage> {
+  const response = await API.get("/admin/appointments/booked", { params });
+  return normalizePage(response.data);
 }
 
 export async function createAppointment(data: AppointmentPayload): Promise<AdminAppointment> {

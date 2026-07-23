@@ -7,5 +7,6 @@ export const dashboardMenu: DashboardMenuItem[] = [
   { key: "appointments", label: "Appointments" },
   { key: "orders", label: "Orders" },
   { key: "marketplace", label: "Marketplace" },
+  { key: "messages", label: "Messages" },
   { key: "logout", label: "Logout" },
 ];

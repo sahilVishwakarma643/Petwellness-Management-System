@@ -1,13 +1,12 @@
 package com.petcare.petwellness.Repository;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
-
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.query.Param;
@@ -21,7 +20,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     List<Appointment> findByPetId(Long petId);
 
     @EntityGraph(attributePaths = { "pet" })
-    List<Appointment> findByStatus(AppointmentStatus status, Pageable pageable);
+    Page<Appointment> findByStatus(AppointmentStatus status, Pageable pageable);
     long countByStatus(AppointmentStatus status);
     List<Appointment> findTop8ByStatusOrderByCreatedAtDesc(AppointmentStatus status);
     List<Appointment> findByStatusAndAppointmentDateBetween(
@@ -30,7 +29,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
             LocalDate endDate);
 
     @EntityGraph(attributePaths = { "pet" })
-    List<Appointment> findByUserIdAndStatus(Long userId, AppointmentStatus status, Pageable pageable);
+    Page<Appointment> findByUserIdAndStatus(Long userId, AppointmentStatus status, Pageable pageable);
 
     @Query("""
             select a from Appointment a
@@ -40,7 +39,7 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
                    or (a.appointmentDate = :today and a.startTime > :nowTime)
               )
             """)
-    List<Appointment> findFutureByStatus(
+    Page<Appointment> findFutureByStatus(
             @Param("status") AppointmentStatus status,
             @Param("today") LocalDate today,
             @Param("nowTime") LocalTime nowTime,

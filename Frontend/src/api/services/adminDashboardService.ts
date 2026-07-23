@@ -1,6 +1,6 @@
 import API from "../api";
 import { getBookedAppointments, type AdminAppointment } from "./adminAppointmentService";
-import { getAdminProducts } from "./adminProductService";
+import { getAllAdminProducts } from "./adminProductService";
 import type { AdminDashboardOverview, ActivityItem, AppointmentPoint, RegistrationPoint } from "../../types/adminDashboard";
 
 type AdminUserRecord = {
@@ -27,15 +27,15 @@ async function getPendingUsers(): Promise<AdminUserRecord[]> {
     params: { offset: 0, limit: 1000 },
   });
 
-  return Array.isArray(response.data)
-    ? response.data.map((item: any) => ({
+  const rows = Array.isArray(response.data?.content) ? response.data.content : Array.isArray(response.data) ? response.data : [];
+
+  return rows.map((item: any) => ({
         id: Number(item?.id || 0),
         fullName: item?.fullName || "",
         email: item?.email || "",
         createdAt: item?.createdAt || "",
         status: "Pending" as const,
-      }))
-    : [];
+      }));
 }
 
 async function getApprovedUsers(): Promise<AdminUserRecord[]> {
@@ -44,15 +44,15 @@ async function getApprovedUsers(): Promise<AdminUserRecord[]> {
       params: { offset: 0, limit: 1000 },
     });
 
-    return Array.isArray(response.data)
-      ? response.data.map((item: any) => ({
+    const rows = Array.isArray(response.data?.content) ? response.data.content : Array.isArray(response.data) ? response.data : [];
+
+    return rows.map((item: any) => ({
           id: Number(item?.id || 0),
           fullName: item?.fullName || "",
           email: item?.email || "",
           createdAt: item?.createdAt || "",
           status: "Approved" as const,
-        }))
-      : [];
+        }));
   } catch (error) {
     const maybeStatus =
       typeof error === "object" &&
@@ -199,14 +199,15 @@ function buildRecentActivities(
 }
 
 async function buildFallbackOverview(): Promise<AdminDashboardOverview> {
-  const [pendingUsers, approvedUsers, bookedAppointments, products] = await Promise.all([
+  const [pendingUsers, approvedUsers, bookedAppointmentsPage, products] = await Promise.all([
     getPendingUsers(),
     getApprovedUsers(),
-    getBookedAppointments(),
-    getAdminProducts(),
+    getBookedAppointments({ offset: 0, limit: 1000 }),
+    getAllAdminProducts(),
   ]);
 
   const allUsers = [...approvedUsers, ...pendingUsers];
+  const bookedAppointments = bookedAppointmentsPage.content;
 
   return {
     totalRegisteredUsers: allUsers.length,

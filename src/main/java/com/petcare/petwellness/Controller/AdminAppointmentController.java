@@ -1,7 +1,6 @@
 package com.petcare.petwellness.Controller;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,14 +51,14 @@ public class AdminAppointmentController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<List<AppointmentResponseDto>> getAppointments(
+    public ResponseEntity<Page<AppointmentResponseDto>> getAppointments(
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "10") int limit) {
         return ResponseEntity.ok(appointmentService.getAppointments(offset, limit));
     }
 
     @GetMapping("/booked")
-    public ResponseEntity<List<AppointmentResponseDto>> getBookedAppointments(
+    public ResponseEntity<Page<AppointmentResponseDto>> getBookedAppointments(
             @RequestParam(defaultValue = "0") int offset,
             @RequestParam(defaultValue = "10") int limit) {
         return ResponseEntity.ok(appointmentService.getBookedAppointments(offset, limit));

@@ -1,7 +1,7 @@
 import API from "../api";
 import { Category, Product, ProductStatus } from "../../types/marketplace";
 
-const PAGE_SIZE = 100;
+const PAGE_SIZE = 20;
 
 const categoryToApiMap: Record<Category, string> = {
   Food: "FOOD",
@@ -32,6 +32,17 @@ type ProductDto = {
   createdAt?: string;
 };
 
+type PageResponse<T> = {
+  content?: T[];
+  totalPages?: number;
+  totalElements?: number;
+  number?: number;
+  size?: number;
+  first?: boolean;
+  last?: boolean;
+  numberOfElements?: number;
+};
+
 export type AdminProductInput = {
   name: string;
   category: Category;
@@ -39,6 +50,16 @@ export type AdminProductInput = {
   stock: number;
   description: string;
   brand?: string;
+};
+
+export type ProductPage = {
+  content: Product[];
+  totalPages: number;
+  totalElements: number;
+  page: number;
+  size: number;
+  first: boolean;
+  last: boolean;
 };
 
 function resolveMediaUrl(rawUrl?: string) {
@@ -103,6 +124,20 @@ function normalizeProduct(dto: ProductDto): Product {
   };
 }
 
+function normalizePage<T>(data: PageResponse<T> | undefined, mapper: (item: T) => Product): ProductPage {
+  const content = Array.isArray(data?.content) ? data!.content.map(mapper) : [];
+
+  return {
+    content,
+    totalPages: Number(data?.totalPages || 0),
+    totalElements: Number(data?.totalElements || content.length),
+    page: Number(data?.number || 0),
+    size: Number(data?.size || PAGE_SIZE),
+    first: Boolean(data?.first),
+    last: Boolean(data?.last),
+  };
+}
+
 function buildFormData(input: AdminProductInput, imageFile?: File | null) {
   const formData = new FormData();
   formData.append("productName", input.name.trim());
@@ -119,22 +154,24 @@ function buildFormData(input: AdminProductInput, imageFile?: File | null) {
   return formData;
 }
 
-export async function getAdminProducts() {
+export async function getAdminProducts(params: { offset?: number; limit?: number; category?: string } = {}) {
+  const response = await API.get("/admin/products/all", { params });
+  return normalizePage(response.data, normalizeProduct);
+}
+
+export async function getAllAdminProducts(params: { category?: string } = {}) {
   const products: Product[] = [];
   let page = 0;
 
   while (true) {
-    const response = await API.get("/admin/products/all", {
-      params: {
-        offset: page,
-        limit: PAGE_SIZE,
-      },
+    const response = await getAdminProducts({
+      offset: page,
+      limit: PAGE_SIZE,
+      ...(params.category ? { category: params.category } : {}),
     });
 
-    const nextBatch = Array.isArray(response.data) ? response.data.map(normalizeProduct) : [];
-    products.push(...nextBatch);
-
-    if (nextBatch.length < PAGE_SIZE) {
+    products.push(...response.content);
+    if (response.last || response.content.length < PAGE_SIZE) {
       break;
     }
 
