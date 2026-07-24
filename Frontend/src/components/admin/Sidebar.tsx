@@ -7,6 +7,7 @@ import {
   CalendarIcon,
   CartIcon,
   ChevronLeftIcon,
+  BellIcon,
   DashboardIcon,
   LogoutIcon,
   PawIcon,
@@ -32,6 +33,7 @@ function getIcon(key: DashboardMenuKey) {
   if (key === "appointments") return <CalendarIcon className={className} />;
   if (key === "orders") return <CartIcon className={className} />;
   if (key === "marketplace") return <StoreIcon className={className} />;
+  if (key === "messages") return <BellIcon className={className} />;
   return <LogoutIcon className={className} />;
 }
 
@@ -101,7 +103,8 @@ export default function Sidebar({
                 (item.key === "createOwner" && location.pathname.startsWith("/admin/create-owner")) ||
                 (item.key === "appointments" && location.pathname.startsWith("/admin/appointments")) ||
                 (item.key === "orders" && location.pathname.startsWith("/admin/orders")) ||
-                (item.key === "marketplace" && location.pathname.startsWith("/admin/marketplace"));
+                (item.key === "marketplace" && location.pathname.startsWith("/admin/marketplace")) ||
+                (item.key === "messages" && location.pathname.startsWith("/admin/contact-messages"));
 
               if (item.key !== "logout") {
                 const to =
@@ -113,7 +116,9 @@ export default function Sidebar({
                     ? "/admin/appointments"
                     : item.key === "orders"
                     ? "/admin/orders"
-                    : "/admin/marketplace";
+                    : item.key === "marketplace"
+                    ? "/admin/marketplace"
+                    : "/admin/contact-messages";
                 return (
                   <NavLink
                     key={item.key}

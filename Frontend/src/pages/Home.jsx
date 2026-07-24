@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import API from "../api/api";
+import { PawIcon } from "../components/admin/Icons";
 
 const navLinks = [
   { href: "#hero", label: "Home" },
@@ -96,8 +97,8 @@ function App() {
           <header className="border-b border-slate-100 bg-white/95 backdrop-blur">
             <nav className="flex items-center justify-between px-5 py-4 sm:px-8 lg:px-10">
               <div className="flex items-center gap-2">
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-sky-600 text-xl font-bold text-white">
-                  🐾
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-sky-600 text-white">
+                  <PawIcon className="h-5 w-5" />
                 </span>
                 <div className="flex flex-col leading-tight">
                   <span className="text-sm font-semibold tracking-tight text-slate-900">

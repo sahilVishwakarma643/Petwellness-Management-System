@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../api/api";
+import { PawIcon } from "../components/admin/Icons";
 
 const initialForm = {
   fullName: "",
@@ -319,8 +320,8 @@ function Register() {
             style={{ background: "linear-gradient(135deg, #EBF4F8 0%, #D0F5EB 55%, #DAEAF8 100%)" }}
           >
             <div className="mb-3 flex items-center justify-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#2DD4A0] text-[22px] text-white">
-                🐾
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#2DD4A0] text-white">
+                <PawIcon className="h-6 w-6" />
               </div>
               <div className="text-left">
                 <p className="text-[22px] font-extrabold text-[#1A2332]">PetCare</p>

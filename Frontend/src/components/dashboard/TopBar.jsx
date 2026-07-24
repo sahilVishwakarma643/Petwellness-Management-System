@@ -1,6 +1,5 @@
 export default function TopBar({
   userName,
-  petsCount,
   dateText,
   onOpenSidebar,
   onViewProfile,
@@ -126,10 +125,6 @@ export default function TopBar({
               readOnly={!onSearchChange}
               className="h-10 w-full rounded-full bg-app-bg px-4 text-sm text-app-navy placeholder:text-app-slate focus:outline-none sm:w-56"
             />
-            <button type="button" className="relative inline-flex h-10 w-10 items-center justify-center rounded-xl border border-app-border bg-app-card text-base">
-              {"\uD83D\uDD14"}
-              <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-app-red" />
-            </button>
             <button
               type="button"
               onClick={onViewProfile}

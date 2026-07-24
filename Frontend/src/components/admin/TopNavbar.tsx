@@ -2,9 +2,11 @@ import { BellIcon, SearchIcon } from "./Icons";
 
 type TopNavbarProps = {
   onOpenSidebar: () => void;
+  notificationCount?: number;
+  onNotificationsClick?: () => void;
 };
 
-export default function TopNavbar({ onOpenSidebar }: TopNavbarProps) {
+export default function TopNavbar({ onOpenSidebar, notificationCount = 0, onNotificationsClick }: TopNavbarProps) {
   return (
     <header className="sticky top-0 z-20 border-b border-teal-100 bg-white/85 px-4 py-3 backdrop-blur-sm sm:px-6">
       <div className="flex items-center gap-3">
@@ -22,9 +24,16 @@ export default function TopNavbar({ onOpenSidebar }: TopNavbarProps) {
             type="button"
             className="relative rounded-xl border border-teal-200 bg-white p-2 text-slate-600 hover:bg-teal-50"
             aria-label="Notifications"
+            onClick={onNotificationsClick}
           >
             <BellIcon className="h-5 w-5" />
-            <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-rose-500" />
+            {notificationCount > 0 ? (
+              <span className="absolute -right-1 -top-1 inline-flex min-h-5 min-w-5 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-bold leading-none text-white">
+                {notificationCount > 99 ? "99+" : notificationCount}
+              </span>
+            ) : (
+              <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-rose-500" />
+            )}
           </button>
 
           <div className="rounded-xl border border-teal-200 bg-white px-3 py-2">
