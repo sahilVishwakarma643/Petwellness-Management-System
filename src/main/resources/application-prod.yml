@@ -20,7 +20,7 @@ management:
           - info
   health:
     mail:
-      enable: false        
+      enabled: false        
 
 springdoc:
   api-docs:
