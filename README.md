@@ -1,106 +1,255 @@
-# Pet Wellness App Backend
+# Pet Wellness Management System
 
-Spring Boot backend that now powers the entire pet-wellness experience: OTP-based onboarding, owner onboarding workflows, pet and medical records, vaccination tracking, appointment scheduling, marketplace orders, Razorpay payments, and admin dashboards.
+> A full-stack platform for managing pet care workflows, including owner onboarding, appointments, marketplace products, carts, orders, vaccinations, and admin operations.
 
-## Key Features
-- **OTP onboarding + profile completion** – verify email with one-time passwords, submit documents, and receive approval/rejection emails before a JWT-protected session starts.
-- **Pet, health & vaccination records** – owners can create/update their pets, upload medical history/vaccination files, and download consolidated health-report PDFs.
-- **Appointments** – admins manage slots, while owners can view availability, book/cancel appointments, and see their booking history with pagination.
-- **Marketplace + payments** – browse product catalogues, manage a cart, checkout with Razorpay orders, confirm or abort payments, and cancel pending orders.
-- **Admin controls** – approve/reject users, create owner profiles, manage products/orders, and oversee appointment schedules from secure admin-only endpoints.
+## Overview
 
-## Tech Stack
-- Java 24 + Spring Boot 4.0.2
-- Spring Security (JWT + role gating)
-- Spring Data JPA (MySQL)
-- Spring Mail (SMTP for OTP/password notifications)
-- Springdoc OpenAPI (Swagger UI and schema)
-- Razorpay SDK (payment orchestration)
-- Template engine for reporting (`src/main/resources/templates`)
+Pet Wellness Management System is a role-based web application built for pet owners and administrators. It combines a Spring Boot backend with a React frontend to support everyday pet-care operations in one place: registration, profile management, appointment booking, product browsing, cart and checkout flows, vaccination tracking, and admin review workflows.
 
-## Repository Layout
-- `pom.xml`, `mvnw`, `.mvn/` keep Maven Wrapper and dependency management at the repo root.
-- `src/main/java/com/petcare/petwellness` contains every controller/service/entity/DTO.
-- `src/main/resources` holds `application.yml` and the report templates that feed PDF generation.
-- `src/test/java` contains the automated suites; update them along with feature work.
+The application is designed around a layered backend architecture and a UI that reflects the different responsibilities of each role:
 
-## API Highlights
+- **Owners** can register, manage their profile, book appointments, browse marketplace products, place orders, and track pet-related records.
+- **Admins** can review registrations, manage appointments and products, monitor marketplace activity, handle contact messages, and observe operational summaries from the dashboard.
 
-### Authentication & onboarding
-- `POST /api/auth/send-otp` – audit email, generate + email OTP.
-- `POST /api/auth/verify-otp` – validate 6-digit code before showing registration form.
-- `POST /api/auth/registration` – `multipart/form-data` request with owner metadata, ID proof, and profile image.
-- `POST /api/auth/login` – receives temporary password and returns JWT plus `changePasswordRequired` flag.
-- `POST /api/auth/set-password` – first-login endpoint to finalize credentials.
+The codebase emphasizes separation of concerns, DTO-based API boundaries, validation, and production-oriented runtime behavior.
 
-### Owner profile & pets
-- `GET /api/profile/me` – fetch the caller’s profile.
-- `PATCH /api/profile/Edit` – partial updates (profile image optional) via multipart form.
-- `POST /api/pets/add`, `PATCH /api/pets/Edit/{petId}`, `DELETE /api/pets/delete/{petId}` – maintain pets and attachments.
-- `GET /api/pets/me` – list the owner’s pets for dashboard cards.
+## Key Capabilities
 
-### Pet health, vaccinations & reports
-- `POST /api/medical-history/pet/add/{petId}` – add documented history (supports files).
-- `GET /api/medical-history/pet/{petId}` – paginated listing + `PATCH /api/medical-history/Edit/{id}`/`DELETE /api/medical-history/delete/{id}` for maintenance.
-- `POST /api/vaccinations/pet/add/{petId}` – log vaccination events; `PATCH /api/vaccinations/Edit/{id}` and `DELETE /api/vaccinations/delete/{id}` edit/remove them.
-- `POST /api/vaccinations/{id}/complete` – mark vaccination done.
-- `GET /api/vaccinations/pet/{petId}` – paginate vaccine history.
-- `GET /api/reports/pet/{petId}/health-report` – streams a PDF health report with `Content-Disposition` attachment headers.
+- Role-based authentication and authorization with JWT
+- Owner registration, profile completion, and admin approval flow
+- Appointment scheduling and booking lifecycle
+- Marketplace product management with cart and order processing
+- Vaccination tracking and pet-care record management
+- Admin dashboard with summary metrics, activity feed, and charts
+- Contact message inbox for admin follow-up
+- File uploads for profile images, ID proof, and product assets
+- Email notifications for key account and workflow events
+- Dockerized deployment path for container platforms such as Render
 
-### Appointments
-- `GET /api/appointments/available` – browse slots with offset/limit.
-- `POST /api/appointments/{id}/book` & `POST /api/appointments/{id}/cancel` – book/cancel using the logged-in user’s pets.
-- `GET /api/appointments/my` – fetch user-specific bookings.
-- **Admin** (`/api/admin/appointments`) – create, update, delete slots; list all/booked appointments with pagination.
+## Architecture
 
-### Marketplace, cart & orders
-- `GET /api/user/products` – paginated product catalogue filtered by `ProductCategory`.
-- `GET /api/cart` – view cart summary; add/update/delete via `/api/cart/items`.
-- `POST /api/cart/checkout` – create an order (shipping + address capture).
-- `POST /api/orders/{orderId}/razorpay-order` – create Razorpay payment intent.
-- `POST /api/orders/{orderId}/verify-payment` – capture Razorpay signature + confirm payment.
-- `POST /api/orders/{orderId}/confirm-payment` – manual confirmation.
-- `POST /api/orders/{orderId}/cancel` – abort and issue refunds when applicable.
-- `GET /api/orders/my` & `GET /api/orders/{orderId}` – user order history/detail.
+The backend follows a layered Spring architecture:
 
-### Admin operations
-- `/api/admin/pending-users`, `/api/admin/approved-users` – paginated user lists.
-- `/api/admin/approve/{userId}` and `/api/admin/reject/{userId}` – control onboarding state and send emails.
-- `/api/admin/create-owner` – admin can register an owner (supports multipart uploads).
-- `/api/admin/approved-users/{userId}` – delete approved owner profiles.
-- `/api/admin/products` – full CRUD for product catalogue, including file uploads for images.
-- `/api/admin/orders` – list, view, update status, and cancel any order.
+- **Controller layer** exposes HTTP endpoints and request/response contracts.
+- **Service layer** contains business rules, validation flow, and transactional orchestration.
+- **Repository layer** encapsulates persistence access using Spring Data JPA.
+- **DTOs** are used for API boundaries so the internal entity model stays decoupled from request/response payloads.
+- **Config classes** centralize web, security, and runtime settings.
 
-## Error Shape & Security Notes
-Errors follow a consistent payload:
+This structure keeps domain logic out of controllers, reduces coupling between the UI and persistence model, and makes the API easier to evolve.
 
-```json
-{
-  "message": "Some error",
-  "status": 400,
-  "timestamp": "2026-02-14T12:34:56"
-}
+## Technology Stack
+
+### Backend
+
+- Java 24
+- Spring Boot 4.0.2
+- Spring Web
+- Spring Security
+- Spring Data JPA
+- Validation
+- JWT-based authentication
+- File upload support
+- Email integration
+
+### Frontend
+
+- React
+- JavaScript / TypeScript mix
+- Axios for API access
+- Framer Motion for motion and transitions
+
+### Infrastructure
+
+- Maven Wrapper for reproducible builds
+- Docker multi-stage build
+- Render-friendly container startup
+
+## Security Model
+
+Security is handled with a role-aware design:
+
+- Authentication uses JWT.
+- Authorization is enforced at the endpoint and service level.
+- Public endpoints are limited to intentionally open flows such as login, registration, and contact message submission.
+- Admin routes are separated from owner routes.
+- Validation is used to reject malformed input before it reaches business logic.
+
+This keeps the API predictable and reduces the chance of unauthorized access or inconsistent state transitions.
+
+## Production-Oriented Design
+
+Several design choices were made to keep the application maintainable and deployment-ready:
+
+- **DTO-based APIs** keep frontend contracts stable even when entities change.
+- **Paginated endpoints** prevent unbounded data transfer and reduce memory pressure.
+- **Validation-first request handling** catches bad input early.
+- **File handling** is isolated in utility and service code rather than mixed into controllers.
+- **Email workflows** are handled as part of service orchestration so account and workflow notifications remain consistent.
+- **Scheduled/background jobs** are used where appropriate for operational tasks such as reconciliation or periodic checks.
+- **Docker support** keeps deployment reproducible and isolates runtime dependencies from build dependencies.
+
+## Main Modules
+
+### Owner Flow
+
+- Registration and login
+- Profile completion
+- Dashboard overview
+- Pet management
+- Appointment booking
+- Marketplace browsing
+- Cart and checkout
+- Order history and order details
+- Vaccination records
+
+### Admin Flow
+
+- Approval queue for new registrations
+- Approved user management
+- Appointment slot management
+- Product management
+- Order status handling
+- Contact message inbox
+- Dashboard trends and activity feed
+
+### Contact Messages
+
+Contact messages are stored for admin review and workflow management. This allows the admin team to respond from the application instead of relying on a separate external process.
+
+## API Design Notes
+
+The API is organized by domain:
+
+- `/api/auth/**`
+- `/api/user/**`
+- `/api/admin/**`
+- `/api/contact-messages/**`
+
+This keeps the routing predictable and makes authorization rules easier to reason about.
+
+Responses use explicit DTOs rather than raw entities, which helps with:
+
+- stable client contracts
+- lower coupling
+- safer refactoring
+- clearer serialization boundaries
+
+## File Handling
+
+The system supports file uploads for several workflows:
+
+- profile images
+- ID proof documents
+- product images
+- vaccination prescription files
+
+File operations are kept out of controllers and handled in the service layer and file utility code. That makes upload validation, storage, and cleanup easier to test and reuse.
+
+## Email Workflows
+
+Email notifications are used for important account and workflow events such as:
+
+- account approval
+- rejection or deletion notices
+- appointment notifications
+- order-related updates
+- contact message replies when applicable
+
+Keeping notification logic in services rather than controllers makes it easier to control transactional behavior and failure handling.
+
+## Database and Pagination
+
+The application uses paginated queries for data-heavy screens such as users, appointments, orders, and products.
+
+Why this matters:
+
+- avoids loading large datasets into memory
+- improves response time for admin lists
+- keeps UI state manageable
+- supports scalable list rendering in the frontend
+
+For charts and dashboard summaries, the backend returns aggregated datasets instead of pushing raw tables to the client.
+
+## Docker
+
+The repository includes a production-oriented multi-stage Docker setup:
+
+- a build stage that uses the Maven Wrapper
+- a runtime stage built on a minimal Java 24 JRE image
+- a non-root runtime user
+- Render-compatible port handling
+- `.dockerignore` rules to keep build context lean
+
+If you are deploying on Render, the container should start via the provided entrypoint and read `PORT` from the environment.
+
+## Local Development
+
+### Prerequisites
+
+- Java 24
+- Maven Wrapper included in the repo
+- Node.js for the frontend
+- A relational database
+
+### Backend
+
+```bash
+./mvnw spring-boot:run
 ```
 
-- Authentication errors return `401 Unauthorized`; authorization breaches return `403 Forbidden` with the same shape.
-- JWT header must be `Authorization: Bearer <token>` for protected routes.
-- Swagger and OpenAPI remain open at `/swagger-ui.html` and `/v3/api-docs`.
+On Windows:
 
-## Frontend Integration Checklist
-1. Keep API calls under `/api/...`; the Axios base URL on the frontend already assumes that.
-2. Send JWT from login via `Authorization` header; `changePasswordRequired` alerts the UI to show the password reset screen.
-3. Use `multipart/form-data` for registration, pet uploads, profile edits, medical-history/vaccination uploads, and admin owner creation.
-4. Validate pincodes (6 digits), OTPs (6 digits), and dates (`yyyy-MM-dd`) before sending.
-5. Handle both text responses (`"Password set successfully"`) and JSON error payloads with `message` + `status`.
-6. Make two separate UI flows: owner dashboards (pets, appointments, orders, cart) and admin dashboards (users, products, orders, appointments).
+```powershell
+.\mvnw.cmd spring-boot:run
+```
 
-## Running Locally
-1. Copy `secrets.properties.example` to `secrets.properties` in the repo root and supply MySQL, SMTP, and JWT secrets.
-2. The backend is a single Maven module. Run it from the project root:
-   ```powershell
-   .\mvnw spring-boot:run
-   ```
-3. Swagger UI is available at `http://localhost:8080/swagger-ui.html`; OpenAPI at `/v3/api-docs`.
-4. Health reports download from `/api/reports/pet/{petId}/health-report`.
+### Frontend
 
-> 
+Run the frontend from the frontend project directory using the package manager configured in the repo.
+
+
+## Configuration
+
+Typical environment-driven settings include:
+
+- database URL, username, and password
+- JWT secret and token settings
+- mail server credentials
+- upload/storage paths
+- application profile
+- optional runtime port
+
+Keep secrets outside the repository and inject them through environment variables or the deployment platform.
+
+## Suggested Repository Structure
+
+```text
+src/main/java/com/petcare/petwellness
+├── Config
+├── Controller
+├── DTO
+├── Domain
+├── Enums
+├── Exceptions
+├── Repository
+├── Service
+├── Util
+└── Events
+```
+
+## Why This Project Stands Out
+
+This application is structured like a real production service rather than a single demo feature:
+
+- role-based flows are separated cleanly
+- data contracts are explicit
+- background concerns such as email and file handling are not mixed into controllers
+- admin and owner experiences are intentionally different
+- pagination and API boundaries are used to keep the system scalable
+- Docker support makes the project portable across local and cloud environments
+
+
+## License
+
+No license has been declared in the repository yet.
