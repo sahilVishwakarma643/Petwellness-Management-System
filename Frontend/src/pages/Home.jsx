@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import API from "../api/api";
 
 const navLinks = [
   { href: "#hero", label: "Home" },
@@ -11,6 +12,61 @@ const navLinks = [
 
 function App() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [contactForm, setContactForm] = useState({
+    name: "",
+    email: "",
+    phoneNumber: "",
+    message: "",
+  });
+  const [contactLoading, setContactLoading] = useState(false);
+  const [contactStatus, setContactStatus] = useState({ type: "", message: "" });
+
+  const handleContactChange = (event) => {
+    const { name, value } = event.target;
+    const nextValue =
+      name === "phoneNumber"
+        ? value.replace(/\D/g, "").slice(0, 10)
+        : value;
+
+    setContactForm((prev) => ({
+      ...prev,
+      [name]: nextValue,
+    }));
+  };
+
+  const handleContactSubmit = async (event) => {
+    event.preventDefault();
+    setContactStatus({ type: "", message: "" });
+
+    if (!contactForm.name.trim() || !contactForm.email.trim() || !contactForm.phoneNumber.trim() || !contactForm.message.trim()) {
+      setContactStatus({ type: "error", message: "Please fill all contact form fields." });
+      return;
+    }
+
+    setContactLoading(true);
+    try {
+      const response = await API.post("/contact-messages", contactForm);
+      setContactStatus({
+        type: "success",
+        message: typeof response.data === "string" ? response.data : response.data?.message || "Your message sent successfully.",
+      });
+      setContactForm({
+        name: "",
+        email: "",
+        phoneNumber: "",
+        message: "",
+      });
+    } catch (error) {
+      const data = error?.response?.data;
+      const message =
+        typeof data === "string"
+          ? data
+          : data?.message || error?.message || "Failed to send message.";
+      setContactStatus({ type: "error", message });
+    } finally {
+      setContactLoading(false);
+    }
+  };
 
   return (
     <div className="relative min-h-screen bg-sky-100 px-4 py-6 text-slate-900 sm:py-10">
@@ -357,36 +413,57 @@ function App() {
             </div>
 
             {/* Contact Form */}
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleContactSubmit}>
               <input
                 type="text"
                 placeholder="Your Name"
+                name="name"
+                value={contactForm.name}
+                onChange={handleContactChange}
                 className="w-full rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-800 placeholder:text-slate-400 shadow-sm"
               />
 
               <input
                 type="email"
                 placeholder="Email Address"
+                name="email"
+                value={contactForm.email}
+                onChange={handleContactChange}
                 className="w-full rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-800 placeholder:text-slate-400 shadow-sm"
               />
 
               <input
                 type="tel"
                 placeholder="Phone Number"
+                name="phoneNumber"
+                inputMode="numeric"
+                maxLength={10}
+                value={contactForm.phoneNumber}
+                onChange={handleContactChange}
                 className="w-full rounded-full border border-slate-200 bg-white px-4 py-2 text-sm text-slate-800 placeholder:text-slate-400 shadow-sm"
               />
 
               <textarea
                 rows="4"
                 placeholder="Your Message"
+                name="message"
+                value={contactForm.message}
+                onChange={handleContactChange}
                 className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-2 text-sm text-slate-800 placeholder:text-slate-400 shadow-sm"
               ></textarea>
 
+              {contactStatus.message ? (
+                <p className={`text-sm font-medium ${contactStatus.type === "success" ? "text-emerald-600" : "text-rose-600"}`}>
+                  {contactStatus.message}
+                </p>
+              ) : null}
+
               <button
                 type="submit"
-                className="rounded-full bg-sky-700 px-6 py-2 text-sm font-medium text-white shadow-lg shadow-sky-700/40 hover:bg-sky-800"
+                disabled={contactLoading}
+                className="rounded-full bg-sky-700 px-6 py-2 text-sm font-medium text-white shadow-lg shadow-sky-700/40 hover:bg-sky-800 disabled:cursor-not-allowed disabled:bg-slate-400"
               >
-                Send Message
+                {contactLoading ? "Sending..." : "Send Message"}
               </button>
             </form>
           </div>
