@@ -18,6 +18,9 @@ management:
         include:
           - health
           - info
+  health:
+    mail:
+      enable: false        
 
 springdoc:
   api-docs:
