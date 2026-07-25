@@ -76,6 +76,18 @@ management:
   endpoints:
     web: {}
 
+app:
+  email:
+    provider: ${EMAIL_PROVIDER:smtp}
+
+brevo:
+  api:
+    key: ${BREVO_API_KEY:}
+
+  sender:
+    name: ${BREVO_SENDER_NAME:Pet Wellness}
+    email: ${BREVO_SENDER_EMAIL:}
+
 otp:
   expiry-minutes: 5
   max-failed-attempts: 5

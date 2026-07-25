@@ -23,3 +23,7 @@ management:
           - info
           - metrics
           - mappings
+# this is for brevo email
+#app:
+  #email:
+    #provider: brevo
