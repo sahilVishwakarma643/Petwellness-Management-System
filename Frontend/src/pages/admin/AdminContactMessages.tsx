@@ -28,6 +28,8 @@ function formatDateTime(value?: string | null) {
     year: "numeric",
     hour: "numeric",
     minute: "2-digit",
+    hour12: false,
+    timeZone: "Asia/Kolkata",
   });
 }
 
@@ -107,15 +109,16 @@ export default function AdminContactMessages() {
       return;
     }
 
+    const selectedMessageId = selectedMessage.id;
     let cancelled = false;
 
     async function markRead() {
       try {
-        await markContactMessageAsRead(selectedMessage.id);
+        await markContactMessageAsRead(selectedMessageId);
         if (cancelled) return;
         setMessages((prev) =>
           prev.map((item) =>
-            item.id === selectedMessage.id
+            item.id === selectedMessageId
               ? { ...item, status: "READ", readAt: item.readAt || new Date().toISOString() }
               : item
           )

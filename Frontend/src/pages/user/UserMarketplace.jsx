@@ -8,7 +8,7 @@ import CategoryFilter from "../../components/user/marketplace/CategoryFilter";
 import ProductCard from "../../components/user/marketplace/ProductCard";
 import ProductDetailModal from "../../components/user/marketplace/ProductDetailModal";
 import { useToast } from "../../components/shared/Toast";
-import { getLoggedInFirstName } from "../../utils/userDisplay";
+import { getLoggedInFullName } from "../../utils/userDisplay";
 
 const LIMIT = 20;
 
@@ -45,7 +45,7 @@ export default function UserMarketplace() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [addingProductId, setAddingProductId] = useState(null);
 
-  const ownerName = useMemo(() => getLoggedInFirstName(), []);
+  const ownerName = useMemo(() => getLoggedInFullName(), []);
   const owner = useMemo(
     () => ({
       name: ownerName,

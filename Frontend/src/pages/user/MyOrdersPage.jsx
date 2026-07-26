@@ -6,11 +6,7 @@ import TopBar from "../../components/dashboard/TopBar";
 import { useToast } from "../../components/shared/Toast";
 import CancelOrderModal from "../../components/user/orders/CancelOrderModal";
 import OrderCard from "../../components/user/orders/OrderCard";
-import { getLoggedInFirstName } from "../../utils/userDisplay";
-
-function getLoggedInName() {
-  return getLoggedInFirstName();
-}
+import { getLoggedInFullName } from "../../utils/userDisplay";
 
 function OrdersSkeleton() {
   return (
@@ -45,7 +41,7 @@ export default function MyOrdersPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState(null);
 
-  const ownerName = useMemo(() => getLoggedInName(), []);
+  const ownerName = useMemo(() => getLoggedInFullName(), []);
   const owner = useMemo(
     () => ({
       name: ownerName,

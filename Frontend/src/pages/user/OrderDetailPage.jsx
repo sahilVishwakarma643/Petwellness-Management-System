@@ -7,11 +7,7 @@ import { useToast } from "../../components/shared/Toast";
 import CancelOrderModal from "../../components/user/orders/CancelOrderModal";
 import OrderStatusBadge from "../../components/user/orders/OrderStatusBadge";
 import OrderStatusTracker from "../../components/user/orders/OrderStatusTracker";
-import { getLoggedInFirstName } from "../../utils/userDisplay";
-
-function getLoggedInName() {
-  return getLoggedInFirstName();
-}
+import { getLoggedInFullName } from "../../utils/userDisplay";
 
 function formatMoney(value) {
   return `Rs ${Number(value || 0).toFixed(2)}`;
@@ -27,6 +23,8 @@ function formatDate(value) {
     year: "numeric",
     hour: "2-digit",
     minute: "2-digit",
+    hour12: false,
+    timeZone: "Asia/Kolkata",
   });
 }
 
@@ -71,7 +69,7 @@ export default function OrderDetailPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isCancelOpen, setIsCancelOpen] = useState(false);
 
-  const ownerName = useMemo(() => getLoggedInName(), []);
+  const ownerName = useMemo(() => getLoggedInFullName(), []);
   const owner = useMemo(
     () => ({
       name: ownerName,

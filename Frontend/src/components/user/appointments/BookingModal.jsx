@@ -20,7 +20,12 @@ function formatTime(value) {
   const [hour, minute] = String(value).split(":");
   const date = new Date();
   date.setHours(Number(hour || 0), Number(minute || 0), 0, 0);
-  return date.toLocaleTimeString("en-IN", { hour: "numeric", minute: "2-digit" });
+  return date.toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "Asia/Kolkata",
+  });
 }
 
 const TYPE_STYLES = {

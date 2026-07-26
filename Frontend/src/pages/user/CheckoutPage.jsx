@@ -6,11 +6,7 @@ import Sidebar from "../../components/dashboard/Sidebar";
 import TopBar from "../../components/dashboard/TopBar";
 import { useCart } from "../../context/CartContext";
 import { useToast } from "../../components/shared/Toast";
-import { getLoggedInFirstName } from "../../utils/userDisplay";
-
-function getLoggedInName() {
-  return getLoggedInFirstName();
-}
+import { getLoggedInFullName } from "../../utils/userDisplay";
 
 function formatMoney(value) {
   return `₹${Number(value || 0).toFixed(2)}`;
@@ -42,7 +38,7 @@ export default function CheckoutPage() {
   const addressRef = useRef(null);
   const pincodeRef = useRef(null);
 
-  const ownerName = useMemo(() => getLoggedInName(), []);
+  const ownerName = useMemo(() => getLoggedInFullName(), []);
   const owner = useMemo(
     () => ({
       name: ownerName,

@@ -11,7 +11,7 @@ import MedicalHistoryModal from "../components/pets/MedicalHistoryModal";
 import PetCard from "../components/pets/PetCard";
 import PetDetailPanel from "../components/pets/PetDetailPanel";
 import VaccinationModal from "../components/pets/VaccinationModal";
-import { getLoggedInFirstName } from "../utils/userDisplay";
+import { getLoggedInFullName } from "../utils/userDisplay";
 import {
   addMedicalHistoryRecord,
   addVaccinationRecord,
@@ -119,7 +119,7 @@ export default function MyPets() {
   const [busyAction, setBusyAction] = useState(false);
   const handledVaccinationRouteRef = useRef("");
 
-  const ownerName = useMemo(() => getLoggedInFirstName(), []);
+  const ownerName = useMemo(() => getLoggedInFullName(), []);
   const owner = useMemo(
     () => ({
       name: ownerName,

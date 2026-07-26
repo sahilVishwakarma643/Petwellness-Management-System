@@ -5,11 +5,7 @@ import TopBar from "../../components/dashboard/TopBar";
 import CartItemRow from "../../components/user/cart/CartItemRow";
 import { useCart } from "../../context/CartContext";
 import { useToast } from "../../components/shared/Toast";
-import { getLoggedInFirstName } from "../../utils/userDisplay";
-
-function getLoggedInName() {
-  return getLoggedInFirstName();
-}
+import { getLoggedInFullName } from "../../utils/userDisplay";
 
 export default function CartPage() {
   const navigate = useNavigate();
@@ -19,7 +15,7 @@ export default function CartPage() {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [busyItems, setBusyItems] = useState({});
 
-  const ownerName = useMemo(() => getLoggedInName(), []);
+  const ownerName = useMemo(() => getLoggedInFullName(), []);
   const owner = useMemo(
     () => ({
       name: ownerName,

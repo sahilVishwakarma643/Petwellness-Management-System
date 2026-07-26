@@ -10,6 +10,17 @@ export default function TopNavbar({ onOpenSidebar, notificationCount = 0, onNoti
   return (
     <header className="sticky top-0 z-20 border-b border-teal-100 bg-white/85 px-4 py-3 backdrop-blur-sm sm:px-6">
       <div className="flex items-center gap-3">
+        <button
+          type="button"
+          className="inline-flex rounded-xl border border-teal-200 bg-white p-2 text-slate-700 shadow-sm hover:bg-teal-50 md:hidden"
+          aria-label="Open sidebar"
+          onClick={onOpenSidebar}
+        >
+          <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+
         <div className="relative flex-1">
           <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
           <input

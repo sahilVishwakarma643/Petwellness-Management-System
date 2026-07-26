@@ -1,3 +1,5 @@
+import { getAuthDisplayName } from "./authState";
+
 function decodeJwtPayload(token) {
   if (!token || typeof token !== "string") return {};
 
@@ -25,6 +27,15 @@ function firstNameFromValue(value) {
   return firstChunk.charAt(0).toUpperCase() + firstChunk.slice(1);
 }
 
+function fullNameFromValue(value) {
+  if (typeof value !== "string") return "";
+
+  const clean = value.trim();
+  if (!clean) return "";
+
+  return clean.includes("@") ? clean.split("@")[0] : clean;
+}
+
 export function getLoggedInFirstName(fallback = "Pet Parent") {
   const payload = decodeJwtPayload(localStorage.getItem("token"));
   const candidates = [
@@ -44,4 +55,24 @@ export function getLoggedInFirstName(fallback = "Pet Parent") {
 
   const chosen = candidates.find((value) => typeof value === "string" && value.trim());
   return firstNameFromValue(chosen) || fallback;
+}
+
+function fullNameFallbackFromAuth() {
+  const payload = decodeJwtPayload(localStorage.getItem("token"));
+  const candidates = [
+    getAuthDisplayName(),
+    payload?.fullName,
+    payload?.name,
+    localStorage.getItem("userName"),
+    payload?.username,
+    payload?.sub,
+    payload?.email,
+  ];
+
+  const chosen = candidates.find((value) => typeof value === "string" && value.trim());
+  return fullNameFromValue(chosen);
+}
+
+export function getLoggedInFullName(fallback = "") {
+  return fullNameFallbackFromAuth() || fallback;
 }

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import API from "../api/api";
+import { setAuthDisplayName } from "../utils/authState";
 import "./Login.css";
 
 function getErrorMessage(error) {
@@ -126,16 +127,7 @@ function Login() {
       if (token) {
         localStorage.setItem("token", token);
       }
-      if (firstName) {
-        localStorage.setItem("firstName", firstName);
-      }
-      if (tokenName) {
-        localStorage.setItem("userName", tokenName);
-      } else if (firstName) {
-        localStorage.setItem("userName", firstName);
-      } else if (email) {
-        localStorage.setItem("userName", email.split("@")[0]);
-      }
+      setAuthDisplayName(tokenName || firstName || (email ? email.split("@")[0] : ""));
 
       if (payload.changePasswordRequired) {
         setSuccess("Login successful. Redirecting to set a new password.");

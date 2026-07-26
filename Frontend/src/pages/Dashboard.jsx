@@ -23,7 +23,12 @@ function formatTime(value) {
   if (!value) return "-";
   const parsed = new Date(`1970-01-01T${value}`);
   if (Number.isNaN(parsed.getTime())) return value;
-  return parsed.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+  return parsed.toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+    timeZone: "Asia/Kolkata",
+  });
 }
 
 function appointmentTypeLabel(type) {
@@ -318,4 +323,3 @@ export default function Dashboard() {
     </div>
   );
 }
-
