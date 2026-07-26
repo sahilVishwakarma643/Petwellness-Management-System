@@ -2,6 +2,13 @@
 
 > A full-stack platform for managing pet care workflows, including owner onboarding, appointments, marketplace products, carts, orders, vaccinations, and admin operations.
 
+## Login
+
+Use these default admin credentials for quick access during review:
+
+- Email: `admin@petwellness.com`
+- Password: `adminssakp`
+
 ## Overview
 
 Pet Wellness Management System is a role-based web application built for pet owners and administrators. It combines a Spring Boot backend with a React frontend to support everyday pet-care operations in one place: registration, profile management, appointment booking, product browsing, cart and checkout flows, vaccination tracking, and admin review workflows.
@@ -10,6 +17,8 @@ The application is designed around a layered backend architecture and a UI that 
 
 - **Owners** can register, manage their profile, book appointments, browse marketplace products, place orders, and track pet-related records.
 - **Admins** can review registrations, manage appointments and products, monitor marketplace activity, handle contact messages, and observe operational summaries from the dashboard.
+
+For recruiter/demo access, the login page includes a small credential note panel where you can place the default admin email and password in one obvious spot. Update that text with your real demo credentials before sharing the project.
 
 The codebase emphasizes separation of concerns, DTO-based API boundaries, validation, and production-oriented runtime behavior.
 

@@ -202,6 +202,13 @@ function Login() {
           </button>
         </div>
 
+        <div className="login-credentials-note" aria-label="Default admin credential note">
+          <p className="font-semibold"> login note</p>
+          <p>Place the default admin email and password here for quick access during demos.</p>
+          <p className="mt-1 text-xs text-teal-800/80">Email: admin@petwellness.com</p>
+          <p className="mt-1 text-xs text-teal-800/80">Password: adminssakp</p>
+        </div>
+
         {error ? <p className="status-message status-error">{error}</p> : null}
         {success ? <p className="status-message status-success">{success}</p> : null}
 
