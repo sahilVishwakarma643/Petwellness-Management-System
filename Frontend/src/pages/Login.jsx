@@ -197,7 +197,7 @@ function Login() {
         <div className="login-credentials-note" aria-label="Default admin credential note">
           <p className="font-semibold"> login note</p>
           <p>First request may be slower as server wakes up.</p>
-          <p>Place the default admin email and password.</p>
+          <p>Admin email and password.</p>
           <p className="mt-1 text-xs text-teal-800/80">Email: admin@petwellness.com</p>
           <p className="mt-1 text-xs text-teal-800/80">Password: adminssakp</p>
         </div>
