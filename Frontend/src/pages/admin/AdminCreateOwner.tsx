@@ -57,6 +57,7 @@ const idTypeLabels: Record<string, string> = {
   DRIVING_LICENSE: "Driving License",
 };
 
+
 function todayValue() {
   return new Date().toISOString().slice(0, 10);
 }

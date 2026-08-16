@@ -25,6 +25,18 @@ const inputBase =
   "w-full rounded-lg border border-teal-100 bg-white px-3 py-2.5 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-teal-600 focus:bg-white focus:ring-4 focus:ring-teal-600/10";
 const iconInput = `${inputBase} pl-10`;
 
+const qualificationLabels: Record<string, string> = {
+  TENTH: "10th",
+  TWELFTH: "12th",
+  ITI: "ITI",
+  DIPLOMA: "Diploma",
+  BACHELORS: "Bachelors",
+  MASTERS: "Masters",
+  PHD: "PhD",
+  OTHERS: "Others",
+};
+
+
 function fieldState(hasError: boolean, touched: boolean, hasValue: boolean) {
   if (touched && hasError) return "border-rose-400 bg-rose-50 focus:border-rose-500 focus:ring-rose-500/10";
   if (touched && hasValue) return "border-emerald-400";
@@ -201,14 +213,24 @@ export default function PersonalSection({ formData, errors, touched, maxDate, on
           <Label>Highest Qualification</Label>
           <div className="relative">
             <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-slate-400">🎓</span>
-            <input
-              type="text"
-              value={formData.highestQualification}
-              onChange={(event) => onChange("highestQualification", event.target.value)}
-              onBlur={() => onBlur("highestQualification")}
-              placeholder="e.g. Bachelor of Science, MBA"
-              className={`${iconInput} ${fieldState(!!errors.highestQualification, !!touched.highestQualification, !!formData.highestQualification.trim())}`}
-            />
+            <select
+  value={formData.highestQualification}
+  onChange={(event) => onChange("highestQualification", event.target.value)}
+  onBlur={() => onBlur("highestQualification")}
+  className={`${iconInput} ${fieldState(
+    !!errors.highestQualification,
+    !!touched.highestQualification,
+    !!formData.highestQualification.trim()
+  )}`}
+>
+  <option value="">Select Highest Qualification</option>
+
+  {Object.entries(qualificationLabels).map(([value, label]) => (
+    <option key={value} value={value}>
+      {label}
+    </option>
+  ))}
+</select>
           </div>
           {touched.highestQualification ? <ErrorText message={errors.highestQualification} /> : null}
         </div>

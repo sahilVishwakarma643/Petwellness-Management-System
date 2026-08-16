@@ -33,6 +33,24 @@ function getErrorMessage(error) {
   return error?.message || "Request failed";
 }
 
+const idTypeLabels = {
+  AADHAR: "Aadhaar Card",
+  PASSPORT: "Passport",
+  DRIVING_LICENSE: "Driving License",
+  PAN: "Pan card",
+};
+
+const qualificationLabels = {
+  MATRIC: "10th",
+  HIGH_SCHOOL: "12th",
+  ITI: "ITI",
+  DIPLOMA: "Diploma",
+  BACHELORS: "Bachelors",
+  MASTERS: "Masters",
+  PHD: "PhD",
+  OTHERS: "Others",
+};
+
 function isPastDate(value) {
   if (!value) {
     return false;
@@ -109,7 +127,11 @@ function Register() {
     try {
       const response = await API.post("/auth/send-otp", { email });
       setOtpSent(true);
-      setSuccess(typeof response.data === "string" ? response.data : "OTP sent successfully");
+      setSuccess(
+        typeof response.data === "string"
+          ? response.data
+          : "OTP sent successfully",
+      );
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
@@ -131,7 +153,11 @@ function Register() {
     try {
       const response = await API.post("/auth/verify-otp", { email, otp });
       setOtpVerified(true);
-      setSuccess(typeof response.data === "string" ? response.data : "OTP verified successfully");
+      setSuccess(
+        typeof response.data === "string"
+          ? response.data
+          : "OTP verified successfully",
+      );
     } catch (err) {
       setError(getErrorMessage(err));
     } finally {
@@ -175,7 +201,9 @@ function Register() {
     }
 
     if (!acceptedTerms) {
-      setError("You must accept the Privacy Policy and Terms & Conditions before registering.");
+      setError(
+        "You must accept the Privacy Policy and Terms & Conditions before registering.",
+      );
       return;
     }
 
@@ -238,7 +266,8 @@ function Register() {
       const message =
         typeof payload === "string"
           ? payload
-          : payload?.message || "Profile completed successfully. Await admin approval.";
+          : payload?.message ||
+            "Profile completed successfully. Await admin approval.";
 
       setSuccess(message);
       setForm(initialForm);
@@ -271,7 +300,8 @@ function Register() {
     <div
       className="fixed inset-0 overflow-x-hidden overflow-y-auto text-[#1A2332]"
       style={{
-        background: "linear-gradient(135deg, #EBF4F8 0%, #D0F5EB 50%, #DAEAF8 100%)",
+        background:
+          "linear-gradient(135deg, #EBF4F8 0%, #D0F5EB 50%, #DAEAF8 100%)",
         fontFamily: '"Plus Jakarta Sans", sans-serif',
       }}
     >
@@ -317,20 +347,27 @@ function Register() {
         >
           <div
             className="border-b border-[#E2EBF0] px-5 py-6 text-center sm:px-8 sm:py-7"
-            style={{ background: "linear-gradient(135deg, #EBF4F8 0%, #D0F5EB 55%, #DAEAF8 100%)" }}
+            style={{
+              background:
+                "linear-gradient(135deg, #EBF4F8 0%, #D0F5EB 55%, #DAEAF8 100%)",
+            }}
           >
             <div className="mb-3 flex items-center justify-center gap-3">
               <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#2DD4A0] text-white">
                 <PawIcon className="h-6 w-6" />
               </div>
               <div className="text-left">
-                <p className="text-[22px] font-extrabold text-[#1A2332]">PetCare</p>
+                <p className="text-[22px] font-extrabold text-[#1A2332]">
+                  PetCare
+                </p>
                 <p className="text-xs font-semibold uppercase tracking-[0.12em] text-[#6B7A8D]">
                   Admin Hub
                 </p>
               </div>
             </div>
-            <h1 className="text-[24px] font-extrabold text-[#1A2332]">Create Your Account</h1>
+            <h1 className="text-[24px] font-extrabold text-[#1A2332]">
+              Create Your Account
+            </h1>
             <p className="mx-auto mt-2 max-w-md text-base leading-7 text-[#6B7A8D]">
               Join PetCare and manage your pets in one place
             </p>
@@ -348,9 +385,13 @@ function Register() {
                 >
                   {otpVerified ? "✓" : "1"}
                 </div>
-                <p className="mt-2 text-center text-sm font-bold text-[#1BAF82]">OTP Verification</p>
+                <p className="mt-2 text-center text-sm font-bold text-[#1BAF82]">
+                  OTP Verification
+                </p>
               </div>
-              <div className={`mt-4 h-[2px] flex-1 rounded-full ${otpVerified ? "bg-[#2DD4A0]" : "bg-[#E2EBF0]"}`} />
+              <div
+                className={`mt-4 h-[2px] flex-1 rounded-full ${otpVerified ? "bg-[#2DD4A0]" : "bg-[#E2EBF0]"}`}
+              />
               <div className="flex min-w-[96px] flex-col items-center">
                 <div
                   className={`flex h-8 w-8 items-center justify-center rounded-full border text-xs font-bold ${
@@ -361,7 +402,9 @@ function Register() {
                 >
                   2
                 </div>
-                <p className={`mt-2 text-center text-sm font-bold ${otpVerified ? "text-[#1BAF82]" : "text-[#6B7A8D]"}`}>
+                <p
+                  className={`mt-2 text-center text-sm font-bold ${otpVerified ? "text-[#1BAF82]" : "text-[#6B7A8D]"}`}
+                >
                   Registration Details
                 </p>
               </div>
@@ -387,11 +430,22 @@ function Register() {
               </div>
               <div className="space-y-4">
                 <div style={{ animation: "fadeUp 0.3s ease 0.1s both" }}>
-                  <label className="mb-1.5 block text-sm font-bold text-[#1A2332]">Email Address</label>
+                  <label className="mb-1.5 block text-sm font-bold text-[#1A2332]">
+                    Email Address
+                  </label>
                   <div className="flex flex-col gap-3 sm:flex-row">
                     <div className="relative flex-1">
-                      <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-base text-[#6B7A8D]">✉️</span>
-                      <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} className={fieldClass(email, true)} disabled={otpVerified} />
+                      <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-base text-[#6B7A8D]">
+                        ✉️
+                      </span>
+                      <input
+                        type="email"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className={fieldClass(email, true)}
+                        disabled={otpVerified}
+                      />
                     </div>
                     <button
                       type="button"
@@ -401,7 +455,10 @@ function Register() {
                     >
                       {loadingAction === "sendOtp" ? (
                         <>
-                          <span className="h-[14px] w-[14px] rounded-full border-2 border-white/30 border-t-white" style={{ animation: "spin 0.7s linear infinite" }} />
+                          <span
+                            className="h-[14px] w-[14px] rounded-full border-2 border-white/30 border-t-white"
+                            style={{ animation: "spin 0.7s linear infinite" }}
+                          />
                           Sending...
                         </>
                       ) : (
@@ -413,25 +470,49 @@ function Register() {
 
                 {otpSent ? (
                   <div style={{ animation: "fadeUp 0.3s ease forwards" }}>
-                    <label className="mb-1.5 block text-sm font-bold text-[#1A2332]">Enter OTP</label>
+                    <label className="mb-1.5 block text-sm font-bold text-[#1A2332]">
+                      Enter OTP
+                    </label>
                     <div className="flex flex-col gap-3 sm:flex-row">
                       <div className="relative flex-1">
-                        <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-base text-[#6B7A8D]">🔐</span>
-                        <input type="text" inputMode="numeric" maxLength={6} placeholder="6-digit OTP" value={otp} onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))} className={`${fieldClass(otp, true)} text-base font-bold tracking-[0.25em]`} disabled={!otpSent || otpVerified} />
+                        <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-base text-[#6B7A8D]">
+                          🔐
+                        </span>
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          maxLength={6}
+                          placeholder="6-digit OTP"
+                          value={otp}
+                          onChange={(e) =>
+                            setOtp(e.target.value.replace(/\D/g, ""))
+                          }
+                          className={`${fieldClass(otp, true)} text-base font-bold tracking-[0.25em]`}
+                          disabled={!otpSent || otpVerified}
+                        />
                       </div>
                       <button
                         type="button"
                         onClick={handleVerifyOtp}
                         className={`inline-flex min-w-[132px] items-center justify-center gap-2 rounded-[10px] px-5 py-3 text-base font-bold text-white transition-all ${
-                          !otpSent || otpVerified || loadingAction === "verifyOtp"
+                          !otpSent ||
+                          otpVerified ||
+                          loadingAction === "verifyOtp"
                             ? "cursor-not-allowed bg-[#E2EBF0] text-[#6B7A8D]"
                             : "bg-[#1E6FD9] hover:shadow-[0_4px_12px_rgba(30,111,217,0.25)]"
                         }`}
-                        disabled={!otpSent || otpVerified || loadingAction === "verifyOtp"}
+                        disabled={
+                          !otpSent ||
+                          otpVerified ||
+                          loadingAction === "verifyOtp"
+                        }
                       >
                         {loadingAction === "verifyOtp" ? (
                           <>
-                            <span className="h-[14px] w-[14px] rounded-full border-2 border-white/30 border-t-white" style={{ animation: "spin 0.7s linear infinite" }} />
+                            <span
+                              className="h-[14px] w-[14px] rounded-full border-2 border-white/30 border-t-white"
+                              style={{ animation: "spin 0.7s linear infinite" }}
+                            />
                             Verifying...
                           </>
                         ) : otpVerified ? (
@@ -445,7 +526,10 @@ function Register() {
                 ) : null}
 
                 {otpVerified ? (
-                  <div className="rounded-[10px] border border-[#34D399] bg-[#D1FAE5] px-4 py-3 text-base font-semibold text-[#065F46]" style={{ animation: "slideDown 0.25s ease forwards" }}>
+                  <div
+                    className="rounded-[10px] border border-[#34D399] bg-[#D1FAE5] px-4 py-3 text-base font-semibold text-[#065F46]"
+                    style={{ animation: "slideDown 0.25s ease forwards" }}
+                  >
                     ✓ Email verified successfully!
                   </div>
                 ) : null}
@@ -456,7 +540,11 @@ function Register() {
               noValidate
               onSubmit={handleRegistrationSubmit}
               className="space-y-5"
-              style={otpVerified ? { animation: "slideInRight 0.35s ease forwards" } : undefined}
+              style={
+                otpVerified
+                  ? { animation: "slideInRight 0.35s ease forwards" }
+                  : undefined
+              }
             >
               <div className="mb-4 flex items-center gap-3 text-lg font-extrabold text-[#1A2332]">
                 <span className="h-[18px] w-[3px] rounded-full bg-[#2DD4A0]" />
@@ -465,18 +553,30 @@ function Register() {
 
               <section style={{ animation: "fadeUp 0.3s ease 0.05s both" }}>
                 <div className="mb-3 flex items-center gap-2">
-                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#6B7A8D]">Personal Information</p>
+                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#6B7A8D]">
+                    Personal Information
+                  </p>
                   <div className="h-px flex-1 bg-[#E2EBF0]" />
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div>
-                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Full Name <span className="text-[#F87171]">*</span></label>
-                    <input name="fullName" placeholder="Your full name" value={form.fullName} onChange={handleFieldChange} className={fieldClass(form.fullName)} />
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">
+                      Full Name <span className="text-[#F87171]">*</span>
+                    </label>
+                    <input
+                      name="fullName"
+                      placeholder="Your full name"
+                      value={form.fullName}
+                      onChange={handleFieldChange}
+                      className={fieldClass(form.fullName)}
+                    />
                   </div>
 
                   <div>
-                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Phone Number <span className="text-[#F87171]">*</span></label>
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">
+                      Phone Number <span className="text-[#F87171]">*</span>
+                    </label>
                     <input
                       name="phoneNumber"
                       type="text"
@@ -490,27 +590,68 @@ function Register() {
                   </div>
 
                   <div>
-                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Highest Qualification <span className="text-[#F87171]">*</span></label>
-                    <input name="highestQualification" placeholder="e.g. Bachelor of Science" value={form.highestQualification} onChange={handleFieldChange} className={fieldClass(form.highestQualification)} />
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">
+                      Highest Qualification{" "}
+                      <span className="text-[#F87171]">*</span>
+                    </label>
+                    <select
+                      name="highestQualification"
+                      value={form.highestQualification}
+                      onChange={handleFieldChange}
+                      className={fieldClass(form.highestQualification)}
+                    >
+                      <option value="">Select Highest Qualification</option>
+
+                      {Object.entries(qualificationLabels).map(
+                        ([value, label]) => (
+                          <option key={value} value={value}>
+                            {label}
+                          </option>
+                        ),
+                      )}
+                    </select>
                   </div>
 
                   <div>
-                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Occupation <span className="text-[#F87171]">*</span></label>
-                    <input name="occupation" placeholder="e.g. Software Engineer" value={form.occupation} onChange={handleFieldChange} className={fieldClass(form.occupation)} />
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">
+                      Occupation <span className="text-[#F87171]">*</span>
+                    </label>
+                    <input
+                      name="occupation"
+                      placeholder="e.g. Software Engineer"
+                      value={form.occupation}
+                      onChange={handleFieldChange}
+                      className={fieldClass(form.occupation)}
+                    />
                   </div>
 
                   <div>
-                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Date of Birth <span className="text-[#F87171]">*</span></label>
-                    <input name="dateOfBirth" type="date" max={maxDate} value={form.dateOfBirth} onChange={handleFieldChange} className={fieldClass(form.dateOfBirth)} />
-                    
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">
+                      Date of Birth <span className="text-[#F87171]">*</span>
+                    </label>
+                    <input
+                      name="dateOfBirth"
+                      type="date"
+                      max={maxDate}
+                      value={form.dateOfBirth}
+                      onChange={handleFieldChange}
+                      className={fieldClass(form.dateOfBirth)}
+                    />
                   </div>
 
                   <div className="sm:col-span-2">
-                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Gender <span className="text-[#F87171]">*</span></label>
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">
+                      Gender <span className="text-[#F87171]">*</span>
+                    </label>
                     <div className="flex flex-wrap gap-2">
                       {["MALE", "FEMALE", "OTHER"].map((option) => {
                         const active = form.gender === option;
-                        const icon = option === "MALE" ? "♂" : option === "FEMALE" ? "♀" : "⚧";
+                        const icon =
+                          option === "MALE"
+                            ? "♂"
+                            : option === "FEMALE"
+                              ? "♀"
+                              : "⚧";
 
                         return (
                           <label
@@ -521,7 +662,14 @@ function Register() {
                                 : "border-[#E2EBF0] bg-[#EBF4F8] text-[#6B7A8D] hover:border-[#2DD4A0] hover:bg-[#D0F5EB] hover:text-[#1BAF82]"
                             }`}
                           >
-                            <input type="radio" name="gender" value={option} checked={active} onChange={handleFieldChange} className="sr-only" />
+                            <input
+                              type="radio"
+                              name="gender"
+                              value={option}
+                              checked={active}
+                              onChange={handleFieldChange}
+                              className="sr-only"
+                            />
                             <span>{icon}</span>
                             <span>{option}</span>
                           </label>
@@ -533,45 +681,89 @@ function Register() {
                   <div>
                     <label className="mb-1.5 flex items-center gap-2 text-base font-bold text-[#1A2332]">
                       Father&apos;s Name
-                      <span className="rounded-full bg-[#D0F5EB] px-2 py-0.5 text-xs font-bold text-[#1BAF82]">Optional</span>
+                      <span className="rounded-full bg-[#D0F5EB] px-2 py-0.5 text-xs font-bold text-[#1BAF82]">
+                        Optional
+                      </span>
                     </label>
-                    <input name="fatherName" placeholder="Father Name" value={form.fatherName} onChange={handleFieldChange} className={fieldClass(form.fatherName)} />
+                    <input
+                      name="fatherName"
+                      placeholder="Father Name"
+                      value={form.fatherName}
+                      onChange={handleFieldChange}
+                      className={fieldClass(form.fatherName)}
+                    />
                   </div>
 
                   <div>
                     <label className="mb-1.5 flex items-center gap-2 text-base font-bold text-[#1A2332]">
                       Mother&apos;s Name
-                      <span className="rounded-full bg-[#D0F5EB] px-2 py-0.5 text-xs font-bold text-[#1BAF82]">Optional</span>
+                      <span className="rounded-full bg-[#D0F5EB] px-2 py-0.5 text-xs font-bold text-[#1BAF82]">
+                        Optional
+                      </span>
                     </label>
-                    <input name="motherName" placeholder="Mother Name" value={form.motherName} onChange={handleFieldChange} className={fieldClass(form.motherName)} />
+                    <input
+                      name="motherName"
+                      placeholder="Mother Name"
+                      value={form.motherName}
+                      onChange={handleFieldChange}
+                      className={fieldClass(form.motherName)}
+                    />
                   </div>
                 </div>
               </section>
 
               <section style={{ animation: "fadeUp 0.3s ease 0.1s both" }}>
                 <div className="mb-3 flex items-center gap-2">
-                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#6B7A8D]">Address Details</p>
+                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#6B7A8D]">
+                    Address Details
+                  </p>
                   <div className="h-px flex-1 bg-[#E2EBF0]" />
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="sm:col-span-2">
-                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Street <span className="text-[#F87171]">*</span></label>
-                    <input name="street" placeholder="Street address" value={form.street} onChange={handleFieldChange} className={fieldClass(form.street)} />
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">
+                      Street <span className="text-[#F87171]">*</span>
+                    </label>
+                    <input
+                      name="street"
+                      placeholder="Street address"
+                      value={form.street}
+                      onChange={handleFieldChange}
+                      className={fieldClass(form.street)}
+                    />
                   </div>
 
                   <div>
-                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">City <span className="text-[#F87171]">*</span></label>
-                    <input name="city" placeholder="City" value={form.city} onChange={handleFieldChange} className={fieldClass(form.city)} />
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">
+                      City <span className="text-[#F87171]">*</span>
+                    </label>
+                    <input
+                      name="city"
+                      placeholder="City"
+                      value={form.city}
+                      onChange={handleFieldChange}
+                      className={fieldClass(form.city)}
+                    />
                   </div>
 
                   <div>
-                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">State <span className="text-[#F87171]">*</span></label>
-                    <input name="state" placeholder="State" value={form.state} onChange={handleFieldChange} className={fieldClass(form.state)} />
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">
+                      State <span className="text-[#F87171]">*</span>
+                    </label>
+                    <input
+                      name="state"
+                      placeholder="State"
+                      value={form.state}
+                      onChange={handleFieldChange}
+                      className={fieldClass(form.state)}
+                    />
                   </div>
 
                   <div>
-                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Pincode <span className="text-[#F87171]">*</span></label>
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">
+                      Pincode <span className="text-[#F87171]">*</span>
+                    </label>
                     <input
                       name="pincode"
                       type="text"
@@ -588,18 +780,37 @@ function Register() {
 
               <section style={{ animation: "fadeUp 0.3s ease 0.15s both" }}>
                 <div className="mb-3 flex items-center gap-2">
-                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#6B7A8D]">Identity &amp; Documents</p>
+                  <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#6B7A8D]">
+                    Identity &amp; Documents
+                  </p>
                   <div className="h-px flex-1 bg-[#E2EBF0]" />
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">ID Proof Type <span className="text-[#F87171]">*</span></label>
-                    <input name="idProofType" placeholder="ID Proof Type" value={form.idProofType} onChange={handleFieldChange} className={fieldClass(form.idProofType)} />
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">
+                      ID Proof Type <span className="text-[#F87171]">*</span>
+                    </label>
+                    <select
+                      name="idProofType"
+                      value={form.idProofType}
+                      onChange={handleFieldChange}
+                      className={fieldClass(form.idProofType)}
+                    >
+                      <option value="">Select ID Proof Type</option>
+
+                      {Object.entries(idTypeLabels).map(([value, label]) => (
+                        <option key={value} value={value}>
+                          {label}
+                        </option>
+                      ))}
+                    </select>
                   </div>
 
                   <div>
-                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Upload ID Proof <span className="text-[#F87171]">*</span></label>
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">
+                      Upload ID Proof <span className="text-[#F87171]">*</span>
+                    </label>
                     <p className="mb-2 text-sm text-[#6B7A8D]">PDF, JPG, PNG</p>
                     <label
                       className={`flex min-h-[90px] cursor-pointer items-center justify-center rounded-xl border-2 border-dashed px-4 py-4 transition-all ${
@@ -608,28 +819,44 @@ function Register() {
                           : "border-[#E2EBF0] bg-[#EBF4F8] hover:border-[#2DD4A0] hover:bg-[#D0F5EB]"
                       }`}
                     >
-                      <input type="file" onChange={(e) => setIdProofFile(e.target.files?.[0] || null)} className="hidden" />
+                      <input
+                        type="file"
+                        onChange={(e) =>
+                          setIdProofFile(e.target.files?.[0] || null)
+                        }
+                        className="hidden"
+                      />
                       {idProofFile ? (
                         <div className="flex w-full items-center gap-3">
                           <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-lg">
-                            {idProofFile.type.startsWith("image/") ? "🖼️" : "📄"}
+                            {idProofFile.type.startsWith("image/")
+                              ? "🖼️"
+                              : "📄"}
                           </div>
                           <div className="min-w-0 flex-1">
-                            <p className="truncate text-sm font-semibold text-[#1A2332]">{idProofFile.name}</p>
+                            <p className="truncate text-sm font-semibold text-[#1A2332]">
+                              {idProofFile.name}
+                            </p>
                           </div>
                         </div>
                       ) : (
                         <div className="text-center">
                           <div className="text-xl text-[#6B7A8D]">📎</div>
-                          <p className="mt-1 text-sm font-semibold text-[#1A2332]">Click to upload ID Proof</p>
-                          <p className="mt-1 text-sm text-[#6B7A8D]">PDF, JPG, PNG · Max 5MB</p>
+                          <p className="mt-1 text-sm font-semibold text-[#1A2332]">
+                            Click to upload ID Proof
+                          </p>
+                          <p className="mt-1 text-sm text-[#6B7A8D]">
+                            PDF, JPG, PNG · Max 5MB
+                          </p>
                         </div>
                       )}
                     </label>
                   </div>
 
                   <div>
-                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">Profile Photo <span className="text-[#F87171]">*</span></label>
+                    <label className="mb-1.5 flex items-center gap-1 text-sm font-bold text-[#1A2332]">
+                      Profile Photo <span className="text-[#F87171]">*</span>
+                    </label>
                     <div className="flex flex-col gap-4 rounded-xl border border-[#E2EBF0] bg-white p-4 sm:flex-row sm:items-start">
                       <label
                         className={`flex h-20 w-20 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 text-xl ${
@@ -638,22 +865,46 @@ function Register() {
                             : "border-dashed border-[#E2EBF0] bg-[#EBF4F8]"
                         }`}
                       >
-                        <input type="file" onChange={(e) => setProfileImageFile(e.target.files?.[0] || null)} className="hidden" />
+                        <input
+                          type="file"
+                          onChange={(e) =>
+                            setProfileImageFile(e.target.files?.[0] || null)
+                          }
+                          className="hidden"
+                        />
                         {profilePreview ? (
-                          <img src={profilePreview} alt="Profile preview" className="h-full w-full object-cover" />
+                          <img
+                            src={profilePreview}
+                            alt="Profile preview"
+                            className="h-full w-full object-cover"
+                          />
                         ) : (
                           <span>👤</span>
                         )}
                       </label>
 
                       <div className="flex-1">
-                        <p className="text-sm font-bold text-[#1A2332]">Upload your photo</p>
-                        <p className="mt-1 text-sm text-[#6B7A8D]">JPG, PNG, WebP · Max 5MB</p>
+                        <p className="text-sm font-bold text-[#1A2332]">
+                          Upload your photo
+                        </p>
+                        <p className="mt-1 text-sm text-[#6B7A8D]">
+                          JPG, PNG, WebP · Max 5MB
+                        </p>
                         <label className="mt-3 inline-flex cursor-pointer items-center rounded-full bg-[#D0F5EB] px-4 py-2 text-sm font-bold text-[#1BAF82] transition-all hover:bg-[#2DD4A0] hover:text-white">
                           📷 Choose Photo
-                          <input type="file" onChange={(e) => setProfileImageFile(e.target.files?.[0] || null)} className="hidden" />
+                          <input
+                            type="file"
+                            onChange={(e) =>
+                              setProfileImageFile(e.target.files?.[0] || null)
+                            }
+                            className="hidden"
+                          />
                         </label>
-                        {profileImageFile ? <p className="mt-2 text-sm text-[#6B7A8D]">{profileImageFile.name}</p> : null}
+                        {profileImageFile ? (
+                          <p className="mt-2 text-sm text-[#6B7A8D]">
+                            {profileImageFile.name}
+                          </p>
+                        ) : null}
                       </div>
                     </div>
                   </div>
@@ -670,7 +921,10 @@ function Register() {
                   />
                   <span>
                     I accept the{" "}
-                    <Link to="/legal" className="font-bold text-[#1BAF82] underline underline-offset-2">
+                    <Link
+                      to="/legal"
+                      className="font-bold text-[#1BAF82] underline underline-offset-2"
+                    >
                       Privacy Policy and Terms &amp; Conditions
                     </Link>
                   </span>
@@ -690,7 +944,10 @@ function Register() {
               >
                 {loadingAction === "register" ? (
                   <>
-                    <span className="h-[14px] w-[14px] rounded-full border-2 border-white/30 border-t-white" style={{ animation: "spin 0.7s linear infinite" }} />
+                    <span
+                      className="h-[14px] w-[14px] rounded-full border-2 border-white/30 border-t-white"
+                      style={{ animation: "spin 0.7s linear infinite" }}
+                    />
                     Creating Account...
                   </>
                 ) : (
@@ -701,7 +958,10 @@ function Register() {
 
             <p className="mt-5 text-center text-base text-[#6B7A8D]">
               Already have an account?{" "}
-              <Link to="/login" className="font-bold text-[#2DD4A0] transition-colors hover:text-[#1BAF82]">
+              <Link
+                to="/login"
+                className="font-bold text-[#2DD4A0] transition-colors hover:text-[#1BAF82]"
+              >
                 Sign In
               </Link>
             </p>
